@@ -1,0 +1,7 @@
+{
+  "typescriptThreePlus": true,
+  "supportsES6": true,
+  "withoutRuntimeChecks": false,
+  "legacyDiscriminatorBehavior": false,
+  "nullSafeAdditionalProps": false
+}

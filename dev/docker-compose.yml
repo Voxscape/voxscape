@@ -1,0 +1,63 @@
+version: '3'
+
+services:
+  pgsql:
+    # https://hub.docker.com/_/postgres
+    image: postgres:14
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: nuthatch_dev
+    volumes:
+      - ./data-pgsql:/var/lib/postgresql/data
+    ports:
+      - 62432:5432
+    restart: on-failure
+    command: # see https://github.com/docker-library/postgres/blob/master/docker-entrypoint.sh
+      - postgres
+      - -c
+      - log_min_error_statement=notice
+      - -c
+      - log_statement=all
+      - -c
+      - log_duration=on
+      - -c
+      - log_error_verbosity=default # terse / default / debug
+    healthcheck:
+      test:
+        - CMD
+        - pg_isready
+        - -U
+        - pguser
+        - -d
+        - playground
+      interval: 1s
+      timeout: 30s
+      retries: 10
+
+  hasura: &hasura-base
+    # see https://hub.docker.com/r/hasura/graphql-engine
+    image: hasura/graphql-engine:v2.9.0.cli-migrations-v3
+    command: # see https://github.com/hasura/graphql-engine/blob/master/packaging/cli-migrations/v3/docker-entrypoint.sh
+      - graphql-engine
+      - serve
+      - --connections=20
+    environment: # see https://hasura.io/docs/latest/graphql/core/deployment/graphql-engine-flags/reference/
+      HASURA_GRAPHQL_DATABASE_URL: postgres://pguser:secret@pgsql:5432/nuthatch_dev
+      # start console with ./hasura/hasura-cli.sh
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "false"
+      HASURA_GRAPHQL_ADMIN_SECRET: 'super_secret_admin_secret'
+      HASURA_GRAPHQL_EVENTS_FETCH_INTERVAL: "600000" # not using events anyway
+      HASURA_GRAPHQL_SCHEMA_SYNC_POLL_INTERVAL: '0' # not storing metadata in kvs
+      HASURA_GRAPHQL_UNAUTHORIZED_ROLE: guest
+      HASURA_GRAPHQL_DEV_MODE: 'true'
+      HASURA_GRAPHQL_ADMIN_INTERNAL_ERRORS: 'true'
+    # volumes: [] # no volumes: persisted data should be created in console and source-managed
+    links:
+      - pgsql
+    ports:
+      - 62080:8080
+    restart: on-failure
+    depends_on:
+      pgsql:
+        condition: service_healthy

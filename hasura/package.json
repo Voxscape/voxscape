@@ -1,0 +1,15 @@
+{
+  "name": "hasura-graphql-scripts",
+  "version": "0.1.0",
+  "description": "hasura / GraphQL data and scripts",
+  "license": "MIT",
+  "scripts": {
+    "hasura": "hasura"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "graphqurl": "^1.0.1",
+    "hasura-cli": "^2.9.0"
+  }
+}
