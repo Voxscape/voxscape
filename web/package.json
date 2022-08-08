@@ -9,8 +9,6 @@
     "export": "next export",
     "analyze": "BUNDLE_ANALYZE=both next build",
     "start": "NODE_ENV=production next start",
-    "relay": "relay-compiler",
-    "relay:watch": "relay-compiler --watch",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
