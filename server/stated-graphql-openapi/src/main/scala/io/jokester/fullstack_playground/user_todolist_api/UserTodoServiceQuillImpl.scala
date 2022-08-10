@@ -3,12 +3,16 @@ import cats.syntax.either._
 import com.typesafe.scalalogging.LazyLogging
 import io.circe.generic.auto._
 import io.circe.syntax._
-import io.jokester.fullstack_playground.quill.generated.userTodo.{UserTodos => UserTodoRow, Users => UserRow}
-import io.jokester.fullstack_playground.quill.{QuillCirceJsonEncoding, QuillContextFactory, QuillDatetimeEncoding, QuillWorkarounds}
+import io.jokester.fullstack_playground.quill.generated.userTodo.{
+  UserTodos => UserTodoRow,
+  Users => UserRow,
+}
+import io.jokester.fullstack_playground.quill.{QuillContextFactory, QuillWorkarounds}
 import io.jokester.fullstack_playground.user_todolist_api.UserTodoApi._
 import io.jokester.http_api.JwtAuthConvention._
-import io.jokester.http_api.OpenAPIConvention
-import io.jokester.http_api.OpenAPIConvention.BadRequest
+import io.jokester.scala_commons.openapi.OpenAPIConvention.BadRequest
+import io.jokester.scala_commons.openapi.OpenAPIConvention
+import io.jokester.scala_commons.quill.{QuillCirceJsonEncoding, QuillDatetimeEncoding}
 import io.jokester.utils.security.BCryptHelpers
 
 import scala.util.chaining._
@@ -47,8 +51,8 @@ class UserTodoServiceQuillImpl(protected override val ctx: QuillContextFactory.U
   }
 
   override def updateProfile(
-                              userId: UserId,
-                              newProfile: UserTodoApi.UserProfile,
+      userId: UserId,
+      newProfile: UserTodoApi.UserProfile,
   ): OpenAPIConvention.Failable[UserTodoApi.UserAccount] = {
     val updated = run({
 

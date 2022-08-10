@@ -4,11 +4,12 @@ import io.circe._
 import io.circe.generic.auto._
 import io.circe.syntax._
 import cats.syntax.either._
-import pdi.jwt.{JwtAlgorithm, JwtCirce, JwtClaim, Jwt}
+import io.jokester.scala_commons.openapi.OpenAPIConvention
+import pdi.jwt.{Jwt, JwtAlgorithm, JwtCirce, JwtClaim}
 
 import java.time.Instant
 import scala.util.{Success, Try}
-import OpenAPIConvention.{Failable, BadRequest, Unauthorized}
+import io.jokester.scala_commons.openapi.OpenAPIConvention.{BadRequest, Failable, Unauthorized}
 
 object JwtAuthConvention {
 

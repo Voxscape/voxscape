@@ -29,7 +29,7 @@ object Dependencies {
     "io.circe" %% "circe-parser",
   ).map(_ % Versions.circe)
 
-  lazy val utilDeps: Seq[ModuleID] = Seq(
+  lazy val authDeps: Seq[ModuleID] = Seq(
     "org.springframework.security" % "spring-security-crypto" % Versions.spring,
   )
 
@@ -69,6 +69,9 @@ object Dependencies {
     "com.github.javafaker" % "javafaker"        % "1.0.2",
   ).map(_ % Test)
 
+  /**
+    * @deprecated
+    */
   lazy val buildDeps: Seq[ModuleID] = Seq.empty
 }
 

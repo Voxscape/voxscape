@@ -3,7 +3,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 trait BCryptHelpers {
 
-  private val bcrypt = new BCryptPasswordEncoder
+  private lazy val bcrypt = new BCryptPasswordEncoder
 
   def createPasswordHash(pass: String): String = bcrypt.encode(pass)
 

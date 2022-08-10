@@ -1,4 +1,4 @@
-package io.jokester.fullstack_playground.utils.akka_http
+package io.jokester.scala_commons.akka
 
 import akka.actor.typed.ActorSystem
 import akka.actor.{ActorSystem => UntypedActorSystem}
@@ -7,12 +7,11 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{HttpEntity, HttpMethods, HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.directives.LoggingMagnet
-import akka.http.scaladsl.server.{Directive0, Route, RouteResult}
+import akka.http.scaladsl.server.{Directive0, Route}
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives.cors
 import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
 import com.typesafe.scalalogging.LazyLogging
 
-import java.time.Clock
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
@@ -111,7 +110,8 @@ object AkkaHttpServer extends LazyLogging {
               HttpMethods.PUT,
               HttpMethods.PATCH,
             ),
-          ).withMaxAge(Some(600L)),
+          )
+          .withMaxAge(Some(600L)),
       ),
     )
   }

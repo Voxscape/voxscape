@@ -1,8 +1,8 @@
-package io.jokester.fullstack_playground.quill
+package io.jokester.scala_commons.quill
 
 import com.typesafe.scalalogging.LazyLogging
-import io.circe.{Json, JsonObject}
 import io.circe.parser.{parse => parseJson}
+import io.circe.{Json, JsonObject}
 import io.getquill.PostgresJdbcContext
 import org.postgresql.util.PGobject
 

@@ -7,7 +7,7 @@ import flatspec._
 import matchers._
 import org.scalatest.concurrent.ScalaFutures
 import io.jokester.fullstack_playground.todolist_api.TodoApi._
-import io.jokester.http_api.OpenAPIConvention._
+import io.jokester.scala_commons.openapi.OpenAPIConvention._
 
 trait TodoApiImplTest
     extends should.Matchers
@@ -59,7 +59,7 @@ trait TodoApiImplTest
     testee.list().right.value.todos should contain(updated4)
 
     // D
-    testee.remove(created.id) should equal (().asRight)
+    testee.remove(created.id) should equal(().asRight)
     testee.remove(-1).left.value should equal(NotFound(s"Todo(id=-1) not found"))
     val list3 = testee.list().right.value.todos
     list3 should not.contain(created)

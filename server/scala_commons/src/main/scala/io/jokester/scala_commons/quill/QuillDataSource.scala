@@ -1,4 +1,4 @@
-package io.jokester.fullstack_playground.quill
+package io.jokester.scala_commons.quill
 
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 import io.getquill.SnakeCase
@@ -56,7 +56,7 @@ trait QuillDataSource {
   protected def hikariDataSource(wrapped: DataSource): HikariDataSource = {
     val config = new HikariConfig()
     config.setDataSource(wrapped)
-//    config.setConnectionInitSql("set time zone 'UTC'")
+    //    config.setConnectionInitSql("set time zone 'UTC'")
     new HikariDataSource(config)
   }
 }

@@ -1,6 +1,6 @@
 package io.jokester.http_api
 
-import io.jokester.http_api.OpenAPIConvention.{ApiResultSync, Failable}
+import io.jokester.scala_commons.openapi.OpenAPIConvention.{ApiResultSync, Failable}
 import org.scalatest.concurrent.ScalaFutures
 
 import scala.concurrent.Future

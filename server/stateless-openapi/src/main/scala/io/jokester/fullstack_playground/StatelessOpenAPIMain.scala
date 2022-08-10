@@ -8,7 +8,7 @@ import io.jokester.fullstack_playground.todolist_api.{
   TodoApiService,
   TodoApiMemoryImpl,
 }
-import io.jokester.fullstack_playground.utils.akka_http.AkkaHttpServer
+import io.jokester.scala_commons.akka.AkkaHttpServer
 
 import java.nio.file.{Files, Path}
 

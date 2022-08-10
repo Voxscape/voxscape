@@ -11,6 +11,12 @@ ThisBuild / scalaVersion := scala2Version
 ThisBuild / scalacOptions ++= Seq("-Xlint")
 //ThisBuild / coverageEnabled := true // this is not the way to do it. should "sbt coverageOn" instead
 
+lazy val scalaCommons = (project in file("scala_commons"))
+  .settings(
+    name := "scalaCommons",
+    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps,
+  )
+
 lazy val statelessAkkaHttp = (project in file("stateless-akka-http"))
   .settings(
     name := "stateless-akka-http",
@@ -18,24 +24,25 @@ lazy val statelessAkkaHttp = (project in file("stateless-akka-http"))
     Universal / target := file("target/universal"),
   )
   .enablePlugins(JavaAppPackaging)
+  .dependsOn(scalaCommons)
 
 lazy val statelessOpenapi = (project in file("stateless-openapi"))
   .settings(
     name := "stateless-openapi",
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ testDeps ++ utilDeps,
+    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ testDeps ++ authDeps,
     Universal / target := file("target/universal"),
   )
   .enablePlugins(JavaAppPackaging)
-  .dependsOn(statelessAkkaHttp)
+  .dependsOn(statelessAkkaHttp, scalaCommons)
 
 lazy val statedGraphqlOpenapi = (project in file("stated-graphql-openapi"))
   .settings(
     name := "stated-graphql-openapi",
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ quillDeps ++ testDeps ++ buildDeps,
+    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ quillDeps ++ testDeps ,
     Universal / target := file("target/universal"),
   )
   .enablePlugins(JavaAppPackaging)
-  .dependsOn(statelessAkkaHttp, statelessOpenapi % "compile->compile;test->test;")
+  .dependsOn(statelessAkkaHttp, statelessOpenapi % "compile->compile;test->test;", scalaCommons)
 
 lazy val rdbCodegen = (project in file("rdb-codegen"))
   .settings(
@@ -46,14 +53,14 @@ lazy val rdbCodegen = (project in file("rdb-codegen"))
 lazy val legacyScalikeJdbc = (project in file("stated-scalikejdbc"))
   .settings(
     name := "stated-scalikejdbc",
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ scalikeJdbcDeps ++ testDeps ++ buildDeps,
+    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ scalikeJdbcDeps ++ testDeps,
   )
   .enablePlugins(
     // see http://scalikejdbc.org/documentation/reverse-engineering.html
     // (not generating prefect code)
     ScalikejdbcPlugin,
   )
-  .dependsOn(statelessAkkaHttp, statelessOpenapi % "compile->compile;test->test;")
+  .dependsOn(statelessAkkaHttp, statelessOpenapi % "compile->compile;test->test;", scalaCommons)
 
 lazy val enableQuillLog = taskKey[Unit]("enable quill logs")
 enableQuillLog := {

@@ -8,8 +8,8 @@ import sttp.tapir.json.circe.jsonBody
 import sttp.tapir.openapi.OpenAPI
 
 import java.time.Instant
-import io.jokester.http_api.OpenAPIConvention._
-import io.jokester.http_api.OpenAPIBuilder
+import io.jokester.scala_commons.openapi.OpenAPIConvention._
+import io.jokester.scala_commons.openapi.OpenAPIBuilder
 
 object TodoApi {
 

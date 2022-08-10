@@ -4,7 +4,7 @@ import akka.http.scaladsl.server.Route
 import cats.syntax.either._
 import akka.http.scaladsl.server.Directives.{concat, pathPrefix}
 import io.jokester.fullstack_playground.todolist_api.TodoApi.TodoList
-import io.jokester.http_api.OpenAPIConvention
+import io.jokester.scala_commons.openapi.OpenAPIConvention
 import sttp.capabilities.WebSockets
 import sttp.capabilities.akka.AkkaStreams
 import sttp.tapir._
@@ -29,11 +29,9 @@ object TodoApiAkkaBinding {
         List(
           endpoints.listTodo.serverLogic(req => Future(impl.list())),
           endpoints.showTodo.serverLogic(req => Future(impl.show(req))),
-
           endpoints.createTodo.serverLogic(req => Future(impl.create(req))),
           endpoints.updateTodo.serverLogic(req => Future(impl.update(req._1, req._2))),
-          endpoints.deleteTodo.serverLogic(req => Future(impl.remove(req)))
-
+          endpoints.deleteTodo.serverLogic(req => Future(impl.remove(req))),
         ),
       )
     serverImplRoute

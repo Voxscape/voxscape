@@ -1,4 +1,4 @@
-package io.jokester.http_api
+package io.jokester.scala_commons.openapi
 
 import sttp.tapir.Endpoint
 import sttp.tapir.openapi.OpenAPI

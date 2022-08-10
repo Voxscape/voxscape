@@ -3,13 +3,10 @@ package io.jokester.fullstack_playground.todolist_api
 import com.typesafe.scalalogging.LazyLogging
 import cats.syntax.either._
 import io.jokester.fullstack_playground.quill.generated.public.Todos
-import io.jokester.fullstack_playground.quill.{
-  QuillContextFactory,
-  QuillDatetimeEncoding,
-  QuillWorkarounds,
-}
+import io.jokester.fullstack_playground.quill.{QuillContextFactory, QuillWorkarounds}
 import io.jokester.fullstack_playground.todolist_api.TodoApi.{CreateTodoIntent, TodoList}
-import io.jokester.http_api.OpenAPIConvention._
+import io.jokester.scala_commons.openapi.OpenAPIConvention._
+import io.jokester.scala_commons.quill.QuillDatetimeEncoding
 
 import java.time.{Clock, OffsetDateTime}
 
