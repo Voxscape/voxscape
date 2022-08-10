@@ -1,4 +1,5 @@
-package io.jokester.utils.security
+package io.jokester.security
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 trait BCryptHelpers {

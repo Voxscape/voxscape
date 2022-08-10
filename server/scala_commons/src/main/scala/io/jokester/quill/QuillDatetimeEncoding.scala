@@ -1,4 +1,4 @@
-package io.jokester.scala_commons.quill
+package io.jokester.quill
 
 import io.getquill.PostgresJdbcContext
 

@@ -1,4 +1,4 @@
-package io.jokester.scala_commons.quill
+package io.jokester.quill
 
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 import io.getquill.SnakeCase

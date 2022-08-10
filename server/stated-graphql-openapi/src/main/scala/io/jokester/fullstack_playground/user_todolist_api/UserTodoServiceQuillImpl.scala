@@ -11,8 +11,8 @@ import io.jokester.fullstack_playground.quill.{QuillContextFactory, QuillWorkaro
 import io.jokester.fullstack_playground.user_todolist_api.UserTodoApi._
 import io.jokester.api.JwtAuthConvention._
 import io.jokester.api.OpenAPIConvention._
-import io.jokester.scala_commons.quill.{QuillCirceJsonEncoding, QuillDatetimeEncoding}
-import io.jokester.utils.security.BCryptHelpers
+import io.jokester.quill.{QuillCirceJsonEncoding, QuillDatetimeEncoding}
+import io.jokester.security.BCryptHelpers
 
 import scala.util.chaining._
 

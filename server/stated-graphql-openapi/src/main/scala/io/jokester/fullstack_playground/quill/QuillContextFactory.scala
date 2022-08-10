@@ -4,7 +4,7 @@ import io.getquill.util.LoadConfig
 import io.getquill.{PostgresDialect, PostgresJdbcContext, SnakeCase}
 import io.jokester.fullstack_playground.quill.generated.public.PublicExtensions
 import io.jokester.fullstack_playground.quill.generated.userTodo.UserTodoExtensions
-import io.jokester.scala_commons.quill.QuillDataSource
+import io.jokester.quill.QuillDataSource
 
 object QuillContextFactory extends QuillDataSource {
 
