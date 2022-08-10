@@ -1,4 +1,4 @@
-package io.jokester.scala_commons.akka
+package io.jokester.akka
 
 import akka.actor.typed.ActorSystem
 import akka.actor.{ActorSystem => UntypedActorSystem}

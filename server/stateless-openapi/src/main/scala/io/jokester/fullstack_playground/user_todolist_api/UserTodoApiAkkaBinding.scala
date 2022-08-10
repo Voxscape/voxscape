@@ -2,9 +2,9 @@ package io.jokester.fullstack_playground.user_todolist_api
 
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import io.jokester.api.{HasuraJwtAuthConvention, JwtAuthConvention}
 import io.jokester.fullstack_playground.user_todolist_api.UserTodoApi._
-import io.jokester.http_api.{HasuraJwtAuthConvention, JwtAuthConvention}
-import io.jokester.http_api.JwtAuthConvention._
+import io.jokester.api.JwtAuthConvention._
 import sttp.model.headers.CookieValueWithMeta
 import sttp.tapir.server.akkahttp.AkkaHttpServerInterpreter
 

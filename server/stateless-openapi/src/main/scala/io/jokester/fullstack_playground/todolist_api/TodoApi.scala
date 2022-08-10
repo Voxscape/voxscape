@@ -1,6 +1,8 @@
 package io.jokester.fullstack_playground.todolist_api
 
 import io.circe.generic.auto._
+import io.jokester.api.OpenAPIBuilder
+import io.jokester.api.OpenAPIConvention._
 import sttp.model.StatusCode
 import sttp.tapir._
 import sttp.tapir.generic.auto._
@@ -8,8 +10,6 @@ import sttp.tapir.json.circe.jsonBody
 import sttp.tapir.openapi.OpenAPI
 
 import java.time.Instant
-import io.jokester.scala_commons.openapi.OpenAPIConvention._
-import io.jokester.scala_commons.openapi.OpenAPIBuilder
 
 object TodoApi {
 

@@ -1,4 +1,4 @@
-package io.jokester.http_api
+package io.jokester.api
 
 import io.circe.JsonObject
 import io.circe.syntax.EncoderOps

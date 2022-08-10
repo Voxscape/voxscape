@@ -1,10 +1,10 @@
 package io.jokester.fullstack_playground.todolist_api
 
 import com.typesafe.scalalogging.LazyLogging
+import io.jokester.api.OpenAPIConvention._
 
 import java.time.Clock
 import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
-import io.jokester.scala_commons.openapi.OpenAPIConvention._
 import TodoApi._
 
 class TodoApiMemoryImpl extends TodoApiService with LazyLogging {

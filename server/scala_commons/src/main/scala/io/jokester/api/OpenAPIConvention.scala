@@ -1,4 +1,4 @@
-package io.jokester.scala_commons.openapi
+package io.jokester.api
 
 import io.circe.generic.auto._
 import sttp.tapir.generic.auto._

@@ -4,7 +4,7 @@ import akka.http.scaladsl.server.Route
 import cats.syntax.either._
 import akka.http.scaladsl.server.Directives.{concat, pathPrefix}
 import io.jokester.fullstack_playground.todolist_api.TodoApi.TodoList
-import io.jokester.scala_commons.openapi.OpenAPIConvention
+import io.jokester.api.OpenAPIConvention
 import sttp.capabilities.WebSockets
 import sttp.capabilities.akka.AkkaStreams
 import sttp.tapir._

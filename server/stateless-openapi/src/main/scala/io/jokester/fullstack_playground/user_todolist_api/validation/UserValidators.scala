@@ -1,7 +1,7 @@
 package io.jokester.fullstack_playground.user_todolist_api.validation
 import cats.data.Validated
+import io.jokester.api.OpenAPIConvention._
 import io.jokester.fullstack_playground.user_todolist_api.UserTodoApi._
-import io.jokester.scala_commons.openapi.OpenAPIConvention.{BadRequest, Failable}
 
 import scala.language.implicitConversions
 

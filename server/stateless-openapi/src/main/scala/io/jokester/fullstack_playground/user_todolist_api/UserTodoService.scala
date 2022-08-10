@@ -1,9 +1,9 @@
 package io.jokester.fullstack_playground.user_todolist_api
 
 import io.jokester.fullstack_playground.user_todolist_api.UserTodoApi.CreateTodoResponse
-import io.jokester.http_api.JwtAuthConvention.UserId
+import io.jokester.api.JwtAuthConvention.UserId
 import UserTodoApi._
-import io.jokester.scala_commons.openapi.OpenAPIConvention
+import io.jokester.api.OpenAPIConvention
 
 import scala.concurrent.Future
 

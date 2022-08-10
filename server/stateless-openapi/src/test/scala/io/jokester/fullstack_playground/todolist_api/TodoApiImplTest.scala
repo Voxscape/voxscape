@@ -7,7 +7,6 @@ import flatspec._
 import matchers._
 import org.scalatest.concurrent.ScalaFutures
 import io.jokester.fullstack_playground.todolist_api.TodoApi._
-import io.jokester.scala_commons.openapi.OpenAPIConvention._
 
 trait TodoApiImplTest
     extends should.Matchers

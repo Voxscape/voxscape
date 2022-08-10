@@ -5,8 +5,8 @@ import cats.syntax.either._
 import io.jokester.fullstack_playground.quill.generated.public.Todos
 import io.jokester.fullstack_playground.quill.{QuillContextFactory, QuillWorkarounds}
 import io.jokester.fullstack_playground.todolist_api.TodoApi.{CreateTodoIntent, TodoList}
-import io.jokester.scala_commons.openapi.OpenAPIConvention._
 import io.jokester.scala_commons.quill.QuillDatetimeEncoding
+import io.jokester.api.OpenAPIConvention._
 
 import java.time.{Clock, OffsetDateTime}
 

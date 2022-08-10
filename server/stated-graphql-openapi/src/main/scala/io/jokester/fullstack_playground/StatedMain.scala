@@ -2,6 +2,7 @@ package io.jokester.fullstack_playground
 
 import akka.http.scaladsl.server.Directives._
 import com.typesafe.scalalogging.LazyLogging
+import io.jokester.akka.AkkaHttpServer
 import io.jokester.fullstack_playground.quill.QuillContextFactory
 import io.jokester.fullstack_playground.todolist_api.{
   TodoApiAkkaBinding,
@@ -13,7 +14,6 @@ import io.jokester.fullstack_playground.user_todolist_api.{
   UserTodoApiAkkaBinding,
   UserTodoServiceQuillImpl,
 }
-import io.jokester.scala_commons.akka.AkkaHttpServer
 
 import java.nio.file.{Files, Path}
 import scala.concurrent.ExecutionContext

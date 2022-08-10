@@ -1,8 +1,9 @@
 package io.jokester.fullstack_playground.todolist_api
 
+import io.jokester.api.OpenAPIConvention.Failable
+
 trait TodoApiService {
   import TodoApi._
-  import io.jokester.scala_commons.openapi.OpenAPIConvention._
 
   def create(req: CreateTodoIntent): Failable[Todo]
 
