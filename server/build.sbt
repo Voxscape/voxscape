@@ -11,6 +11,8 @@ ThisBuild / scalaVersion     := scala2Version
 ThisBuild / scalacOptions ++= Seq("-Xlint")
 //ThisBuild / coverageEnabled := true // this is not the way to do it. should "sbt coverageOn" instead
 
+resolvers += "GCP maven mirror" at "https://maven-central-asia.storage-download.googleapis.com/repos/central/data/"
+
 lazy val scalaCommons = (project in file("scala-commons"))
   .settings(
     name := "scalaCommons",
@@ -19,12 +21,14 @@ lazy val scalaCommons = (project in file("scala-commons"))
 //    excludeDependencies ++= incompatibleDependencies,
   )
 
-lazy val apiServer = (project in file("api-server")).settings(
-  name := "api-server",
-  Universal / target := file("target/universal"),
-  libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps ++ redisDeps ++ oauthDeps,
-  dependencyOverrides ++= manuallyResolvedDeps,
-).dependsOn(scalaCommons)
+lazy val apiServer = (project in file("api-server"))
+  .settings(
+    name               := "api-server",
+    Universal / target := file("target/universal"),
+    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps ++ redisDeps ++ oauthDeps,
+    dependencyOverrides ++= manuallyResolvedDeps,
+  )
+  .dependsOn(scalaCommons)
   .enablePlugins(
     // see http://scalikejdbc.org/documentation/reverse-engineering.html
     // (not generating prefect code)
