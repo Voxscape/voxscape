@@ -3,12 +3,11 @@ package io.jokester.nuthatch
 import io.jokester.akka.AkkaHttpServer
 
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, ExecutionContext}
+import scala.concurrent.{Await}
 
 object ApiServer extends App {
-  println("hello")
-
-  val finish = AkkaHttpServer.waitKeyboardInterrupt()(ExecutionContext.global)
-  Await.result(finish, Duration.Inf)
-
+  val serverDown = AkkaHttpServer.listenWithNewSystem(system => {
+    AkkaHttpServer.fallback404Route
+  })
+  Await.result(serverDown, Duration.Inf)
 }

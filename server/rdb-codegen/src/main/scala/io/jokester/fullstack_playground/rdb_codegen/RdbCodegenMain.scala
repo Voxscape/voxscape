@@ -1,8 +1,10 @@
 package io.jokester.fullstack_playground.rdb_codegen
 
+import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import io.getquill.codegen.jdbc.{ComposeableTraitsJdbcCodegen, SimpleJdbcCodegen}
 import io.getquill.codegen.model._
+import io.getquill.util.LoadConfig
 import org.postgresql.ds.PGSimpleDataSource
 
 /** A to run code generation (before I learned better way)
@@ -10,12 +12,13 @@ import org.postgresql.ds.PGSimpleDataSource
 object RdbCodegenMain extends App with LazyLogging {
   logger.debug("started")
 
-  val destPkg = "io.jokester.fullstack_playground.quill.generated"
+  val destPkg = "io.jokester.nuthatch.quill.generated"
 
   lazy val simplePgDataSource = {
     val pgDataSource = new PGSimpleDataSource()
+    val config       = LoadConfig("db.dev")
     pgDataSource.setURL(
-      "jdbc:postgresql://localhost:61432/playground?user=pguser&password=secret&ssl=false",
+      config.getString("url"),
     )
     pgDataSource
   }
@@ -73,6 +76,6 @@ object RdbCodegenMain extends App with LazyLogging {
   }
 
   traitsCodeGen.writeFiles(location =
-    "stated-graphql-openapi/src/main/scala/" + destPkg.split("\\.").mkString("/"),
+    "api-server/src/main/scala/" + destPkg.split("\\.").mkString("/"),
   )
 }
