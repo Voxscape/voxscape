@@ -9,10 +9,10 @@ models:
 	sbt scalikejdbcGenAllForce scalafmtAll
 
 bin:
-	sbt statelessAkkaHttp/packageXzTarball statelessOpenapi/packageXzTarball statedGraphqlOpenapi/packageXzTarball
+	sbt apiServer/packageXzTarball
 
 quillCodegen:
-	rm -rf stated-graphql-openapi/src/main/scala/io/jokester/fullstack_playground/quill/generated/
+	rm -rf api-server/src/main/scala/io/jokester/nuthatch/quill/generated/
 	sbt rdbCodegen/run
 
 test:

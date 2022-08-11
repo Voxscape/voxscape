@@ -10,7 +10,8 @@ object Dependencies {
     "ch.qos.logback"  % "logback-classic" % "1.3.0-alpha10", // this provides SLF4J backend
     "commons-logging" % "commons-logging" % "1.2",
     // config
-    "com.typesafe" % "config" % "1.4.2",
+    "com.typesafe"     % "config" % "1.4.2",
+    "com.google.guava" % "guava"  % "31.1-jre",
   )
 
   lazy val akkaDeps: Seq[ModuleID] = Seq(
@@ -26,7 +27,7 @@ object Dependencies {
   ).map(_.cross(CrossVersion.for3Use2_13))
 
   lazy val manuallyResolvedDeps: Seq[ModuleID] = Seq(
-    "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1"
+    "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1",
   )
 
   /** drop 2.13 when CrossVersion included multiple variants
@@ -55,7 +56,7 @@ object Dependencies {
   )
 
   lazy val oauthDeps: Seq[ModuleID] = Seq(
-    "org.pac4j" % "pac4j-oauth" % "5.4.3"
+    "com.github.scribejava" % "scribejava-apis" % "8.3.1",
   )
 
   lazy val tapirDeps: Seq[ModuleID] = Seq(
@@ -87,11 +88,11 @@ object Dependencies {
     "org.postgresql" % "postgresql" % Versions.postgresql,
     //      "com.zaxxer"     % "HikariCP"   % "4.0.1", // this resolves to bad version
     "org.scalikejdbc" %% "scalikejdbc" % Versions.scalikeJDBC,
+    "org.scalikejdbc"     %% "scalikejdbc-test" % Versions.scalikeJDBC % Test,
   )
 
   lazy val testDeps: Seq[ModuleID] = Seq(
     "org.scalatest"       %% "scalatest"        % Versions.scalaTest,
-    "org.scalikejdbc"     %% "scalikejdbc-test" % Versions.scalikeJDBC,
     "com.github.javafaker" % "javafaker"        % "1.0.2",
   ).map(_ % Test)
 
@@ -117,9 +118,8 @@ private object Versions {
   val scalikeJDBC = "3.5.0"
   val flyway      = "8.0.2"
 
-
   // testing
-  val scalaTest               = "3.2.12"
+  val scalaTest               = "3.2.13"
   val scalaTestPlusScalaCheck = "3.2.2.0"
 
 }

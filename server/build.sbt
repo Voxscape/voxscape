@@ -16,7 +16,7 @@ resolvers += "GCP maven mirror" at "https://maven-central-asia.storage-download.
 lazy val scalaCommons = (project in file("scala-commons"))
   .settings(
     name := "scalaCommons",
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps,
+    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps ++ testDeps,
     dependencyOverrides ++= manuallyResolvedDeps,
 //    excludeDependencies ++= incompatibleDependencies,
   )
@@ -24,8 +24,7 @@ lazy val scalaCommons = (project in file("scala-commons"))
 lazy val apiServer = (project in file("api-server"))
   .settings(
     name               := "api-server",
-    Universal / target := file("target/universal"),
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps ++ redisDeps ++ oauthDeps,
+    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps ++ redisDeps ++ oauthDeps ++ testDeps,
     dependencyOverrides ++= manuallyResolvedDeps,
   )
   .dependsOn(scalaCommons)
@@ -85,13 +84,3 @@ enableQuillLog := {
   sys.props.put("quill.binds.log", true.toString)
 }
 (statedGraphqlOpenapi / Compile / run) := ((statedGraphqlOpenapi / Compile / run) dependsOn enableQuillLog).evaluated
-
-{
-  lazy val packageAllTxz = taskKey[Unit]("package all txz in parallel")
-  packageAllTxz dependsOn ()
-  packageAllTxz := {
-    (statelessAkkaHttp / Universal / packageXzTarball).value
-    (statelessOpenapi / Universal / packageXzTarball).value
-    (statedGraphqlOpenapi / Universal / packageXzTarball).value
-  }
-}
