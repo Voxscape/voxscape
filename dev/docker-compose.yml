@@ -30,7 +30,7 @@ services:
         - -U
         - pguser
         - -d
-        - playground
+        - nuthatch_dev
       interval: 1s
       timeout: 30s
       retries: 10
@@ -47,7 +47,7 @@ services:
       # start console with ./hasura/hasura-cli.sh
       HASURA_GRAPHQL_ENABLE_CONSOLE: "false"
       HASURA_GRAPHQL_ADMIN_SECRET: 'super_secret_admin_secret'
-      HASURA_GRAPHQL_EVENTS_FETCH_INTERVAL: "600000" # not using events anyway
+      HASURA_GRAPHQL_EVENTS_FETCH_INTERVAL: "0" # not using events anyway
       HASURA_GRAPHQL_SCHEMA_SYNC_POLL_INTERVAL: '0' # not storing metadata in kvs
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: guest
       HASURA_GRAPHQL_DEV_MODE: 'true'

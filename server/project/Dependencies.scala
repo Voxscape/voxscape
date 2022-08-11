@@ -101,7 +101,7 @@ private object Versions {
 
   // rdbms
   val postgresql  = "42.3.6"
-  val quill       = "3.19.0"
+  val quill       = "4.3.0"
   val scalikeJDBC = "3.5.0"
   val flyway      = "8.0.2"
 

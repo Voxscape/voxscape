@@ -24,7 +24,7 @@ class TodoApiQuillImpl(
         .insert(_.title -> lift(req.title), _.desc -> lift(req.desc))
         .returning(row => row)
     })
-    (mapFromDB(created)).asRight
+    mapFromDB(created).asRight
   }
 
   override def list(): Failable[TodoList] = {

@@ -18,6 +18,12 @@ lazy val scalaCommons = (project in file("scala-commons"))
 //    excludeDependencies ++= incompatibleDependencies,
   )
 
+lazy val apiServer = (project in file("api-server")).settings(
+  name := "api-server",
+  Universal / target := file("target/universal"),
+  libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps,
+).dependsOn(scalaCommons)
+
 lazy val statelessAkkaHttp = (project in file("stateless-akka-http"))
   .settings(
     name := "stateless-akka-http",
