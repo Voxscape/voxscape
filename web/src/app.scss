@@ -1,3 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url(@blueprintjs/core/lib/css/blueprint.css);
+@import url(@blueprintjs/icons/lib/css/blueprint-icons.css);
