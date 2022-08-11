@@ -1,4 +1,4 @@
-import sbt._
+import sbt.{librarymanagement, _}
 
 object Dependencies {
   lazy val basicDeps: Seq[ModuleID] = Seq(
@@ -11,6 +11,7 @@ object Dependencies {
     // config
     "com.typesafe" % "config" % "1.4.2",
   )
+
   lazy val akkaDeps: Seq[ModuleID] = Seq(
     // akka
     "com.typesafe.akka" %% "akka-stream"        % Versions.akka,
@@ -20,8 +21,13 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-cluster-typed" % Versions.akka,
     "com.typesafe.akka" %% "akka-http"          % Versions.akkaHttp,
     "ch.megard"         %% "akka-http-cors"     % "1.1.3",
-    "de.heikoseeberger" %% "akka-http-circe"    % "1.39.2",
+    ("de.heikoseeberger" %% "akka-http-circe"    % "1.39.2")
+  ).map(_.cross(CrossVersion.for3Use2_13))
+
+  lazy val suffixOverrides: Seq[ModuleID] = Seq(
+    ("com.typesafe.scala-logging" %% "scala-logging"   % "3.9.5").withCrossVersion(CrossVersion.constant("3")),
   )
+
   lazy val circeDeps: Seq[ModuleID] = Seq(
     // circe
     "io.circe" %% "circe-core",
@@ -38,9 +44,9 @@ object Dependencies {
     "com.softwaremill.sttp.tapir" %% "tapir-core",
     "com.softwaremill.sttp.tapir" %% "tapir-json-circe",
     "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs",
-    "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml",
+    "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle",
     "com.softwaremill.sttp.tapir" %% "tapir-akka-http-server",
-  ).map(_ % Versions.tapir) :+ ("com.pauldijou" %% "jwt-circe" % "5.0.0")
+  ).map(_ % Versions.tapir).map(_.cross(CrossVersion.for3Use2_13)) :+ ("com.github.jwt-scala" %% "jwt-circe" % "9.0.6")
   //      "com.softwaremill.sttp.client3" %% "core"            % Versions.sttp
 
   lazy val quillDeps: Seq[ModuleID] = Seq(
@@ -53,7 +59,7 @@ object Dependencies {
   lazy val quillCodegenDeps: Seq[ModuleID] = Seq(
     "org.postgresql" % "postgresql" % Versions.postgresql,
 //    "io.getquill"   %% "quill-jdbc"           % Versions.quill,
-    "io.getquill" %% "quill-codegen-jdbc" % Versions.quill,
+    ("io.getquill" %% "quill-codegen-jdbc" % Versions.quill).cross(CrossVersion.for3Use2_13),
   )
 
   lazy val scalikeJdbcDeps: Seq[ModuleID] = Seq(
@@ -76,10 +82,10 @@ object Dependencies {
 }
 
 private object Versions {
-  val circe     = "0.14.1"
+  val circe     = "0.14.2"
   val circeYaml = "0.13.1"
 
-  val tapir = "1.0.0-M8" // FIXME: use released version
+  val tapir = "1.0.4" // FIXME: use released version
 
   val akkaHttp  = "10.2.9"
   val akka      = "2.6.19"

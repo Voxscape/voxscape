@@ -1,7 +1,8 @@
 package io.jokester.api
 
+import sttp.apispec.openapi.OpenAPI
+import sttp.apispec.openapi.circe.yaml.RichOpenAPI
 import sttp.tapir.Endpoint
-import sttp.tapir.openapi.OpenAPI
 
 object OpenAPIBuilder {
   def buildOpenApi(
@@ -18,7 +19,6 @@ object OpenAPIBuilder {
       title: String,
       version: String,
   ): String = {
-    import sttp.tapir.openapi.circe.yaml._
     buildOpenApi(endpoints, title, version).toYaml
   }
 }

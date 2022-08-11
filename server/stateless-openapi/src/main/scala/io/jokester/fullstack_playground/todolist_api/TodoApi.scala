@@ -3,11 +3,11 @@ package io.jokester.fullstack_playground.todolist_api
 import io.circe.generic.auto._
 import io.jokester.api.OpenAPIBuilder
 import io.jokester.api.OpenAPIConvention._
+import sttp.apispec.openapi.OpenAPI
 import sttp.model.StatusCode
 import sttp.tapir._
 import sttp.tapir.generic.auto._
 import sttp.tapir.json.circe.jsonBody
-import sttp.tapir.openapi.OpenAPI
 
 import java.time.Instant
 
