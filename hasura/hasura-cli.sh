@@ -20,4 +20,4 @@ set -x
 
 pwd
 
-exec ./node_modules/.bin/hasura "$@"
+exec npm run hasura "$@"
