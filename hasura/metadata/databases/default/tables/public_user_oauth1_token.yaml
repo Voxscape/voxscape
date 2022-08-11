@@ -1,0 +1,3 @@
+table:
+  name: user_oauth1_token
+  schema: public
