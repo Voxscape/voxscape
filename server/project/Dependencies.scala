@@ -25,6 +25,10 @@ object Dependencies {
     "de.heikoseeberger" %% "akka-http-circe"    % "1.39.2",
   ).map(_.cross(CrossVersion.for3Use2_13))
 
+  lazy val manuallyResolvedDeps: Seq[ModuleID] = Seq(
+    "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1"
+  )
+
   /** drop 2.13 when CrossVersion included multiple variants
     */
   lazy val incompatibleDependencies: Seq[DependencyBuilders.OrganizationArtifactName] = Seq(

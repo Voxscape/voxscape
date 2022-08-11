@@ -15,14 +15,22 @@ lazy val scalaCommons = (project in file("scala-commons"))
   .settings(
     name := "scalaCommons",
     libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps,
+    dependencyOverrides ++= manuallyResolvedDeps,
 //    excludeDependencies ++= incompatibleDependencies,
   )
 
 lazy val apiServer = (project in file("api-server")).settings(
   name := "api-server",
   Universal / target := file("target/universal"),
-  libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps,
+  libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps ++ scalikeJdbcDeps,
+  dependencyOverrides ++= manuallyResolvedDeps,
 ).dependsOn(scalaCommons)
+  .enablePlugins(
+    // see http://scalikejdbc.org/documentation/reverse-engineering.html
+    // (not generating prefect code)
+    ScalikejdbcPlugin,
+  )
+  .enablePlugins(JavaAppPackaging)
 
 lazy val statelessAkkaHttp = (project in file("stateless-akka-http"))
   .settings(
@@ -63,9 +71,6 @@ lazy val legacyScalikeJdbc = (project in file("stated-scalikejdbc"))
     libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ scalikeJdbcDeps ++ testDeps,
   )
   .enablePlugins(
-    // see http://scalikejdbc.org/documentation/reverse-engineering.html
-    // (not generating prefect code)
-    ScalikejdbcPlugin,
   )
   .dependsOn(statelessAkkaHttp, statelessOpenapi % "compile->compile;test->test;", scalaCommons)
 
