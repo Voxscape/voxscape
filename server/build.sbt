@@ -11,7 +11,7 @@ ThisBuild / scalaVersion := scala2Version
 ThisBuild / scalacOptions ++= Seq("-Xlint")
 //ThisBuild / coverageEnabled := true // this is not the way to do it. should "sbt coverageOn" instead
 
-lazy val scalaCommons = (project in file("scala_commons"))
+lazy val scalaCommons = (project in file("scala-commons"))
   .settings(
     name := "scalaCommons",
     libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps,

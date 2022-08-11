@@ -31,8 +31,7 @@ trait QuillCirceJsonEncoding[T <: PostgresJdbcContext[_]] {
 
 }
 
-/**
-  * @deprecated
+/** @deprecated
   */
 trait QuillCirceJsonObjEncoding[T <: PostgresJdbcContext[_]] { self: LazyLogging =>
   val DO_NOT_USE: Nothing = ???

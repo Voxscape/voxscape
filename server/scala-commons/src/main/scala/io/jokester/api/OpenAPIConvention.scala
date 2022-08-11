@@ -1,6 +1,7 @@
 package io.jokester.api
 
 import io.circe.generic.auto._
+import sttp.tapir.Schema
 import sttp.tapir.generic.auto._
 import sttp.model.StatusCode
 import sttp.tapir.json.circe.jsonBody

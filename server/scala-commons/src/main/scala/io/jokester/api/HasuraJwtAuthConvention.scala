@@ -5,8 +5,8 @@ import io.circe.syntax.EncoderOps
 
 object HasuraJwtAuthConvention {
 
-  /**
-    * @see https://hasura.io/docs/latest/auth/authentication/jwt/#the-spec
+  /** @see
+    *   https://hasura.io/docs/latest/auth/authentication/jwt/#the-spec
     * @return
     */
   final case class HasuraClaims(

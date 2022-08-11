@@ -17,9 +17,7 @@ import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 object AkkaHttpServer extends LazyLogging {
 
-  /**
-    * Listen with an ad-hoc `ActorSystem`
-    * and block until keypress
+  /** Listen with an ad-hoc `ActorSystem` and block until keypress
     */
   def listen(
       rootRoute: Route,
@@ -41,9 +39,7 @@ object AkkaHttpServer extends LazyLogging {
     listenWithSystem(rootRoute, interface, port)(untypedSystem = typedSystem.classicSystem)
   }
 
-  /**
-    * Listen with provided `ActorSystem`
-    * and block until keypress
+  /** Listen with provided `ActorSystem` and block until keypress
     */
   def listenWithSystem(
       rootRoute: Route,

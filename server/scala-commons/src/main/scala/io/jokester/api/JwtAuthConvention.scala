@@ -13,13 +13,11 @@ import io.jokester.api.OpenAPIConvention._
 
 object JwtAuthConvention {
 
-  /**
-    * token from request
+  /** token from request
     */
   final case class TaintedToken(value: String) extends AnyVal
 
-  /**
-    * validated userId
+  /** validated userId
     */
   case class UserId(value: Int)
 }
@@ -28,8 +26,7 @@ trait JwtAuthConvention extends JwtHelper {
   import JwtAuthConvention._
   private def now(): Long = Instant.now().getEpochSecond
 
-  /**
-    * payload to encode into JWT
+  /** payload to encode into JWT
     */
   final case class BearerTokenPayload(
       userId: Int,
@@ -93,8 +90,7 @@ trait JwtAuthConvention extends JwtHelper {
       .flatMap(_.assertUserId(expectedUserId))
   }
 
-  /**
-    * @deprecated
+  /** @deprecated
     */
   def validateAccessToken(
       token: TaintedToken,

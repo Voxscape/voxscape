@@ -8,8 +8,7 @@ import javax.sql.DataSource
 
 trait QuillDataSource {
 
-  /**
-    * how table/columns are escaped in SQL
+  /** how table/columns are escaped in SQL
     */
   object FixedPostgresNaming extends SnakeCase {
     override def table(s: String): String = s"""\"${super.table(s)}\""""
@@ -17,9 +16,9 @@ trait QuillDataSource {
     override def column(s: String): String = s"""\"${super.column(s)}\""""
   }
 
-  /**
-    * @param url JDBC URL like "jdbc:postgresql://localhost:61432/playground"
-    *            (user / password in URL gets ignored)
+  /** @param url
+    *   JDBC URL like "jdbc:postgresql://localhost:61432/playground" (user / password in URL gets
+    *   ignored)
     * @return
     */
   protected def simplePgDataSource(
@@ -50,8 +49,8 @@ trait QuillDataSource {
 
   }
 
-  /**
-    * @note must be closed manually
+  /** @note
+    *   must be closed manually
     */
   protected def hikariDataSource(wrapped: DataSource): HikariDataSource = {
     val config = new HikariConfig()
