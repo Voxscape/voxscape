@@ -21,3 +21,8 @@ const catchAllHandler: NextApiHandler = async (req, res) => {
   }
 };
 export default catchAllHandler;
+export const options = {
+  api: {
+    bodyParser: false,
+  },
+};
