@@ -1,7 +1,7 @@
 import Dependencies._
 
 val scala2Version = "2.13.7"
-val scala3Version = "3.1.3" // TODO: try compile with scala3
+val scala3Version = "3.1.3" // TODO: try to compile with scala3 when our deps are good with 3
 
 // "bare" definition, applies to all projects
 ThisBuild / version := "current"
@@ -15,6 +15,7 @@ lazy val scalaCommons = (project in file("scala-commons"))
   .settings(
     name := "scalaCommons",
     libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps,
+//    excludeDependencies ++= incompatibleDependencies,
   )
 
 lazy val statelessAkkaHttp = (project in file("stateless-akka-http"))
@@ -48,7 +49,6 @@ lazy val rdbCodegen = (project in file("rdb-codegen"))
   .settings(
     name := "rdb-codegen",
     libraryDependencies ++= basicDeps ++ quillCodegenDeps ++ circeDeps,
-    dependencyOverrides ++= suffixOverrides
   )
 
 lazy val legacyScalikeJdbc = (project in file("stated-scalikejdbc"))
