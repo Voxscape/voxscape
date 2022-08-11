@@ -17,9 +17,7 @@ trait QuillWorkarounds {
 
   object RowNotFoundViolation {
 
-    /**
-      * handles `IllegalStateException(Expected a single result but got List())`
-      * when
+    /** handles `IllegalStateException(Expected a single result but got List())` when
       * query.delete.returing throws when removed row count was not 1
       */
     def unapply(e: Throwable): Option[Throwable] = {

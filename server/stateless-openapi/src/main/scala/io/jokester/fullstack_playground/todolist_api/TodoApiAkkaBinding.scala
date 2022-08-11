@@ -14,9 +14,7 @@ import sttp.tapir.server.akkahttp.AkkaHttpServerInterpreter
 import scala.language.implicitConversions
 import scala.concurrent.{ExecutionContext, Future}
 
-/**
-  *
-  */
+/** */
 object TodoApiAkkaBinding {
 
   def buildTodoApiRoute(impl: TodoApiService)(implicit ec: ExecutionContext): Route = {

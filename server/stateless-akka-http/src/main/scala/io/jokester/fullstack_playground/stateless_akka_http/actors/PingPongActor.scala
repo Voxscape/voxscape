@@ -38,8 +38,8 @@ object PingActor extends LazyLogging {
             ctx.ask[ /* Req */ PongActor.GetPong, /* Res */ PongActor.PongRes](
               pongActor,
               (ref: ActorRef[PongActor.PongRes]) => PongActor.GetPong(ref),
-            ) {
-              case Success(r @ PongActor.PongRes(_)) => WrappedPongRes(r)
+            ) { case Success(r @ PongActor.PongRes(_)) =>
+              WrappedPongRes(r)
             }
 
             Behaviors.same
@@ -71,11 +71,10 @@ object PongActor {
     Behaviors.setup[Command] { ctx =>
       var count = 0
 
-      Behaviors.receiveMessage[Command]({
-        case Pong(replyTo) =>
-          count += 1
-          replyTo ! PongRes(count)
-          Behaviors.same
+      Behaviors.receiveMessage[Command]({ case Pong(replyTo) =>
+        count += 1
+        replyTo ! PongRes(count)
+        Behaviors.same
       })
     }
 

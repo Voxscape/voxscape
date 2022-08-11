@@ -14,17 +14,16 @@ object SinkManagerActor extends LazyLogging {
   def apply(): Behaviors.Receive[Command] = {
     var map: Map[String, ActorRef[SinkActor.Command]] = Map.empty
 
-    Behaviors.receive({
-      case (ctx, GetSink(sinkName, replyTo)) =>
-        val existed = map.get(sinkName)
-        val c = {
-          val sinkId = UUID.randomUUID()
-          existed.getOrElse(ctx.spawn(SinkActor(sinkName, sinkId), s"sink-${sinkId}"))
-        }
-        map += sinkName -> c
-        replyTo ! SinkManagerActor.GotSink(c)
+    Behaviors.receive({ case (ctx, GetSink(sinkName, replyTo)) =>
+      val existed = map.get(sinkName)
+      val c = {
+        val sinkId = UUID.randomUUID()
+        existed.getOrElse(ctx.spawn(SinkActor(sinkName, sinkId), s"sink-${sinkId}"))
+      }
+      map += sinkName -> c
+      replyTo ! SinkManagerActor.GotSink(c)
 
-        Behaviors.same
+      Behaviors.same
 
     })
   }

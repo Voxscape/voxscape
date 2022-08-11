@@ -23,8 +23,7 @@ object StatelessOpenAPIMain extends App with LazyLogging {
       AkkaHttpServer.listenWithNewSystem(routeBuilder = { actorSystem =>
         implicit val ec = actorSystem.executionContext
 
-        /**
-          * CRUD
+        /** CRUD
           */
         val todoRoute = TodoApiAkkaBinding.buildTodoApiRoute(new TodoApiMemoryImpl())
 

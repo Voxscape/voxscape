@@ -5,8 +5,7 @@ import io.circe.{Decoder, Encoder, Json, JsonObject}
 import org.postgresql.util.PGobject
 import scalikejdbc.Binders
 
-/**
-  * FIXME: this does not work
+/** FIXME: this does not work
   */
 trait JsonEncodable[O] { self: O =>
   def toPgObj: PGobject = ???

@@ -4,10 +4,10 @@ val scala2Version = "2.13.7"
 val scala3Version = "3.1.3" // TODO: try to compile with scala3 when our deps are good with 3
 
 // "bare" definition, applies to all projects
-ThisBuild / version := "current"
-ThisBuild / organization := "io.jokester.fullstack_playground"
+ThisBuild / version          := "current"
+ThisBuild / organization     := "io.jokester.fullstack_playground"
 ThisBuild / organizationName := "gh/jokester/fullstack-playground"
-ThisBuild / scalaVersion := scala2Version
+ThisBuild / scalaVersion     := scala2Version
 ThisBuild / scalacOptions ++= Seq("-Xlint")
 //ThisBuild / coverageEnabled := true // this is not the way to do it. should "sbt coverageOn" instead
 
@@ -39,7 +39,7 @@ lazy val statelessOpenapi = (project in file("stateless-openapi"))
 lazy val statedGraphqlOpenapi = (project in file("stated-graphql-openapi"))
   .settings(
     name := "stated-graphql-openapi",
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ quillDeps ++ testDeps ,
+    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ quillDeps ++ testDeps,
     Universal / target := file("target/universal"),
   )
   .enablePlugins(JavaAppPackaging)
@@ -69,8 +69,7 @@ enableQuillLog := {
   sys.props.put("quill.macro.log", false.toString)
   sys.props.put("quill.binds.log", true.toString)
 }
-(statedGraphqlOpenapi / Compile / run) := ((statedGraphqlOpenapi / Compile / run) dependsOn enableQuillLog)
-  .evaluated
+(statedGraphqlOpenapi / Compile / run) := ((statedGraphqlOpenapi / Compile / run) dependsOn enableQuillLog).evaluated
 
 {
   lazy val packageAllTxz = taskKey[Unit]("package all txz in parallel")

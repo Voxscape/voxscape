@@ -92,14 +92,12 @@ class MessageSinkHandler(val sinkManagerActor: ActorRef[SinkManagerActor.Command
   ): Flow[Message, TextMessage, NotUsed] = {
     val (outgoingActor, outgoingSrcRaw) = ActorSource
       .actorRef[SinkActor.Event](
-        completionMatcher = {
-          case SinkActor.Disconnect =>
-            logger.debug("completionMatcher")
+        completionMatcher = { case SinkActor.Disconnect =>
+          logger.debug("completionMatcher")
         },
-        failureMatcher = {
-          case SinkActor.DisconnectNow =>
-            logger.debug("failureMatcher")
-            new RuntimeException("killed")
+        failureMatcher = { case SinkActor.DisconnectNow =>
+          logger.debug("failureMatcher")
+          new RuntimeException("killed")
         },
         bufferSize = 16,
         overflowStrategy = OverflowStrategy.fail,

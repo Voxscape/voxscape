@@ -41,9 +41,10 @@ object TodoApi {
 
   case class CreateTodoIntent(title: String, desc: String)
 
-  /**
-    * @note must not "extends AnyVal" or there will be mismatch between OpenAPI / Scala
-    * @fixme this does not make "todos" required in OpenAPI
+  /** @note
+    *   must not "extends AnyVal" or there will be mismatch between OpenAPI / Scala
+    * @fixme
+    *   this does not make "todos" required in OpenAPI
     */
   case class TodoList(todos: Seq[Todo])
 

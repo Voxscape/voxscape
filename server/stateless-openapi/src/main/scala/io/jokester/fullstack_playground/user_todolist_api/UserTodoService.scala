@@ -7,8 +7,7 @@ import io.jokester.api.OpenAPIConvention
 
 import scala.concurrent.Future
 
-/**
-  * Auth-agnostic part
+/** Auth-agnostic part
   */
 trait UserTodoService {
   type Failable[A]  = Either[OpenAPIConvention.ApiError, A]

@@ -84,8 +84,8 @@ class TodoApiQuillImpl(
 
     try {
 
-      /**
-        * @note delete.returning() throws when the query returns NO or MULTI rows
+      /** @note
+        *   delete.returning() throws when the query returns NO or MULTI rows
         */
       val removed = run { findById(todoId).delete.returning(row => row) }
       logger.debug("remove returned {}", removed)
@@ -113,11 +113,12 @@ class TodoApiQuillImpl(
   private val clock = Clock.systemUTC()
   private def now   = OffsetDateTime.now(clock)
 
-  /**
-    * @note updateMeta for some reason doesn't work
-    * this WAS SUPPOSED TO allows us to lift(todo_value) , and exclude todoId columns in update
+  /** @note
+    *   updateMeta for some reason doesn't work this WAS SUPPOSED TO allows us to lift(todo_value) ,
+    *   and exclude todoId columns in update
     *
-    * @see https://getquill.io/#extending-quill-meta-dsl-update-meta
+    * @see
+    *   https://getquill.io/#extending-quill-meta-dsl-update-meta
     */
 //  private implicit val todoUpdateMeta: UpdateMeta[Todos] =
 //    updateMeta[Todos](_.todoId, _.updatedAt, _.createdAt)
