@@ -14,6 +14,7 @@ const nextConf = {
   serverRuntimeConfig: {
     // becomes process.env.SOME_CONSTANT : boolean
     serverStartedAt: new Date().toISOString(),
+    apiServerOrigin: 'http://127.0.0.1:8080'
   },
   /**
    * build-time configuration

@@ -1,5 +1,5 @@
 import { createApi, ClientBad } from '../../src/server/nextkit_server';
-import { serviceRuntimeConfig } from '../../src/config/runtime-config';
+import { serverRuntimeConfig } from '../../src/config/runtime-config';
 
 export default createApi({
   async POST({ ctx }) {
@@ -8,7 +8,7 @@ export default createApi({
   async GET({ ctx }) {
     return {
       ip: ctx.ip,
-      ...serviceRuntimeConfig,
+      ...serverRuntimeConfig,
     };
   },
 });
