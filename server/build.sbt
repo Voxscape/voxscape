@@ -22,7 +22,7 @@ lazy val scalaCommons = (project in file("scala-commons"))
 lazy val apiServer = (project in file("api-server")).settings(
   name := "api-server",
   Universal / target := file("target/universal"),
-  libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps ++ scalikeJdbcDeps,
+  libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps ++ redisDeps ++ oauthDeps,
   dependencyOverrides ++= manuallyResolvedDeps,
 ).dependsOn(scalaCommons)
   .enablePlugins(

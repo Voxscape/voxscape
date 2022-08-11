@@ -47,7 +47,15 @@ object Dependencies {
   ).map(_ % Versions.circe)
 
   lazy val authDeps: Seq[ModuleID] = Seq(
-    "org.springframework.security" % "spring-security-crypto" % Versions.spring,
+    "org.springframework.security" % "spring-security-crypto" % "5.7.2",
+  )
+
+  lazy val redisDeps: Seq[ModuleID] = Seq(
+    "redis.clients" % "jedis" % "4.2.3",
+  )
+
+  lazy val oauthDeps: Seq[ModuleID] = Seq(
+    "org.pac4j" % "pac4j-oauth" % "5.4.3"
   )
 
   lazy val tapirDeps: Seq[ModuleID] = Seq(
@@ -109,8 +117,6 @@ private object Versions {
   val scalikeJDBC = "3.5.0"
   val flyway      = "8.0.2"
 
-  // utils
-  val spring = "5.7.2"
 
   // testing
   val scalaTest               = "3.2.12"
