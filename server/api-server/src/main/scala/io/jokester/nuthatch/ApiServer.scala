@@ -3,14 +3,14 @@ package io.jokester.nuthatch
 import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.LazyLogging
 import io.jokester.akka.AkkaHttpServer
-import io.jokester.nuthatch.infra.RedisContext
+import io.jokester.nuthatch.infra.RedisFactory
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.Await
 
 object ApiServer extends App with LazyLogging {
   val config       = ConfigFactory.load()
-  val redisContext = RedisContext.fromConfig(config.getConfig("redis.default"))
+  val redisPool = RedisFactory.fromConfig(config.getConfig("redis.default"))
 
   def startServerAndWait(): Unit = {
 

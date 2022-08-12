@@ -9,8 +9,10 @@ import io.jokester.nuthatch.infra.RedisKeys
 import io.jokester.web.URIEncoding
 import redis.clients.jedis.Jedis
 
-class TwitterOAuth1Flow(c: Config, jedis: Jedis) extends LazyLogging {
-  def issueTwitterOAuthUrl(c: Config, redirectPath: Option[String]): String = {
+class TwitterOAuth1Flow(c: Config) extends LazyLogging {
+  def issueTwitterOAuthUrl(redirectPath: Option[String] = None)(implicit
+      jedis: Jedis,
+  ): String = {
 
     val redirectQuery =
       redirectPath.map(URIEncoding.encodeURIComponent).map(encoded => s"?redirect=$encoded")
@@ -21,9 +23,8 @@ class TwitterOAuth1Flow(c: Config, jedis: Jedis) extends LazyLogging {
       .callback(callbackUrl)
       .build(TwitterApi.instance())
 
-    /**
-     * "temporary credentials"
-     */
+    /** "temporary credentials"
+      */
     val reqToken = client.getRequestToken
     jedis.setex(RedisKeys.auth.twitterOAuth1Token(reqToken.getToken), 7200, reqToken.getTokenSecret)
     logger.debug("Twitter OAuth1 reqToken: {}", reqToken.getToken, reqToken.getTokenSecret)
@@ -31,11 +32,13 @@ class TwitterOAuth1Flow(c: Config, jedis: Jedis) extends LazyLogging {
     client.getAuthorizationUrl(reqToken)
   }
 
-  def exchangeToken(oauthToken: String, oauthVerifier: String): OAuth1AccessToken = {
+  def exchangeToken(oauthToken: String, oauthVerifier: String)(implicit
+      jedis: Jedis,
+  ): OAuth1AccessToken = {
     val oauthTokenSecret = Option(jedis.get(RedisKeys.auth.twitterOAuth1Token(oauthToken)))
     val reqToken = new OAuth1RequestToken(
       oauthToken,
-      oauthTokenSecret.getOrElse(new RuntimeException("invalid OAuth1 token")),
+      oauthTokenSecret.getOrElse(throw new RuntimeException("invalid OAuth1 token")),
     )
 
     new ServiceBuilder(
@@ -45,5 +48,4 @@ class TwitterOAuth1Flow(c: Config, jedis: Jedis) extends LazyLogging {
     ).build(TwitterApi.instance())
       .getAccessToken(reqToken, oauthVerifier)
   }
-
 }

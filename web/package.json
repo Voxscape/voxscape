@@ -23,6 +23,7 @@
     "@emotion/styled": "^11.10.0",
     "@jokester/ts-commonutil": "^0.3.8",
     "classnames": "^2.3.1",
+    "clsx": "^1.2.1",
     "date-fns": "^2.29.1",
     "debug": "^4.3.4",
     "fp-ts": "^2",

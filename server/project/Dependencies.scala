@@ -30,6 +30,11 @@ object Dependencies {
     "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1",
   )
 
+  lazy val catsDeps: Seq[ModuleID] = Seq(
+    "org.typelevel" %% "cats-core"   % "2.8.0",
+    "org.typelevel" %% "cats-effect" % "3.3.14",
+  )
+
   /** drop 2.13 when CrossVersion included multiple variants
     */
   lazy val incompatibleDependencies: Seq[DependencyBuilders.OrganizationArtifactName] = Seq(
@@ -87,13 +92,13 @@ object Dependencies {
     // pgsql / hikariCP
     "org.postgresql" % "postgresql" % Versions.postgresql,
     //      "com.zaxxer"     % "HikariCP"   % "4.0.1", // this resolves to bad version
-    "org.scalikejdbc" %% "scalikejdbc" % Versions.scalikeJDBC,
-    "org.scalikejdbc"     %% "scalikejdbc-test" % Versions.scalikeJDBC % Test,
+    "org.scalikejdbc" %% "scalikejdbc"      % Versions.scalikeJDBC,
+    "org.scalikejdbc" %% "scalikejdbc-test" % Versions.scalikeJDBC % Test,
   )
 
   lazy val testDeps: Seq[ModuleID] = Seq(
-    "org.scalatest"       %% "scalatest"        % Versions.scalaTest,
-    "com.github.javafaker" % "javafaker"        % "1.0.2",
+    "org.scalatest"       %% "scalatest" % Versions.scalaTest,
+    "com.github.javafaker" % "javafaker" % "1.0.2",
   ).map(_ % Test)
 
   /** @deprecated

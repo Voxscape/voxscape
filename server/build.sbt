@@ -11,6 +11,8 @@ ThisBuild / scalaVersion     := scala2Version
 ThisBuild / scalacOptions ++= Seq("-Xlint")
 //ThisBuild / coverageEnabled := true // this is not the way to do it. should "sbt coverageOn" instead
 
+addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")
+
 resolvers += "GCP maven mirror" at "https://maven-central-asia.storage-download.googleapis.com/repos/central/data/"
 
 lazy val scalaCommons = (project in file("scala-commons"))
@@ -23,8 +25,10 @@ lazy val scalaCommons = (project in file("scala-commons"))
 
 lazy val apiServer = (project in file("api-server"))
   .settings(
-    name               := "api-server",
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps ++ redisDeps ++ oauthDeps ++ testDeps,
+    name := "api-server",
+    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps ++ redisDeps ++ oauthDeps
+      ++ catsDeps
+      ++ testDeps,
     dependencyOverrides ++= manuallyResolvedDeps,
   )
   .dependsOn(scalaCommons)
