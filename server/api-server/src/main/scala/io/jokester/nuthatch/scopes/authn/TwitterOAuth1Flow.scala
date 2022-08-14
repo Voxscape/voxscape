@@ -7,18 +7,17 @@ import com.github.scribejava.core.model.{OAuth1AccessToken, OAuth1RequestToken}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import io.jokester.nuthatch.infra.{ApiContext, RedisKeys}
-import io.jokester.web.URIEncoding
+import org.http4s.Query
 import redis.clients.jedis.Jedis
 
 class TwitterOAuth1Flow(c: Config, apiContext: ApiContext) extends LazyLogging {
 
   def issueTwitterOAuthUrl(
-      redirectPath: Option[String] = None,
+      query: Query = Query.empty,
   ): IO[String] = {
 
-    val redirectQuery =
-      redirectPath.map(URIEncoding.encodeURIComponent).map(encoded => s"?redirect=$encoded")
-    val callbackUrl = c.getString("callback_url") + redirectQuery.getOrElse("")
+    val redirectQuery = if (query.isEmpty) "" else s"?${query.renderString}"
+    val callbackUrl   = c.getString("callback_url") + redirectQuery
 
     val client = new ServiceBuilder(c.getString("consumer_key"))
       .apiSecret(c.getString("consumer_secret"))

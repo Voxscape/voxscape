@@ -37,7 +37,6 @@ lazy val apiServer = (project in file("api-server"))
     name := "api-server",
     libraryDependencies ++= Seq(
       basicDeps,
-      akkaDeps,
       http4sDeps,
       circeDeps,
       tapirDeps,

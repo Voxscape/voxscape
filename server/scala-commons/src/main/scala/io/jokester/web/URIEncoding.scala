@@ -16,8 +16,8 @@ object URIEncoding {
     *   NOT exactly same behavior with JS version
     */
   def decodeURIComponent(encoded: String): String = {
-    val q = Query("_" -> Some(encoded))
-    q.toString.slice(2, 100000)
+    val q = Query.unsafeFromString(s"_=$encoded")
+    q.renderString.slice(2, 100000)
   }
 
 }
