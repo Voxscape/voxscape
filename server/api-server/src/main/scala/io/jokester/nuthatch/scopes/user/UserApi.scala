@@ -1,5 +1,6 @@
 package io.jokester.nuthatch.scopes.user
 
+import cats.effect.IO
 import io.jokester.api.OpenAPIConvention.{Failable, FailableP}
 import cats.syntax.either._
 import io.jokester.nuthatch.infra.ApiContext
@@ -17,19 +18,14 @@ object UserApi {
 
 }
 
-trait UserApi {
+class UserApi(val ctx: ApiContext) {
 
-  def ctx: ApiContext
+  def emailSignUp() = ???
 
-  def emailSignUp()
+  def twitterOAuth1: TwitterOAuth1Flow = new TwitterOAuth1Flow(ctx.getConfig("twitter_oauth1"), ctx)
 
-  def twitterOAuth1: TwitterOAuth1Flow = new TwitterOAuth1Flow(ctx.getConfig("twitter_oauth1"))
-
-  def requestTwitterOAuthLogin(): Failable[OAuth1LoginIntent] = {
-    val twitterUrl = ctx.useRedis({ implicit jedis =>
-      twitterOAuth1.issueTwitterOAuthUrl()
-    })
-    OAuth1LoginIntent(twitterUrl).asRight
+  def requestTwitterOAuthLogin(): IO[OAuth1LoginIntent] = {
+    twitterOAuth1.issueTwitterOAuthUrl().map(OAuth1LoginIntent)
   }
   def twitterLogin(cred: OAuth1TempCred): FailableP[UserProfile] = {
     ???
