@@ -18,7 +18,16 @@ resolvers += "GCP maven mirror" at "https://maven-central-asia.storage-download.
 lazy val scalaCommons = (project in file("scala-commons"))
   .settings(
     name := "scalaCommons",
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps ++ testDeps,
+    libraryDependencies ++= Seq(
+      basicDeps,
+      akkaDeps,
+      http4sDeps,
+      circeDeps,
+      tapirDeps,
+      authDeps,
+      quillDeps,
+      testDeps,
+    ).flatten,
     dependencyOverrides ++= manuallyResolvedDeps,
 //    excludeDependencies ++= incompatibleDependencies,
   )
@@ -26,9 +35,19 @@ lazy val scalaCommons = (project in file("scala-commons"))
 lazy val apiServer = (project in file("api-server"))
   .settings(
     name := "api-server",
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ authDeps ++ quillDeps ++ redisDeps ++ oauthDeps
-      ++ catsDeps
-      ++ testDeps,
+    libraryDependencies ++= Seq(
+      basicDeps,
+      akkaDeps,
+      http4sDeps,
+      circeDeps,
+      tapirDeps,
+      authDeps,
+      quillDeps,
+      redisDeps,
+      oauthDeps,
+      catsDeps,
+      testDeps,
+    ).flatten,
     dependencyOverrides ++= manuallyResolvedDeps,
   )
   .dependsOn(scalaCommons)

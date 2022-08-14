@@ -26,6 +26,13 @@ object Dependencies {
     "de.heikoseeberger" %% "akka-http-circe"    % "1.39.2",
   ).map(_.cross(CrossVersion.for3Use2_13))
 
+  lazy val http4sDeps: Seq[ModuleID] = Seq(
+    "org.http4s" %% "http4s-ember-server",
+    "org.http4s" %% "http4s-ember-client",
+    "org.http4s" %% "http4s-circe",
+    "org.http4s" %% "http4s-dsl",
+  ).map(_ % Versions.http4s)
+
   lazy val manuallyResolvedDeps: Seq[ModuleID] = Seq(
     "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1",
   )
@@ -116,6 +123,7 @@ private object Versions {
   val akka      = "2.6.19"
   val swaggerUi = "3.35.2"
   val upickle   = "1.2.2"
+  val http4s    = "1.0.0-M35"
 
   // rdbms
   val postgresql  = "42.3.6"
