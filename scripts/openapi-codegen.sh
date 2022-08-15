@@ -25,4 +25,4 @@ generate-web () {
 }
 
 npm i
-generate-web "$SPEC_DIR/nuthatch-openapi.yaml" "$CLIENT_ROOT/src/generated/openapi"
+generate-web "$SPEC_DIR/nuthatch-openapi.yaml" "$CLIENT_ROOT/src/api/openapi"

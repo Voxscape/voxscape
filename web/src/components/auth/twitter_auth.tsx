@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { TwitterOAuth1Button } from './auth_button';
 
 export const TwitterAuthForm = () => {
   const router = useRouter();
@@ -9,5 +10,9 @@ export const TwitterAuthForm = () => {
     return () => {};
   }, []);
 
-  return <div>TODO</div>;
+  return (
+    <div>
+      <TwitterOAuth1Button />
+    </div>
+  );
 };

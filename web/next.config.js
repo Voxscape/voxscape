@@ -1,6 +1,7 @@
 /* eslint @typescript-eslint/no-var-requires: 0 */
 const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require('next/constants');
 
+const NUTHATCH_API_ORIGIN = process.env.NUTHATCH_API_ORIGIN || 'http://127.0.0.1:3000';
 /**
  * when in problem, try to sync with {@link https://github.com/vercel/next.js/tree/canary/packages/create-next-app/templates/typescript}
  * @type {import('next').NextConfig}
@@ -14,7 +15,7 @@ const nextConf = {
   serverRuntimeConfig: {
     // becomes process.env.SOME_CONSTANT : boolean
     serverStartedAt: new Date().toISOString(),
-    apiServerOrigin: 'http://127.0.0.1:8080'
+    apiServerOrigin: NUTHATCH_API_ORIGIN,
   },
   /**
    * build-time configuration
@@ -47,6 +48,16 @@ const nextConf = {
   productionBrowserSourceMaps: true,
   reactStrictMode: true,
   future: {},
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/api/nuthatch_v1/:path*',
+          destination: `${NUTHATCH_API_ORIGIN}/api/nuthatch_v1/:path*`,
+        },
+      ],
+    };
+  },
 };
 
 module.exports = (phase, { defaultConfig }) => {
@@ -59,7 +70,7 @@ module.exports = (phase, { defaultConfig }) => {
     merged = require('@next/bundle-analyzer')({ enabled: true, openAnalyzer: false })(merged);
   }
 
-  merged = require('next-transpile-modules')(['lodash-es'])(merged);
+  merged = require('next-transpile-modules')(['lodash-es', '@jokester/ts-commonutil'])(merged);
 
   return merged;
 };
