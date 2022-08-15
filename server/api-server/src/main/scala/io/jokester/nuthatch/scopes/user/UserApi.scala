@@ -18,6 +18,8 @@ object UserApi {
 
 }
 
+object UserApiRoutes {}
+
 class UserApi(val ctx: ApiContext) {
 
   def emailSignUp() = ???

@@ -27,7 +27,7 @@ object RdbCodegenMain extends App with LazyLogging {
       override def nameParser: NameParser = SnakeCaseNames
     }
 
-  lazy val traitsCodeGen = {
+  val traitsCodeGen = {
     new ComposeableTraitsJdbcCodegen(
       simplePgDataSource,
       packagePrefix = destPkg,

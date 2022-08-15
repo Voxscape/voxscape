@@ -15,8 +15,10 @@ object ApiServer extends IOApp with LazyLogging {
     for (
       _quillCtx <- QuillFactory.createQuillContext(config.getConfig("database.default"));
       (pool, publicCtx) = _quillCtx;
-      _ <- IO.sleep(2.seconds);
-      _ <- IO { pool.close() }
+      redisInfo <- redisPool.use(jedis => IO { jedis.info() });
+      _         <- IO.println(redisInfo);
+      _         <- IO.sleep(2.seconds);
+      _         <- IO { pool.close() }
     ) yield ExitCode.Success
 
   }

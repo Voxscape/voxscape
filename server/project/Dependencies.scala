@@ -52,7 +52,7 @@ object Dependencies {
     "com.softwaremill.sttp.tapir" %% "tapir-json-circe",
     "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs",
     "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle",
-    "com.softwaremill.sttp.tapir" %% "tapir-akka-http-server",
+    "com.softwaremill.sttp.tapir" %% "tapir-http4s-server",
   ).map(_ % Versions.tapir)
 
   lazy val quillDeps: Seq[ModuleID] = Seq(
@@ -72,6 +72,10 @@ object Dependencies {
     "org.scalatest"       %% "scalatest" % Versions.scalaTest,
     "com.github.javafaker" % "javafaker" % "1.0.2",
   ).map(_ % Test)
+
+  lazy val incompatibleDependencies: Seq[DependencyBuilders.OrganizationArtifactName] = Seq(
+    "com.typesafe.scala-logging" % "scala-logging_2.13",
+  )
 }
 
 private object Versions {
@@ -84,7 +88,7 @@ private object Versions {
   val akka      = "2.6.19"
   val swaggerUi = "3.35.2"
   val upickle   = "1.2.2"
-  val http4s    = "1.0.0-M35"
+  val http4s    = "0.23.14"
 
   // rdbms
   val postgresql  = "42.3.6"

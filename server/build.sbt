@@ -1,12 +1,12 @@
 import Dependencies._
 
 val scala2Version = "2.13.7"
-val scala3Version = "3.1.3" // TODO: try to compile with scala3 when our deps are good with 3
+val scala3Version = "3.1.3" // FIXME: wait for quill-codegen to generate for scala3
 
 // "bare" definition, applies to all projects
 ThisBuild / version          := "current"
-ThisBuild / organization     := "io.jokester.fullstack_playground"
-ThisBuild / organizationName := "gh/jokester/fullstack-playground"
+ThisBuild / organization     := "io.jokester.nuthatch"
+ThisBuild / organizationName := "gh/jokester/nuthatch"
 ThisBuild / scalaVersion     := scala2Version
 ThisBuild / scalacOptions ++= Seq("-Xlint")
 //ThisBuild / coverageEnabled := true // this is not the way to do it. should "sbt coverageOn" instead
@@ -59,6 +59,7 @@ lazy val rdbCodegen = (project in file("rdb-codegen"))
   .settings(
     name := "rdb-codegen",
     libraryDependencies ++= basicDeps ++ quillCodegenDeps ++ circeDeps,
+//    excludeDependencies ++= incompatibleDependencies,
   )
 
 lazy val enableQuillLog = taskKey[Unit]("enable quill logs")
