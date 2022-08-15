@@ -2,7 +2,6 @@ package io.jokester.nuthatch.scopes.user
 
 import cats.effect.IO
 import io.jokester.api.OpenAPIConvention.{Failable, FailableP}
-import cats.syntax.either._
 import io.jokester.nuthatch.infra.ApiContext
 import io.jokester.nuthatch.scopes.authn.TwitterOAuth1Flow
 import io.jokester.nuthatch.scopes.user.UserApi.{OAuth1LoginIntent, OAuth1TempCred, UserProfile}
@@ -18,7 +17,9 @@ object UserApi {
 
 }
 
-object UserApiRoutes {}
+object UserApiRoutes {
+  val requestOA
+}
 
 class UserApi(val ctx: ApiContext) {
 
