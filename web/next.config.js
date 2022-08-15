@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/no-var-requires: 0 */
 const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require('next/constants');
 
-const NUTHATCH_API_ORIGIN = process.env.NUTHATCH_API_ORIGIN || 'http://127.0.0.1:3000';
+const NUTHATCH_API_ORIGIN = process.env.NUTHATCH_API_ORIGIN || 'http://127.0.0.1:8080';
 /**
  * when in problem, try to sync with {@link https://github.com/vercel/next.js/tree/canary/packages/create-next-app/templates/typescript}
  * @type {import('next').NextConfig}
