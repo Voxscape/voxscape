@@ -1,6 +1,5 @@
-openapi:
-	sbt "statelessOpenapi/run writeOpenApiSpec ../api-spec/todo-api.yaml"
-	sbt "statedGraphqlOpenapi/run writeOpenApiSpec ../api-spec/user-todo-api.yaml"
+apiSpec:
+	sbt "apiServer/run writeOpenApiSpec ../api-spec/nuthatch-openapi.yaml"
 
 migration:
 	sbt flywayMigrate
@@ -20,6 +19,3 @@ test:
 
 packageTxz:
 	sbt packageAllTxz
-
-image: packageTxz
-	docker build --tag=fullplay-playground-scala-servers --file=./Dockerfile ./target/universal/

@@ -2,8 +2,9 @@ package io.jokester.nuthatch
 
 import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.LazyLogging
-import io.jokester.nuthatch.infra.{QuillFactory, RedisFactory}
+import io.jokester.nuthatch.infra.{ApiBinder, QuillFactory, RedisFactory}
 import cats.effect.{ExitCode, IO, IOApp}
+import io.jokester.api.OpenAPIBuilder
 
 import java.nio.file.{Files, Path}
 import scala.concurrent.duration._
@@ -25,15 +26,19 @@ object ApiServer extends IOApp with LazyLogging {
   }
 
   def exportApiSpec(destFilename: String): IO[ExitCode] = IO {
-    Files.writeString(Path.of(destFilename), "TODO")
+    logger.info("Exporting OpenAPI spec to {}", destFilename)
+    Files.writeString(
+      Path.of(destFilename),
+      OpenAPIBuilder.buildOpenApiYaml(ApiBinder.apiList, "nuthatch", "0.1"),
+    )
     ExitCode.Success
   }
 
   def run(args: List[String]): IO[ExitCode] = {
     args match {
-      case List("writeApiSpec", dest) => exportApiSpec(dest)
-      case List.empty                 => runServer
-      case List("runServer")          => runServer
+      case List("writeOpenApiSpec", dest) => exportApiSpec(dest)
+      case List()                         => runServer
+      case List("runServer")              => runServer
       case _ => IO.println(s"command not recognized: $args").map(_ => ExitCode.Error)
     }
   }
