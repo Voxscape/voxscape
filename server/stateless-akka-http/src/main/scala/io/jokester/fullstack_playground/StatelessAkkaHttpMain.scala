@@ -4,7 +4,6 @@ import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.server.Directives.concat
 import akka.http.scaladsl.server.Directives._
 import com.typesafe.scalalogging.LazyLogging
-import io.jokester.akka.AkkaHttpServer
 import io.jokester.fullstack_playground.stateless_akka_http.actors.SinkManagerActor
 import io.jokester.fullstack_playground.stateless_akka_http.routes.SimpleRoutes
 import io.jokester.fullstack_playground.stateless_akka_http.routes.MessageSinkHandler

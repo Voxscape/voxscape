@@ -1,6 +1,5 @@
 package io.jokester.fullstack_playground.rdb_codegen
 
-import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import io.getquill.codegen.jdbc.{ComposeableTraitsJdbcCodegen, SimpleJdbcCodegen}
 import io.getquill.codegen.model._
@@ -16,7 +15,7 @@ object RdbCodegenMain extends App with LazyLogging {
 
   lazy val simplePgDataSource = {
     val pgDataSource = new PGSimpleDataSource()
-    val config       = LoadConfig("db.dev")
+    val config       = LoadConfig("database.dev")
     pgDataSource.setURL(
       config.getString("url"),
     )

@@ -14,42 +14,16 @@ object Dependencies {
     "com.google.guava" % "guava"  % "31.1-jre",
   )
 
-  lazy val akkaDeps: Seq[ModuleID] = Seq(
-    // akka
-    "com.typesafe.akka" %% "akka-stream"        % Versions.akka,
-    "com.typesafe.akka" %% "akka-actor-typed"   % Versions.akka,
-    "com.typesafe.akka" %% "akka-stream-typed"  % Versions.akka,
-    "com.typesafe.akka" %% "akka-slf4j"         % Versions.akka,
-    "com.typesafe.akka" %% "akka-cluster-typed" % Versions.akka,
-    "ch.megard"         %% "akka-http-cors"     % "1.1.3",
-    "com.typesafe.akka" %% "akka-http"          % Versions.akkaHttp,
-    "de.heikoseeberger" %% "akka-http-circe"    % "1.39.2",
-  ).map(_.cross(CrossVersion.for3Use2_13))
-
   lazy val http4sDeps: Seq[ModuleID] = Seq(
     "org.http4s" %% "http4s-ember-server",
     "org.http4s" %% "http4s-ember-client",
-    "org.http4s" %% "http4s-circe",
-    "org.http4s" %% "http4s-dsl",
+//    "org.http4s" %% "http4s-circe",
+//    "org.http4s" %% "http4s-dsl",
   ).map(_ % Versions.http4s)
-
-  lazy val manuallyResolvedDeps: Seq[ModuleID] = Seq(
-    "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1",
-  )
 
   lazy val catsDeps: Seq[ModuleID] = Seq(
     "org.typelevel" %% "cats-core"   % "2.8.0",
     "org.typelevel" %% "cats-effect" % "3.3.14",
-  )
-
-  /** drop 2.13 when CrossVersion included multiple variants
-    */
-  lazy val incompatibleDependencies: Seq[DependencyBuilders.OrganizationArtifactName] = Seq(
-    "com.typesafe.scala-logging" % "scala-logging_2.13",
-    "io.circe"                   % "circe-core_2.13",
-    "io.circe"                   % "circe-generic_2.13",
-    "io.circe"                   % "circe-parser_2.13",
-    "org.scala-lang.modules"     % "scala-java8-compat_2.13",
   )
 
   lazy val circeDeps: Seq[ModuleID] = Seq(
@@ -61,6 +35,8 @@ object Dependencies {
 
   lazy val authDeps: Seq[ModuleID] = Seq(
     "org.springframework.security" % "spring-security-crypto" % "5.7.2",
+    "com.github.scribejava"        % "scribejava-apis"        % "8.3.1",
+    "com.github.jwt-scala"        %% "jwt-circe"              % "9.0.6",
   )
 
   lazy val redisDeps: Seq[ModuleID] = Seq(
@@ -68,7 +44,6 @@ object Dependencies {
   )
 
   lazy val oauthDeps: Seq[ModuleID] = Seq(
-    "com.github.scribejava" % "scribejava-apis" % "8.3.1",
   )
 
   lazy val tapirDeps: Seq[ModuleID] = Seq(
@@ -79,8 +54,6 @@ object Dependencies {
     "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle",
     "com.softwaremill.sttp.tapir" %% "tapir-akka-http-server",
   ).map(_ % Versions.tapir)
-    .map(_.cross(CrossVersion.for3Use2_13)) :+ ("com.github.jwt-scala" %% "jwt-circe" % "9.0.6")
-  //      "com.softwaremill.sttp.client3" %% "core"            % Versions.sttp
 
   lazy val quillDeps: Seq[ModuleID] = Seq(
     "com.zaxxer"     % "HikariCP"   % "5.0.1",
@@ -95,22 +68,10 @@ object Dependencies {
     ("io.getquill" %% "quill-codegen-jdbc" % Versions.quill).cross(CrossVersion.for3Use2_13),
   )
 
-  lazy val scalikeJdbcDeps: Seq[ModuleID] = Seq(
-    // pgsql / hikariCP
-    "org.postgresql" % "postgresql" % Versions.postgresql,
-    //      "com.zaxxer"     % "HikariCP"   % "4.0.1", // this resolves to bad version
-    "org.scalikejdbc" %% "scalikejdbc"      % Versions.scalikeJDBC,
-    "org.scalikejdbc" %% "scalikejdbc-test" % Versions.scalikeJDBC % Test,
-  )
-
   lazy val testDeps: Seq[ModuleID] = Seq(
     "org.scalatest"       %% "scalatest" % Versions.scalaTest,
     "com.github.javafaker" % "javafaker" % "1.0.2",
   ).map(_ % Test)
-
-  /** @deprecated
-    */
-  lazy val buildDeps: Seq[ModuleID] = Seq.empty
 }
 
 private object Versions {

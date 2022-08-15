@@ -20,7 +20,6 @@ lazy val scalaCommons = (project in file("scala-commons"))
     name := "scalaCommons",
     libraryDependencies ++= Seq(
       basicDeps,
-      akkaDeps,
       http4sDeps,
       circeDeps,
       tapirDeps,
@@ -28,7 +27,7 @@ lazy val scalaCommons = (project in file("scala-commons"))
       quillDeps,
       testDeps,
     ).flatten,
-    dependencyOverrides ++= manuallyResolvedDeps,
+    dependencyOverrides ++= Seq.empty,
 //    excludeDependencies ++= incompatibleDependencies,
   )
 
@@ -47,7 +46,6 @@ lazy val apiServer = (project in file("api-server"))
       catsDeps,
       testDeps,
     ).flatten,
-    dependencyOverrides ++= manuallyResolvedDeps,
   )
   .dependsOn(scalaCommons)
   .enablePlugins(
@@ -57,47 +55,11 @@ lazy val apiServer = (project in file("api-server"))
   )
   .enablePlugins(JavaAppPackaging)
 
-lazy val statelessAkkaHttp = (project in file("stateless-akka-http"))
-  .settings(
-    name := "stateless-akka-http",
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps,
-    Universal / target := file("target/universal"),
-  )
-  .enablePlugins(JavaAppPackaging)
-  .dependsOn(scalaCommons)
-
-lazy val statelessOpenapi = (project in file("stateless-openapi"))
-  .settings(
-    name := "stateless-openapi",
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ testDeps ++ authDeps,
-    Universal / target := file("target/universal"),
-  )
-  .enablePlugins(JavaAppPackaging)
-  .dependsOn(statelessAkkaHttp, scalaCommons)
-
-lazy val statedGraphqlOpenapi = (project in file("stated-graphql-openapi"))
-  .settings(
-    name := "stated-graphql-openapi",
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ quillDeps ++ testDeps,
-    Universal / target := file("target/universal"),
-  )
-  .enablePlugins(JavaAppPackaging)
-  .dependsOn(statelessAkkaHttp, statelessOpenapi % "compile->compile;test->test;", scalaCommons)
-
 lazy val rdbCodegen = (project in file("rdb-codegen"))
   .settings(
     name := "rdb-codegen",
     libraryDependencies ++= basicDeps ++ quillCodegenDeps ++ circeDeps,
   )
-
-lazy val legacyScalikeJdbc = (project in file("stated-scalikejdbc"))
-  .settings(
-    name := "stated-scalikejdbc",
-    libraryDependencies ++= basicDeps ++ akkaDeps ++ circeDeps ++ tapirDeps ++ scalikeJdbcDeps ++ testDeps,
-  )
-  .enablePlugins(
-  )
-  .dependsOn(statelessAkkaHttp, statelessOpenapi % "compile->compile;test->test;", scalaCommons)
 
 lazy val enableQuillLog = taskKey[Unit]("enable quill logs")
 enableQuillLog := {
@@ -105,4 +67,3 @@ enableQuillLog := {
   sys.props.put("quill.macro.log", false.toString)
   sys.props.put("quill.binds.log", true.toString)
 }
-(statedGraphqlOpenapi / Compile / run) := ((statedGraphqlOpenapi / Compile / run) dependsOn enableQuillLog).evaluated

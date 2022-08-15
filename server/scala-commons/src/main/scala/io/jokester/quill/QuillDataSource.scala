@@ -6,7 +6,7 @@ import org.postgresql.ds.PGSimpleDataSource
 
 import javax.sql.DataSource
 
-trait QuillDataSource {
+object QuillDataSource {
 
   /** how table/columns are escaped in SQL
     */
@@ -19,40 +19,19 @@ trait QuillDataSource {
   /** @param url
     *   JDBC URL like "jdbc:postgresql://localhost:61432/playground" (user / password in URL gets
     *   ignored)
-    * @return
     */
-  protected def simplePgDataSource(
+  def simplePgDataSource(
       url: String,
-      user: String,
-      password: String,
   ): PGSimpleDataSource = {
     val pgDataSource = new PGSimpleDataSource()
     pgDataSource.setURL(url)
-    pgDataSource.setUser(user)
-    pgDataSource.setPassword(password)
     pgDataSource
-  }
-
-  protected def poolePgDataSource(
-      url: String,
-      user: String,
-      password: String,
-  ): HikariDataSource = {
-
-    hikariDataSource(
-      simplePgDataSource(
-        url,
-        user,
-        password,
-      ),
-    )
-
   }
 
   /** @note
     *   must be closed manually
     */
-  protected def hikariDataSource(wrapped: DataSource): HikariDataSource = {
+  def pooled(wrapped: DataSource): HikariDataSource = {
     val config = new HikariConfig()
     config.setDataSource(wrapped)
     //    config.setConnectionInitSql("set time zone 'UTC'")

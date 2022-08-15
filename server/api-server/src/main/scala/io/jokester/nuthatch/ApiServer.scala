@@ -1,22 +1,23 @@
 package io.jokester.nuthatch
 
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.LazyLogging
-import io.jokester.akka.AkkaHttpServer
-import io.jokester.nuthatch.infra.RedisFactory
+import io.jokester.nuthatch.infra.{QuillFactory, RedisFactory}
+import cats.effect.{IO, IOApp, ExitCode}
 
-import scala.concurrent.duration.Duration
-import scala.concurrent.Await
+import scala.concurrent.duration._
 
-object ApiServer extends App with LazyLogging {
-  val config       = ConfigFactory.load()
-  val redisPool = RedisFactory.fromConfig(config.getConfig("redis.default"))
+object ApiServer extends IOApp with LazyLogging {
+  val config: Config = ConfigFactory.load()
+  val redisPool      = RedisFactory.createResFromConfig(config.getConfig("redis.default"))
 
-  def startServerAndWait(): Unit = {
+  def run(args: List[String]): IO[ExitCode] = {
+    for (
+      _quillCtx <- QuillFactory.createQuillContext(config.getConfig("database.default"));
+      (pool, publicCtx) = _quillCtx;
+      _ <- IO.sleep(2.seconds);
+      _ <- IO { pool.close() }
+    ) yield ExitCode.Success
 
-    val serverDown = AkkaHttpServer.listenWithNewSystem(system => {
-      AkkaHttpServer.fallback404Route
-    })
-    Await.result(serverDown, Duration.Inf)
   }
 }
