@@ -6,6 +6,8 @@ import io.jokester.nuthatch.infra.{ApiBinder, QuillFactory, RedisFactory}
 import cats.effect.{ExitCode, IO, IOApp, Resource}
 import com.comcast.ip4s.IpLiteralSyntax
 import io.jokester.api.OpenAPIBuilder
+import io.jokester.cats_effect.TerminateCondition
+import io.jokester.http4s.VerboseLogger
 import org.http4s.HttpApp
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.{Router, Server}
@@ -17,7 +19,7 @@ object ApiServer extends IOApp with LazyLogging {
   val config: Config = ConfigFactory.load()
   val redisPool      = RedisFactory.createResFromConfig(config.getConfig("redis.default"))
 
-  val httpApp: HttpApp[IO] = Router[IO]().orNotFound
+  val httpApp: HttpApp[IO] = Router[IO]("/" -> VerboseLogger.notFound).orNotFound
 
   val apiServer: Resource[IO, Server] = EmberServerBuilder
     .default[IO]
@@ -32,7 +34,7 @@ object ApiServer extends IOApp with LazyLogging {
       (pool, publicCtx) = _quillCtx;
       redisInfo  <- redisPool.use(jedis => IO { jedis.info() });
       serverPair <- apiServer.allocated;
-      _          <- IO.sleep(3600.seconds);
+      _          <- IO.race(TerminateCondition.enterPressed, IO.sleep(600.second));
       _          <- serverPair._2;
       _          <- IO { logger.info("{} stopped", serverPair._1) };
       _          <- IO { pool.close() }
