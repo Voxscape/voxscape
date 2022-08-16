@@ -34,6 +34,10 @@ object RedisFactory extends LazyLogging {
       (
         jedis,
         { (exitCode: ExitCase) =>
+
+          /**
+           * FIXME: every instance returned twice?
+           */
           logger.debug("returning jedis: {} / {}", jedis, exitCode)
           IO(exitCode match {
             case ExitCase.Succeeded => jedisPool.returnResource(jedis)

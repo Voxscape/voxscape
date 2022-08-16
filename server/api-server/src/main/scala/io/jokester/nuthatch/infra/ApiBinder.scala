@@ -25,13 +25,10 @@ object ApiBinder extends LazyLogging {
       List(
         // OAuth1
         AuthenticationApi.OAuth1.requestOAuthAuth.serverLogic {
-          case "twitter" =>
+          case "twitter_oauth1" =>
             authn.requestTwitterOAuthLogin.attempt.map(launderServerError)
           case _ => IO.raiseError(BadRequest("unsupported provider"))
         },
-        AuthenticationApi.OAuth1.verifyOAuth1Auth.serverLogicError[IO](_ =>
-          IO(NotImplemented("not implemented")),
-        ),
         // Password
       ),
     )
@@ -39,12 +36,11 @@ object ApiBinder extends LazyLogging {
   }
 
   def launderServerError[A](e: Either[Throwable, A]): Either[ApiError, A] = {
-    e match {
-      case Left(t: ApiError) => t.asLeft
-      case Left(t) =>
+    e.leftMap({
+      case t: ApiError => t
+      case t =>
         logger.info("server error", t)
-        Left(ServerError("error happened"))
-      case Right(r) => e.asInstanceOf
-    }
+        ServerError("error happened")
+    })
   }
 }

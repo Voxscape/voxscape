@@ -10,7 +10,10 @@ import sttp.tapir.{EndpointOutput, oneOf, oneOfVariant}
 import scala.concurrent.Future
 
 object OpenAPIConvention {
-  sealed trait ApiError extends Throwable
+  sealed trait ApiError extends Throwable {
+    def message: String
+    override def getMessage: String = message
+  }
 
   // http 400
   case class BadRequest(message: String) extends ApiError
