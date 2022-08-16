@@ -30,7 +30,8 @@ class TwitterOAuth1Flow(c: Config, ctx: ApiContext) extends LazyLogging {
         */
       reqToken <- IO.blocking(client.getRequestToken);
       _        <- saveToken(reqToken);
-      authUrl  <- IO.blocking(client.getAuthorizationUrl(reqToken))
+      authUrl  <- IO.blocking(client.getAuthorizationUrl(reqToken));
+      _        <- IO { logger.debug("issued twitter oauth URL: {}", authUrl) }
     ) yield authUrl
   }
 

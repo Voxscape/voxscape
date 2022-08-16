@@ -2,6 +2,7 @@ package io.jokester.nuthatch.scopes.authn
 
 import io.circe.generic.auto._
 import io.jokester.api.OpenAPIConvention
+import io.jokester.api.OpenAPIConvention.ApiError
 import sttp.tapir.generic.auto._
 import sttp.tapir.json.circe.jsonBody
 import sttp.tapir.{Endpoint, endpoint, path}

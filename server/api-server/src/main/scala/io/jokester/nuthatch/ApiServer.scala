@@ -25,7 +25,7 @@ object ApiServer extends IOApp with LazyLogging {
     val authn      = new AuthenticationService(apiContext);
 
     val routes               = ApiBinder.buildRoutes(authn)
-    val httpApp: HttpApp[IO] = Router[IO]("/" -> routes, "/" -> VerboseLogger.notFound).orNotFound
+    val httpApp: HttpApp[IO] = Router[IO]("/api/nuthatch_v1" -> routes, "/" -> VerboseLogger.notFound).orNotFound
 
     val apiServer: Resource[IO, Server] = EmberServerBuilder
       .default[IO]
