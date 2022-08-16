@@ -8,7 +8,7 @@ import redis.clients.jedis.{Jedis, JedisPool}
 import scala.util.{Success, Using}
 
 object RedisFactory extends LazyLogging {
-  def fromConfig(c: Config): JedisPool = {
+  def poolFromConfig(c: Config): JedisPool = {
     if (c.isResolved) {
       val host = c.getString("host")
       val port = c.getInt("port")
@@ -26,14 +26,15 @@ object RedisFactory extends LazyLogging {
     throw new RuntimeException("Failed connecting to Redis")
   }
 
-  def createResFromConfig(c: Config): Resource[IO, Jedis] = {
-    val jedisPool = fromConfig(c)
+  def wrapJedisPool(jedisPool: JedisPool): Resource[IO, Jedis] = {
     Resource.applyCase(IO {
       val jedis = jedisPool.getResource
+      logger.debug("borrowed jedis: {} / {}", jedis)
 
       (
         jedis,
         { (exitCode: ExitCase) =>
+          logger.debug("returning jedis: {} / {}", jedis, exitCode)
           IO(exitCode match {
             case ExitCase.Succeeded => jedisPool.returnResource(jedis)
             case _                  => jedisPool.returnBrokenResource(jedis)

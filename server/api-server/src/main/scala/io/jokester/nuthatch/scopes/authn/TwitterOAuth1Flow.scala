@@ -1,6 +1,6 @@
 package io.jokester.nuthatch.scopes.authn
 
-import cats.effect.IO
+import cats.effect.{IO, Resource}
 import com.github.scribejava.apis.TwitterApi
 import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.model.{OAuth1AccessToken, OAuth1RequestToken}
@@ -10,7 +10,8 @@ import io.jokester.nuthatch.infra.{ApiContext, RedisKeys}
 import org.http4s.Query
 import redis.clients.jedis.Jedis
 
-class TwitterOAuth1Flow(c: Config, apiContext: ApiContext) extends LazyLogging {
+class TwitterOAuth1Flow(c: Config, ctx: ApiContext) extends LazyLogging {
+  private def redis: Resource[IO, Jedis] = ctx.redis
 
   def issueTwitterOAuthUrl(
       query: Query = Query.empty,
@@ -33,7 +34,7 @@ class TwitterOAuth1Flow(c: Config, apiContext: ApiContext) extends LazyLogging {
     ) yield authUrl
   }
 
-  private def saveToken(reqToken: OAuth1RequestToken): IO[Unit] = apiContext.redis.use(jedis =>
+  private def saveToken(reqToken: OAuth1RequestToken): IO[Unit] = redis.use(jedis =>
     IO.blocking {
       jedis.setex(
         RedisKeys.auth.twitterOAuth1Token(reqToken.getToken),
@@ -44,7 +45,7 @@ class TwitterOAuth1Flow(c: Config, apiContext: ApiContext) extends LazyLogging {
   )
 
   private def loadToken(oauthToken: String): IO[OAuth1RequestToken] = {
-    apiContext.redis.use(jedis =>
+    redis.use(jedis =>
       IO.blocking {
         val oauthTokenSecret = Option(jedis.get(RedisKeys.auth.twitterOAuth1Token(oauthToken)))
         new OAuth1RequestToken(

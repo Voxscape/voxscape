@@ -2,12 +2,13 @@ package io.jokester.nuthatch
 
 import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.LazyLogging
-import io.jokester.nuthatch.infra.{ApiBinder, QuillFactory, RedisFactory}
+import io.jokester.nuthatch.infra.{ApiBinder, ApiContext, QuillFactory, RedisFactory}
 import cats.effect.{ExitCode, IO, IOApp, Resource}
 import com.comcast.ip4s.IpLiteralSyntax
 import io.jokester.api.OpenAPIBuilder
 import io.jokester.cats_effect.TerminateCondition
 import io.jokester.http4s.VerboseLogger
+import io.jokester.nuthatch.scopes.authn.AuthenticationService
 import org.http4s.HttpApp
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.{Router, Server}
@@ -17,27 +18,30 @@ import scala.concurrent.duration._
 
 object ApiServer extends IOApp with LazyLogging {
   val config: Config = ConfigFactory.load()
-  val redisPool      = RedisFactory.createResFromConfig(config.getConfig("redis.default"))
 
-  val httpApp: HttpApp[IO] = Router[IO]("/" -> VerboseLogger.notFound).orNotFound
-
-  val apiServer: Resource[IO, Server] = EmberServerBuilder
-    .default[IO]
-    .withHost(ipv4"0.0.0.0")
-    .withPort(port"8080")
-    .withHttpApp(httpApp)
-    .build
   def runServer: IO[ExitCode] = {
+    val rootConfig = ConfigFactory.load()
+    val apiContext = new ApiContext(rootConfig)
+    val authn      = new AuthenticationService(apiContext);
+
+    val routes               = ApiBinder.buildRoutes(authn)
+    val httpApp: HttpApp[IO] = Router[IO]("/" -> routes, "/" -> VerboseLogger.notFound).orNotFound
+
+    val apiServer: Resource[IO, Server] = EmberServerBuilder
+      .default[IO]
+      .withHost(ipv4"0.0.0.0")
+      .withPort(port"8080")
+      .withHttpApp(httpApp)
+      .build
 
     for (
-      _quillCtx <- QuillFactory.createQuillContext(config.getConfig("database.default"));
-      (pool, publicCtx) = _quillCtx;
-      redisInfo  <- redisPool.use(jedis => IO { jedis.info() });
+      redisInfo  <- apiContext.redis.use(jedis => IO { jedis.info() });
       serverPair <- apiServer.allocated;
       _          <- IO.race(TerminateCondition.enterPressed, IO.sleep(600.second));
       _          <- serverPair._2;
       _          <- IO { logger.info("{} stopped", serverPair._1) };
-      _          <- IO { pool.close() }
+      _          <- apiContext.close();
+      _          <- IO { logger.info("shutting down") }
     ) yield ExitCode.Success
   }
 

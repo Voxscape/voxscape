@@ -1,7 +1,11 @@
 package io.jokester.nuthatch.infra
 
-import io.jokester.nuthatch.scopes.authn.AuthenticationApi
+import cats.effect.IO
+import io.jokester.nuthatch.scopes.authn.{AuthenticationApi, AuthenticationService}
+import org.http4s.HttpRoutes
 import sttp.tapir.Endpoint
+import sttp.tapir.server.http4s.Http4sServerInterpreter
+import io.jokester.api.OpenAPIConvention._
 
 object ApiBinder {
 
@@ -12,4 +16,23 @@ object ApiBinder {
     AuthenticationApi.Password.requestPasswordSignUp,
   )
 
+  def buildRoutes(authn: AuthenticationService): HttpRoutes[IO] = {
+    val interpreter = Http4sServerInterpreter[IO]()
+
+    interpreter.toRoutes(
+      List(
+        // OAuth1
+        AuthenticationApi.OAuth1.requestOAuthAuth.serverLogicSuccess {
+          case "twitter" =>
+            authn.requestTwitterOAuthLogin
+          case _ => IO.raiseError(BadRequest("unsupported provider"))
+        },
+        AuthenticationApi.OAuth1.verifyOAuth1Auth.serverLogicError[IO](_ =>
+          IO(NotImplemented("not implemented")),
+        ),
+        // Password
+      ),
+    )
+
+  }
 }

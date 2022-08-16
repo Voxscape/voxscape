@@ -4,6 +4,7 @@ import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 import io.getquill.SnakeCase
 import org.postgresql.ds.PGSimpleDataSource
 
+import java.io.Closeable
 import javax.sql.DataSource
 
 object QuillDataSource {
@@ -22,8 +23,10 @@ object QuillDataSource {
     */
   def simplePgDataSource(
       url: String,
-  ): PGSimpleDataSource = {
-    val pgDataSource = new PGSimpleDataSource()
+  ): PGSimpleDataSource with Closeable = {
+    val pgDataSource = new PGSimpleDataSource() with Closeable {
+      override def close(): Unit = {}
+    }
     pgDataSource.setURL(url)
     pgDataSource
   }
