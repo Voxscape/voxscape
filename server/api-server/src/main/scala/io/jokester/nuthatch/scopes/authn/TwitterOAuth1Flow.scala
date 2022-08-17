@@ -57,9 +57,7 @@ class TwitterOAuth1Flow(c: Config, ctx: ApiContext) extends LazyLogging {
     )
   }
 
-  def exchangeToken(oauthToken: String, oauthVerifier: String)(implicit
-      jedis: Jedis,
-  ): IO[OAuth1AccessToken] = {
+  def exchangeToken(oauthToken: String, oauthVerifier: String): IO[OAuth1AccessToken] = {
     for (
       reqToken <- loadToken(oauthToken);
       got <- IO.blocking(
