@@ -5,6 +5,9 @@ SHELL := /bin/bash
 sleep:
 	@printf '\ek[SLEEP]\e\\' && sleep 1000
 
+apiClient: apiSpec
+	cd scripts && ./openapi-codegen.sh
+
 apiSpec:
 	cd server && sbt "apiServer/run writeOpenApiSpec ../api-spec/nuthatch-openapi.yaml"
 
