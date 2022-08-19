@@ -9,7 +9,7 @@ import io.jokester.api.OpenAPIBuilder
 import io.jokester.cats_effect.TerminateCondition
 import io.jokester.http4s.VerboseLogger
 import io.jokester.nuthatch.scopes.authn.AuthenticationService
-import org.http4s.HttpApp
+import org.http4s.{HttpApp, HttpRoutes, Request}
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.{Router, Server}
 
@@ -24,8 +24,11 @@ object ApiServer extends IOApp with LazyLogging {
     val apiContext = new ApiContext(rootConfig)
     val authn      = new AuthenticationService(apiContext);
 
-    val routes               = ApiBinder.buildRoutes(authn)
-    val httpApp: HttpApp[IO] = Router[IO]("/api/nuthatch_v1" -> routes, "/" -> VerboseLogger.notFound).orNotFound
+    val apiRoutes: HttpRoutes[IO] =
+      ApiBinder.buildRoutes(authn).tapWith(VerboseLogger.logReqRes[IO])
+
+    val httpApp: HttpApp[IO] =
+      Router[IO]("/api/nuthatch_v1" -> apiRoutes, "/" -> VerboseLogger.notFound).orNotFound
 
     val apiServer: Resource[IO, Server] = EmberServerBuilder
       .default[IO]
