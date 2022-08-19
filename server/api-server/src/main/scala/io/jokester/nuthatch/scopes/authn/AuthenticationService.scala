@@ -1,6 +1,7 @@
 package io.jokester.nuthatch.scopes.authn
 
 import cats.effect.IO
+import com.google.gson.Gson
 import com.typesafe.scalalogging.LazyLogging
 import io.jokester.nuthatch.infra.ApiContext
 import io.jokester.nuthatch.quill.generated.public.UserOauth1Token
@@ -21,7 +22,7 @@ private[authn] trait OAuth1Authn { self: AuthenticationService =>
   ): IO[(AuthenticationApi.CurrentUser, UserOauth1Token)] = {
     for (
       token <- twitterOAuth1.exchangeToken(cred.oauthToken, cred.oauthVerifier);
-      _     <- IO { logger.debug("got token: {}", token) }
+      _     <- IO { logger.debug("got token: {}", new Gson().toJson(token)) }
     ) yield ???
   }
 }

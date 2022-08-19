@@ -27,14 +27,17 @@ object AuthenticationApi {
   object OAuth1 {
     case class OAuth1LoginIntent(externalUrl: String)
 
-    val startOAuth1Auth
-        : Endpoint[Unit, String, OpenAPIConvention.ApiError, OAuth1LoginIntent, Any] =
-      basePath.post.in("oauth1" / "start").in(path[String]("provider")).out(jsonBody[OAuth1LoginIntent])
+    val startAuth: Endpoint[Unit, String, OpenAPIConvention.ApiError, OAuth1LoginIntent, Any] =
+      basePath.post
+        .in("oauth1" / "start")
+        .in(path[String]("provider"))
+        .out(jsonBody[OAuth1LoginIntent])
+        .name("authnOauth1StartAuth")
 
     case class OAuth1TempCred(provider: String, oauthToken: String, oauthVerifier: String)
-    val finishOAuth1Auth
-        : Endpoint[Unit, OAuth1TempCred, OpenAPIConvention.ApiError, CurrentUser, Any] =
+    val finishAuth: Endpoint[Unit, OAuth1TempCred, OpenAPIConvention.ApiError, CurrentUser, Any] =
       basePath.post
+        .name("authnOauth1FinishAuth")
         .in("oauth1" / "finish")
         .in(jsonBody[OAuth1TempCred])
         .out(jsonBody[CurrentUser])

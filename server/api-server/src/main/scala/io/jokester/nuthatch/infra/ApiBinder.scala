@@ -12,8 +12,8 @@ import io.jokester.api.OpenAPIConvention._
 object ApiBinder extends LazyLogging {
 
   def apiList: Seq[Endpoint[_, _, _, _, _]] = Seq(
-    AuthenticationApi.OAuth1.startOAuth1Auth,
-    AuthenticationApi.OAuth1.finishOAuth1Auth,
+    AuthenticationApi.OAuth1.startAuth,
+    AuthenticationApi.OAuth1.finishAuth,
     AuthenticationApi.Password.requestPasswordLogin,
     AuthenticationApi.Password.requestPasswordSignUp,
   )
@@ -24,12 +24,12 @@ object ApiBinder extends LazyLogging {
     interpreter.toRoutes(
       List(
         // OAuth1
-        AuthenticationApi.OAuth1.startOAuth1Auth.serverLogic {
+        AuthenticationApi.OAuth1.startAuth.serverLogic {
           case Const.OAuth1Provider.twitter =>
             authn.startOAuth1Twitter.attempt.map(launderServerError)
           case _ => IO.raiseError(BadRequest("unsupported provider"))
         },
-        AuthenticationApi.OAuth1.finishOAuth1Auth.serverLogic { req =>
+        AuthenticationApi.OAuth1.finishAuth.serverLogic { req =>
           {
             req.provider match {
               case Const.OAuth1Provider.twitter =>

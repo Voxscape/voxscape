@@ -12,6 +12,8 @@ object Dependencies {
     // config
     "com.typesafe"     % "config" % "1.4.2",
     "com.google.guava" % "guava"  % "31.1-jre",
+//    "org.apache.commons" % "commons-lang3" % "3.12.0",
+    "com.google.code.gson" % "gson" % "2.9.1",
   )
 
   lazy val http4sDeps: Seq[ModuleID] = Seq(

@@ -52,7 +52,10 @@ object OpenAPIConvention {
         StatusCode.NotImplemented,
         jsonBody[NotImplemented].description("not implemented"),
       ),
-      oneOfVariant(jsonBody[ServerError].description("server's bad in general")),
+      oneOfVariant(
+        StatusCode.InternalServerError,
+        jsonBody[ServerError].description("server's bad in general"),
+      ),
     )
 
   type ApiResultSync[T] = Either[ApiError, T]
