@@ -12,8 +12,12 @@ apiSpec:
 	cd server && sbt "apiServer/run writeOpenApiSpec ../api-spec/nuthatch-openapi.yaml"
 
 web:
-	@printf '\ek[npm run dev]\e\\'
+	@printf '\ek[web]next dev\e\\'
 	cd web && npm i && exec npm run dev
+
+webTsc:
+	@printf '\ek[web]tsc watch\e\\'
+	cd web && exec npm run typecheck:watch
 
 devDeps:
 	@printf '\ek[docker-compose up]\e\\'
