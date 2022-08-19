@@ -17,6 +17,9 @@ import {
   BadRequest,
   BadRequestFromJSON,
   BadRequestToJSON,
+  CurrentUser,
+  CurrentUserFromJSON,
+  CurrentUserToJSON,
   EmailLoginCred,
   EmailLoginCredFromJSON,
   EmailLoginCredToJSON,
@@ -41,17 +44,14 @@ import {
   Unauthorized,
   UnauthorizedFromJSON,
   UnauthorizedToJSON,
-  UserProfile,
-  UserProfileFromJSON,
-  UserProfileToJSON,
 } from '../models';
 
-export interface PostAuthnOauth1ProviderRequest {
-  provider: string;
+export interface AuthnOauth1FinishAuthRequest {
+  oAuth1TempCred: OAuth1TempCred;
 }
 
-export interface PostAuthnOauth1VerifyRequest {
-  oAuth1TempCred: OAuth1TempCred;
+export interface AuthnOauth1StartAuthRequest {
+  provider: string;
 }
 
 export interface PostAuthnPasswordRequest {
@@ -64,14 +64,57 @@ export interface PostAuthnPasswordRequest {
 export class DefaultApi extends runtime.BaseAPI {
   /**
    */
-  async postAuthnOauth1ProviderRaw(
-    requestParameters: PostAuthnOauth1ProviderRequest,
+  async authnOauth1FinishAuthRaw(
+    requestParameters: AuthnOauth1FinishAuthRequest,
+    initOverrides?: RequestInit | runtime.InitOverideFunction,
+  ): Promise<runtime.ApiResponse<CurrentUser>> {
+    if (requestParameters.oAuth1TempCred === null || requestParameters.oAuth1TempCred === undefined) {
+      throw new runtime.RequiredError(
+        'oAuth1TempCred',
+        'Required parameter requestParameters.oAuth1TempCred was null or undefined when calling authnOauth1FinishAuth.',
+      );
+    }
+
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    headerParameters['Content-Type'] = 'application/json';
+
+    const response = await this.request(
+      {
+        path: `/authn/oauth1/finish`,
+        method: 'POST',
+        headers: headerParameters,
+        query: queryParameters,
+        body: OAuth1TempCredToJSON(requestParameters.oAuth1TempCred),
+      },
+      initOverrides,
+    );
+
+    return new runtime.JSONApiResponse(response, (jsonValue) => CurrentUserFromJSON(jsonValue));
+  }
+
+  /**
+   */
+  async authnOauth1FinishAuth(
+    requestParameters: AuthnOauth1FinishAuthRequest,
+    initOverrides?: RequestInit | runtime.InitOverideFunction,
+  ): Promise<CurrentUser> {
+    const response = await this.authnOauth1FinishAuthRaw(requestParameters, initOverrides);
+    return await response.value();
+  }
+
+  /**
+   */
+  async authnOauth1StartAuthRaw(
+    requestParameters: AuthnOauth1StartAuthRequest,
     initOverrides?: RequestInit | runtime.InitOverideFunction,
   ): Promise<runtime.ApiResponse<OAuth1LoginIntent>> {
     if (requestParameters.provider === null || requestParameters.provider === undefined) {
       throw new runtime.RequiredError(
         'provider',
-        'Required parameter requestParameters.provider was null or undefined when calling postAuthnOauth1Provider.',
+        'Required parameter requestParameters.provider was null or undefined when calling authnOauth1StartAuth.',
       );
     }
 
@@ -81,7 +124,7 @@ export class DefaultApi extends runtime.BaseAPI {
 
     const response = await this.request(
       {
-        path: `/authn/oauth1/{provider}`.replace(
+        path: `/authn/oauth1/start/{provider}`.replace(
           `{${'provider'}}`,
           encodeURIComponent(String(requestParameters.provider)),
         ),
@@ -97,54 +140,11 @@ export class DefaultApi extends runtime.BaseAPI {
 
   /**
    */
-  async postAuthnOauth1Provider(
-    requestParameters: PostAuthnOauth1ProviderRequest,
+  async authnOauth1StartAuth(
+    requestParameters: AuthnOauth1StartAuthRequest,
     initOverrides?: RequestInit | runtime.InitOverideFunction,
   ): Promise<OAuth1LoginIntent> {
-    const response = await this.postAuthnOauth1ProviderRaw(requestParameters, initOverrides);
-    return await response.value();
-  }
-
-  /**
-   */
-  async postAuthnOauth1VerifyRaw(
-    requestParameters: PostAuthnOauth1VerifyRequest,
-    initOverrides?: RequestInit | runtime.InitOverideFunction,
-  ): Promise<runtime.ApiResponse<UserProfile>> {
-    if (requestParameters.oAuth1TempCred === null || requestParameters.oAuth1TempCred === undefined) {
-      throw new runtime.RequiredError(
-        'oAuth1TempCred',
-        'Required parameter requestParameters.oAuth1TempCred was null or undefined when calling postAuthnOauth1Verify.',
-      );
-    }
-
-    const queryParameters: any = {};
-
-    const headerParameters: runtime.HTTPHeaders = {};
-
-    headerParameters['Content-Type'] = 'application/json';
-
-    const response = await this.request(
-      {
-        path: `/authn/oauth1/verify`,
-        method: 'POST',
-        headers: headerParameters,
-        query: queryParameters,
-        body: OAuth1TempCredToJSON(requestParameters.oAuth1TempCred),
-      },
-      initOverrides,
-    );
-
-    return new runtime.JSONApiResponse(response, (jsonValue) => UserProfileFromJSON(jsonValue));
-  }
-
-  /**
-   */
-  async postAuthnOauth1Verify(
-    requestParameters: PostAuthnOauth1VerifyRequest,
-    initOverrides?: RequestInit | runtime.InitOverideFunction,
-  ): Promise<UserProfile> {
-    const response = await this.postAuthnOauth1VerifyRaw(requestParameters, initOverrides);
+    const response = await this.authnOauth1StartAuthRaw(requestParameters, initOverrides);
     return await response.value();
   }
 
@@ -153,7 +153,7 @@ export class DefaultApi extends runtime.BaseAPI {
   async postAuthnPasswordRaw(
     requestParameters: PostAuthnPasswordRequest,
     initOverrides?: RequestInit | runtime.InitOverideFunction,
-  ): Promise<runtime.ApiResponse<UserProfile>> {
+  ): Promise<runtime.ApiResponse<CurrentUser>> {
     if (requestParameters.emailLoginCred === null || requestParameters.emailLoginCred === undefined) {
       throw new runtime.RequiredError(
         'emailLoginCred',
@@ -178,7 +178,7 @@ export class DefaultApi extends runtime.BaseAPI {
       initOverrides,
     );
 
-    return new runtime.JSONApiResponse(response, (jsonValue) => UserProfileFromJSON(jsonValue));
+    return new runtime.JSONApiResponse(response, (jsonValue) => CurrentUserFromJSON(jsonValue));
   }
 
   /**
@@ -186,7 +186,7 @@ export class DefaultApi extends runtime.BaseAPI {
   async postAuthnPassword(
     requestParameters: PostAuthnPasswordRequest,
     initOverrides?: RequestInit | runtime.InitOverideFunction,
-  ): Promise<UserProfile> {
+  ): Promise<CurrentUser> {
     const response = await this.postAuthnPasswordRaw(requestParameters, initOverrides);
     return await response.value();
   }

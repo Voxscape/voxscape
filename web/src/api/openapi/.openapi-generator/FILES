@@ -3,6 +3,7 @@ apis/DefaultApi.ts
 apis/index.ts
 index.ts
 models/BadRequest.ts
+models/CurrentUser.ts
 models/EmailLoginCred.ts
 models/EmailSignUpRequest.ts
 models/Forbidden.ts

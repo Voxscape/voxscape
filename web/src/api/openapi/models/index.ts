@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export * from './BadRequest';
+export * from './CurrentUser';
 export * from './EmailLoginCred';
 export * from './EmailSignUpRequest';
 export * from './Forbidden';

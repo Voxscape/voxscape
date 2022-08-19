@@ -24,13 +24,7 @@ export interface UserProfile {
    * @type {string}
    * @memberof UserProfile
    */
-  email?: string;
-  /**
-   *
-   * @type {boolean}
-   * @memberof UserProfile
-   */
-  isActivated: boolean;
+  twitterUsername?: string;
 }
 
 export function UserProfileFromJSON(json: any): UserProfile {
@@ -42,8 +36,7 @@ export function UserProfileFromJSONTyped(json: any, ignoreDiscriminator: boolean
     return json;
   }
   return {
-    email: !exists(json, 'email') ? undefined : json['email'],
-    isActivated: json['isActivated'],
+    twitterUsername: !exists(json, 'twitterUsername') ? undefined : json['twitterUsername'],
   };
 }
 
@@ -55,7 +48,6 @@ export function UserProfileToJSON(value?: UserProfile | null): any {
     return null;
   }
   return {
-    email: value.email,
-    isActivated: value.isActivated,
+    twitterUsername: value.twitterUsername,
   };
 }

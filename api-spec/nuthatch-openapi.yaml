@@ -3,9 +3,9 @@ info:
   title: nuthatch
   version: '0.1'
 paths:
-  /authn/oauth1/{provider}:
+  /authn/oauth1/start/{provider}:
     post:
-      operationId: postAuthnOauth1Provider
+      operationId: authnOauth1StartAuth
       parameters:
       - name: provider
         in: path
@@ -55,9 +55,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServerError'
-  /authn/oauth1/verify:
+  /authn/oauth1/finish:
     post:
-      operationId: postAuthnOauth1Verify
+      operationId: authnOauth1FinishAuth
       requestBody:
         content:
           application/json:
@@ -70,7 +70,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserProfile'
+                $ref: '#/components/schemas/CurrentUser'
         '400':
           description: client's bad in general
           content:
@@ -122,7 +122,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserProfile'
+                $ref: '#/components/schemas/CurrentUser'
         '400':
           description: client's bad in general
           content:
@@ -168,6 +168,18 @@ components:
       properties:
         message:
           type: string
+    CurrentUser:
+      required:
+      - isActivated
+      - profile
+      type: object
+      properties:
+        email:
+          type: string
+        isActivated:
+          type: boolean
+        profile:
+          $ref: '#/components/schemas/UserProfile'
     EmailLoginCred:
       required:
       - email
@@ -244,11 +256,7 @@ components:
         message:
           type: string
     UserProfile:
-      required:
-      - isActivated
       type: object
       properties:
-        email:
+        twitterUsername:
           type: string
-        isActivated:
-          type: boolean
