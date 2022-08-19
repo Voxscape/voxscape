@@ -2,7 +2,7 @@ package io.jokester.nuthatch.scopes.authn
 
 import io.circe.generic.auto._
 import io.jokester.api.OpenAPIConvention
-import io.jokester.api.OpenAPIConvention.ApiError
+import sttp.tapir._
 import sttp.tapir.generic.auto._
 import sttp.tapir.json.circe.jsonBody
 import sttp.tapir.{Endpoint, endpoint, path}
@@ -13,7 +13,7 @@ object AuthenticationApi {
   case class CurrentUser(
       email: Option[String],
       isActivated: Boolean,
-      profile: UserProfile,
+      profile: UserProfile = UserProfile(),
   )
 
   /** @param email
@@ -27,16 +27,15 @@ object AuthenticationApi {
   object OAuth1 {
     case class OAuth1LoginIntent(externalUrl: String)
 
-    val requestOAuthAuth
+    val startOAuth1Auth
         : Endpoint[Unit, String, OpenAPIConvention.ApiError, OAuth1LoginIntent, Any] =
-      basePath.post.in("oauth1").in(path[String]("provider")).out(jsonBody[OAuth1LoginIntent])
+      basePath.post.in("oauth1" / "start").in(path[String]("provider")).out(jsonBody[OAuth1LoginIntent])
 
     case class OAuth1TempCred(provider: String, oauthToken: String, oauthVerifier: String)
-    val verifyOAuth1Auth
+    val finishOAuth1Auth
         : Endpoint[Unit, OAuth1TempCred, OpenAPIConvention.ApiError, CurrentUser, Any] =
       basePath.post
-        .in("oauth1")
-        .in("verify")
+        .in("oauth1" / "finish")
         .in(jsonBody[OAuth1TempCred])
         .out(jsonBody[CurrentUser])
   }

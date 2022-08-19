@@ -16,9 +16,9 @@ class TwitterOAuth1Flow(c: Config, ctx: ApiContext) extends LazyLogging {
   def issueTwitterOAuthUrl(
       query: Query = Query.empty,
   ): IO[String] = {
+    val fullQuery = query :+ ("provider" -> Some("twitter_oauth1"))
 
-    val redirectQuery = if (query.isEmpty) "" else s"?${query.renderString}"
-    val callbackUrl   = c.getString("callback_url") + redirectQuery
+    val callbackUrl = c.getString("callback_url") + s"?${fullQuery.renderString}"
 
     val client = new ServiceBuilder(c.getString("consumer_key"))
       .apiSecret(c.getString("consumer_secret"))
@@ -69,6 +69,5 @@ class TwitterOAuth1Flow(c: Config, ctx: ApiContext) extends LazyLogging {
           .getAccessToken(reqToken, oauthVerifier),
       )
     ) yield got
-
   }
 }
