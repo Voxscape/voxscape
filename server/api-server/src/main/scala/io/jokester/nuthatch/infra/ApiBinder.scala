@@ -35,7 +35,6 @@ object ApiBinder extends LazyLogging {
               case Const.OAuth1Provider.twitter =>
                 authn
                   .finishOAuth1Twitter(req)
-                  .map(_._1)
                   .attempt
                   .map(launderServerError)
               case _ => IO.raiseError(BadRequest("unsupported provider"))
