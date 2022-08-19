@@ -6,6 +6,7 @@ import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.model.{OAuth1AccessToken, OAuth1RequestToken}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import io.jokester.nuthatch.infra.Const.OAuth1Provider
 import io.jokester.nuthatch.infra.{ApiContext, RedisKeys}
 import org.http4s.Query
 import redis.clients.jedis.Jedis
@@ -16,7 +17,7 @@ class TwitterOAuth1Flow(c: Config, ctx: ApiContext) extends LazyLogging {
   def issueTwitterOAuthUrl(
       query: Query = Query.empty,
   ): IO[String] = {
-    val fullQuery = query :+ ("provider" -> Some("twitter_oauth1"))
+    val fullQuery = query :+ ("provider" -> Some(OAuth1Provider.twitter))
 
     val callbackUrl = c.getString("callback_url") + s"?${fullQuery.renderString}"
 
