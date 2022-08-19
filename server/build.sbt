@@ -28,7 +28,6 @@ lazy val scalaCommons = (project in file("scala-commons"))
       testDeps,
     ).flatten,
     dependencyOverrides ++= Seq.empty,
-//    excludeDependencies ++= incompatibleDependencies,
   )
 
 lazy val apiServer = (project in file("api-server"))
@@ -46,6 +45,7 @@ lazy val apiServer = (project in file("api-server"))
       catsDeps,
       testDeps,
     ).flatten,
+    excludeDependencies ++= incompatibleDependencies,
   )
   .dependsOn(scalaCommons)
   .enablePlugins(

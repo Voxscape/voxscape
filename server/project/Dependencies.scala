@@ -13,7 +13,9 @@ object Dependencies {
     "com.typesafe"     % "config" % "1.4.2",
     "com.google.guava" % "guava"  % "31.1-jre",
 //    "org.apache.commons" % "commons-lang3" % "3.12.0",
-    "com.google.code.gson" % "gson" % "2.9.1",
+    "com.google.code.gson"         % "gson"      % "2.9.1",
+    "io.github.redouane59.twitter" % "twittered" % "2.17" exclude ("org.yaml", "snakeyaml"),
+//    "org.yaml"                     % "snakeyaml" % "1.30",
   )
 
   lazy val http4sDeps: Seq[ModuleID] = Seq(
@@ -76,7 +78,8 @@ object Dependencies {
   ).map(_ % Test)
 
   lazy val incompatibleDependencies: Seq[DependencyBuilders.OrganizationArtifactName] = Seq(
-    "com.typesafe.scala-logging" % "scala-logging_2.13",
+//    "com.typesafe.scala-logging" % "scala-logging_2.13",
+//    "org.yaml"                     % "snakeyaml",
   )
 }
 
