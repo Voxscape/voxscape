@@ -10,6 +10,9 @@ import io.github.redouane59.twitter.signature.TwitterCredentials.TwitterCredenti
 import io.jokester.api.OpenAPIConvention.NotImplemented
 import io.jokester.nuthatch.infra.ApiContext
 import io.jokester.nuthatch.quill.generated.public.UserOauth1Token
+import twitter4j.{Twitter, TwitterFactory}
+import twitter4j.auth.AccessToken
+import twitter4j.conf.ConfigurationBuilder
 
 class AuthenticationService(val ctx: ApiContext) extends OAuth1Authn with LazyLogging {}
 
@@ -50,13 +53,25 @@ private[authn] trait OAuth1Authn { self: AuthenticationService =>
 
     val gson = new Gson()
 
+    val t4j = getTwitter4J(token)
+
     for (
-      userId <- IO.blocking(client.getUserIdFromAccessToken);
-      _      <- IO { logger.debug("got userId: {}", userId) };
-      user   <- IO.blocking(client.getUserFromUserId(userId));
-      _      <- IO { logger.debug("got user: {}", gson.toJson(user)) };
-      _      <- IO.raiseError(NotImplemented("TODO"))
+//      userId <- IO.blocking(client.getUserIdFromAccessToken);
+//      _      <- IO { logger.debug("got userId: {}", userId) };
+      user <- IO.blocking(t4j.verifyCredentials());
+      _    <- IO { logger.debug("got user: {} / {}", gson.toJson(user), user.isVerified) };
+      _    <- IO.raiseError(NotImplemented("TODO"))
     ) yield ???
+  }
+
+  def getTwitter4J(token: OAuth1AccessToken): Twitter = {
+    val factory = new TwitterFactory(
+      new ConfigurationBuilder()
+        .setOAuthConsumerKey(twitterOAuth1Config.getString("consumer_key"))
+        .setOAuthConsumerSecret(twitterOAuth1Config.getString("consumer_secret"))
+        .build(),
+    )
+    factory.getInstance(new AccessToken(token.getToken, token.getTokenSecret))
   }
 }
 

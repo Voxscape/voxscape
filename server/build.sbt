@@ -43,6 +43,7 @@ lazy val apiServer = (project in file("api-server"))
       redisDeps,
       oauthDeps,
       catsDeps,
+      twitterSdkDeps,
       testDeps,
     ).flatten,
     excludeDependencies ++= incompatibleDependencies,

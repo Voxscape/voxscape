@@ -13,9 +13,19 @@ object Dependencies {
     "com.typesafe"     % "config" % "1.4.2",
     "com.google.guava" % "guava"  % "31.1-jre",
 //    "org.apache.commons" % "commons-lang3" % "3.12.0",
-    "com.google.code.gson"         % "gson"      % "2.9.1",
-    "io.github.redouane59.twitter" % "twittered" % "2.17" exclude ("org.yaml", "snakeyaml"),
+    "com.google.code.gson" % "gson" % "2.9.1",
 //    "org.yaml"                     % "snakeyaml" % "1.30",
+  )
+
+  lazy val twitterSdkDeps: Seq[ModuleID] = Seq(
+    /** https://github.com/redouane59/twittered newer (API v1+v2) but incomplete
+      */
+    "io.github.redouane59.twitter" % "twittered" % "2.17" exclude ("org.yaml", "snakeyaml"),
+
+    /** https://twitter4j.org/en/index.html works but less up-to-date ?
+      */
+    "org.twitter4j" % "twitter4j-core"   % "4.0.7",
+    "org.twitter4j" % "twitter4j-stream" % "4.0.7",
   )
 
   lazy val http4sDeps: Seq[ModuleID] = Seq(
