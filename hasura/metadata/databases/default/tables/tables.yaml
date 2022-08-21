@@ -1,3 +1,3 @@
+- "!include public_user.yaml"
 - "!include public_user_oauth1.yaml"
 - "!include public_user_password.yaml"
-- "!include public_users.yaml"

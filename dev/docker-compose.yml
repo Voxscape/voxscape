@@ -39,6 +39,7 @@ services:
   hasura: &hasura-base
     # see https://hub.docker.com/r/hasura/graphql-engine
     image: hasura/graphql-engine:v2.9.0.cli-migrations-v3
+    # profiles: [DISABLED]
     command: # see https://github.com/hasura/graphql-engine/blob/master/packaging/cli-migrations/v3/docker-entrypoint.sh
       - graphql-engine
       - serve
