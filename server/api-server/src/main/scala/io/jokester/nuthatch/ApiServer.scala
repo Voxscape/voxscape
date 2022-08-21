@@ -37,10 +37,12 @@ object ApiServer extends IOApp with LazyLogging {
       .withHttpApp(httpApp)
       .build
 
+    val r = apiContext.redis.use(jedis => IO.blocking(jedis.info()));
+
     for (
-      redisInfo  <- apiContext.redis.use(jedis => IO { jedis.info() });
+      redisInfo1 <- IO.race(r, r);
       serverPair <- apiServer.allocated;
-      _          <- IO.race(TerminateCondition.enterPressed, IO.sleep(600.second));
+      _          <- IO.race(TerminateCondition.enterPressed, IO.sleep(60.second));
       _          <- serverPair._2;
       _          <- IO { logger.info("{} stopped", serverPair._1) };
       _          <- apiContext.close();

@@ -29,20 +29,30 @@ object RedisFactory extends LazyLogging {
   def wrapJedisPool(jedisPool: JedisPool): Resource[IO, Jedis] = {
     Resource.applyCase(IO {
       val jedis = jedisPool.getResource
-      logger.debug("borrowed jedis: {} / {}", jedis)
+      logger.debug("borrowed jedis: {} / {}", System.identityHashCode(jedis))
 
-      (
-        jedis,
-        { (exitCode: ExitCase) =>
-          /** FIXME: every instance returned twice?
-            */
-          logger.debug("returning jedis: {} / {}", jedis, exitCode)
-          IO(exitCode match {
-            case ExitCase.Succeeded => jedisPool.returnResource(jedis)
-            case _                  => jedisPool.returnBrokenResource(jedis)
-          })
-        },
-      )
+      /** FIXME: every instance returned twice?
+        */
+      def onFinish(exitCase: ExitCase): IO[Unit] = {
+        logger.debug("jedisPool onFinish: {} / {}", System.identityHashCode(jedis), exitCase)
+        exitCase match {
+          case ExitCase.Errored(_) =>
+            IO {
+              logger.debug("returning jedis: {} / {}", System.identityHashCode(jedis), exitCase)
+              jedisPool.returnBrokenResource(jedis)
+            }
+          /** Including ExitCase.Cancelled , */
+
+          case _ =>
+            IO {
+              logger.debug("returning jedis: {} / {}", System.identityHashCode(jedis), exitCase)
+              jedisPool.returnResource(jedis)
+            }
+        }
+
+      }
+
+      (jedis, exitCase => onFinish(exitCase))
     })
   }
 }

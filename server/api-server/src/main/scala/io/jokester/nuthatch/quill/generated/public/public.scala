@@ -20,9 +20,9 @@ trait PublicExtensions[+Idiom <: io.getquill.idiom.Idiom, +Naming <: io.getquill
               _.createdAt -> "created_at",
               _.updatedAt -> "updated_at"
             )
-                      
+
           }
-                    
+
       }
 
       object UserDao {
@@ -35,9 +35,9 @@ trait PublicExtensions[+Idiom <: io.getquill.idiom.Idiom, +Naming <: io.getquill
               _.createdAt -> "created_at",
               _.updatedAt -> "updated_at"
             )
-                      
+
           }
-                    
+
       }
 
       object UserOauth1Dao {
@@ -54,9 +54,9 @@ trait PublicExtensions[+Idiom <: io.getquill.idiom.Idiom, +Naming <: io.getquill
               _.createdAt -> "created_at",
               _.updatedAt -> "updated_at"
             )
-                      
+
           }
-                    
+
       }
   }
 }

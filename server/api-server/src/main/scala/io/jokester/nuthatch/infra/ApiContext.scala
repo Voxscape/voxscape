@@ -12,15 +12,18 @@ class ApiContext(val rootConfig: Config) extends LazyLogging {
   private val jedisPool = RedisFactory.poolFromConfig(rootConfig.getConfig("redis.default"))
   def redis: Resource[IO, Jedis] = RedisFactory.wrapJedisPool(jedisPool)
 
-  private val quillResources = QuillFactory.unsafeCreatePooledQuill(rootConfig.getConfig("database.default"))
+  private val quillResources =
+    QuillFactory.unsafeCreatePooledQuill(rootConfig.getConfig("database.default"))
 
   val quill: QuillFactory.PublicCtx = quillResources._2
 
   def close(): IO[Unit] = IO.blocking {
     Try {
       logger.debug("closing Jedis pool")
+
+      /** FIXME: this causes a strange "Invalidated object not currently part of this pool" error
+        */
       quillResources._1.close()
-      jedisPool.close()
     } match {
       case Failure(exception) => logger.warn("error closing Jedis pool", exception)
       case _                  =>
