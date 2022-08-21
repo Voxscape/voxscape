@@ -1,5 +1,6 @@
 package io.jokester.nuthatch.infra
 
+import java.io.Closeable
 import cats.effect.IO
 import cats.effect.kernel.Resource
 import com.typesafe.config.Config
@@ -9,8 +10,10 @@ import io.jokester.nuthatch.quill.generated.public.PublicExtensions
 import io.jokester.quill.{QuillCirceJsonEncoding, QuillDataSource, QuillDatetimeEncoding}
 import io.jokester.quill.QuillDataSource.FixedPostgresNaming
 
+import javax.sql.DataSource
+
 object QuillFactory {
-  type PublicCtx = PostgresJdbcContext[FixedPostgresNaming.type]
+  class PublicCtx(dataSource: DataSource with Closeable) extends PostgresJdbcContext[FixedPostgresNaming.type](FixedPostgresNaming, dataSource)
     with PublicExtensions[PostgresDialect, FixedPostgresNaming.type]
     with QuillCirceJsonEncoding
     with QuillDatetimeEncoding
@@ -18,12 +21,7 @@ object QuillFactory {
   def createNonPooledCtx(c: Config): Resource[IO, PublicCtx] = {
     val simpleDataSource = QuillDataSource.simplePgDataSource(c.getString("url"))
     Resource.make(
-      IO.blocking(
-        new PostgresJdbcContext(FixedPostgresNaming, simpleDataSource)
-          with PublicExtensions[PostgresDialect, QuillDataSource.FixedPostgresNaming.type]
-          with QuillCirceJsonEncoding
-          with QuillDatetimeEncoding,
-      ),
+      IO.blocking(new PublicCtx(simpleDataSource))
     )(ctx => IO.blocking({ ctx.close() }))
   }
 
@@ -31,10 +29,7 @@ object QuillFactory {
     val simpleDataSource = QuillDataSource.simplePgDataSource(c.getString("url"))
     val hikariDataSource = QuillDataSource.pooled(simpleDataSource)
 
-    val ctx = new PostgresJdbcContext(FixedPostgresNaming, hikariDataSource)
-      with PublicExtensions[PostgresDialect, QuillDataSource.FixedPostgresNaming.type]
-      with QuillCirceJsonEncoding
-      with QuillDatetimeEncoding
+    val ctx = new PublicCtx(hikariDataSource)
 
     (hikariDataSource, ctx)
   }
