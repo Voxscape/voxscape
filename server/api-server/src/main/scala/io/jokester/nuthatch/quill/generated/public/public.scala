@@ -4,7 +4,7 @@ case class UserPassword(id: Int, userId: Int, passwordHash: String, createdAt: j
 
 case class User(id: Int, email: String, profile: Option[io.circe.Json], createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
 
-case class UserOauth1(id: Int, userId: Int, provider: String, accessToken: String, accessTokenSecret: String, providerId: Option[String], providerProfile: io.circe.Json, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
+case class UserOauth1(id: Int, userId: Int, provider: String, accessToken: String, accessTokenSecret: String, providerId: String, providerProfile: io.circe.Json, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
 
 trait PublicExtensions[+Idiom <: io.getquill.idiom.Idiom, +Naming <: io.getquill.NamingStrategy] {
   this:io.getquill.context.Context[Idiom, Naming] =>
@@ -20,9 +20,9 @@ trait PublicExtensions[+Idiom <: io.getquill.idiom.Idiom, +Naming <: io.getquill
               _.createdAt -> "created_at",
               _.updatedAt -> "updated_at"
             )
-
+                      
           }
-
+                    
       }
 
       object UserDao {
@@ -35,9 +35,9 @@ trait PublicExtensions[+Idiom <: io.getquill.idiom.Idiom, +Naming <: io.getquill
               _.createdAt -> "created_at",
               _.updatedAt -> "updated_at"
             )
-
+                      
           }
-
+                    
       }
 
       object UserOauth1Dao {
@@ -54,9 +54,9 @@ trait PublicExtensions[+Idiom <: io.getquill.idiom.Idiom, +Naming <: io.getquill
               _.createdAt -> "created_at",
               _.updatedAt -> "updated_at"
             )
-
+                      
           }
-
+                    
       }
   }
 }

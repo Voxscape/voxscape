@@ -5,7 +5,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import redis.clients.jedis.{Jedis, JedisPool}
 
-import scala.util.{Success, Using}
+import scala.util.{Success, Using, Try}
 
 object RedisFactory extends LazyLogging {
   def poolFromConfig(c: Config): JedisPool = {
@@ -15,7 +15,9 @@ object RedisFactory extends LazyLogging {
 
       val pool = new JedisPool(host, port)
 
-      val info = Using(pool.getResource)(_.info())
+      val conn = pool.getResource
+      val info = Try { conn.info() }
+      conn.close()
       info match {
         case Success(_) =>
           logger.info("Connected to Redis")

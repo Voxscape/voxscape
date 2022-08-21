@@ -5,10 +5,15 @@ import cats.effect.IO
 import cats.effect.kernel.Resource
 import com.typesafe.config.Config
 import com.zaxxer.hikari.HikariDataSource
+import io.circe.{JsonObject, Json}
 import io.getquill.{PostgresDialect, PostgresJdbcContext, SnakeCase}
+import io.jokester.nuthatch.quill.QuillJsonHelper
 import io.jokester.nuthatch.quill.generated.public.PublicExtensions
+import io.jokester.nuthatch.quill.generated.{public => T}
 import io.jokester.quill.{QuillCirceJsonEncoding, QuillDataSource, QuillDatetimeEncoding}
-import io.jokester.quill.QuillDataSource.FixedPostgresNaming
+
+import java.time.OffsetDateTime
+//import io.jokester.quill.QuillDataSource.FixedPostgresNaming
 
 import javax.sql.DataSource
 
@@ -18,6 +23,8 @@ object QuillFactory {
       with PublicExtensions[PostgresDialect, SnakeCase.type]
       with QuillCirceJsonEncoding
       with QuillDatetimeEncoding
+      with QuillJsonHelper
+      with PublicCtxDummyFactory
 
   def createNonPooledCtx(c: Config): Resource[IO, PublicCtx] = {
     val simpleDataSource = QuillDataSource.simplePgDataSource(c.getString("url"))
@@ -32,5 +39,27 @@ object QuillFactory {
 
     val ctx = new PublicCtx(hikariDataSource)
     (hikariDataSource, ctx)
+  }
+
+  trait PublicCtxDummyFactory {
+    val dummyUser: T.User = T.User(
+      id = -1,
+      email = "CHANGE_ME",
+      profile = None,
+      createdAt = OffsetDateTime.MIN,
+      updatedAt = OffsetDateTime.MIN,
+    )
+    val dummyOAuth1: T.UserOauth1 = T.UserOauth1(
+      id = -2,
+      userId = -1,
+      provider = "DUMMY",
+      accessToken = "DUMMY",
+      accessTokenSecret = "DUMMY",
+      providerId = "DUMMY",
+      providerProfile = Json.fromJsonObject(JsonObject.empty),
+      createdAt = OffsetDateTime.MIN,
+      updatedAt = OffsetDateTime.MIN,
+    )
+
   }
 }
