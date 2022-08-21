@@ -1,22 +1,22 @@
 package io.jokester.quill
 
-import io.getquill.PostgresJdbcContext
+import io.getquill.context.jdbc.JdbcContextBase
 
 import java.sql.Types
 import java.time.OffsetDateTime
 
 /** low-level bindings
   */
-trait QuillDatetimeEncoding[T <: PostgresJdbcContext[_]] {
+trait QuillDatetimeEncoding {
 
-  protected val ctx: T
+  self: JdbcContextBase[_, _] =>
 
   /** implicit values must be of path-dependent type, not "OurCtx#decoder"
     */
-  protected lazy implicit val offsetDateTimeDecoder: ctx.type#Decoder[OffsetDateTime] =
-    ctx.decoder((index, row, session) => row.getObject(index, classOf[OffsetDateTime]))
-  protected lazy implicit val offsetDateTimeEncoder: ctx.type#Encoder[OffsetDateTime] =
-    ctx.encoder(
+  implicit val offsetDateTimeDecoder: self.type#Decoder[OffsetDateTime] =
+    self.decoder((index, row, session) => row.getObject(index, classOf[OffsetDateTime]))
+  implicit val offsetDateTimeEncoder: self.type#Encoder[OffsetDateTime] =
+    self.encoder(
       Types.TIMESTAMP_WITH_TIMEZONE,
       (index, value, row) => {
         row.setObject(index, value)

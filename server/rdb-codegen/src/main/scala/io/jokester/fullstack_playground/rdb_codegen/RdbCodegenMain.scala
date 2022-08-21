@@ -44,7 +44,7 @@ object RdbCodegenMain extends App with LazyLogging {
         */
       override def packagingStrategy: PackagingStrategy = {
         PackagingStrategy.ByPackageHeader
-          .TablePerFile(destPkg)
+          .TablePerSchema(destPkg)
           .copy(
             packageNamingStrategyForQuerySchemas =
               PackageHeaderByNamespace(destPkg, _.table.namespace),

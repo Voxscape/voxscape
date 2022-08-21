@@ -4,6 +4,8 @@ import cats.effect.IO
 import cats.effect.kernel.Resource
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import io.getquill.PostgresJdbcContext
+import io.jokester.quill.QuillCirceJsonEncoding
 import redis.clients.jedis.Jedis
 
 import scala.util.{Failure, Try}
