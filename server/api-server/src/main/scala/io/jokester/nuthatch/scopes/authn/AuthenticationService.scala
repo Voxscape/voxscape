@@ -17,6 +17,17 @@ class AuthenticationService(protected val apiCtx: ApiContext)
     extends TwitterOAuth1
     with LazyLogging {}
 
+/** @internal
+  */
+private[authn] case class UserWithAuth(
+    user: T.User,
+    userOAuth1: Seq[T.UserOauth1],
+) {
+  def findByProvider(provider: String): Option[T.UserOauth1] = {
+    userOAuth1.find(_.provider == provider)
+  }
+}
+
 private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationService =>
 
   private lazy val twitterOAuth1Config = apiCtx.rootConfig.getConfig("twitter_oauth1")
@@ -50,7 +61,7 @@ private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationServic
   def upsertUser(
       twitterUser: TwitterUser,
       token: OAuth1AccessToken,
-  ): IO[AuthenticationApi.CurrentUser] = {
+  ): IO[UserWithAuth] = {
 
     val twitterEmail = buildTwitterEmail(twitterUser)
 
@@ -60,7 +71,7 @@ private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationServic
         Option(twitterUser.getId).map(_.toString).get,
       );
       emailMatch <- findUserByEmail(twitterEmail);
-      upserted <- upsertOAuthUser(
+      userId <- upsertOAuthUser(
         oauthMatch,
         emailMatch,
         apiCtx.quill.dummyUser.copy(
@@ -73,11 +84,9 @@ private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationServic
           providerId = twitterUser.getId.toString,
           providerProfile = apiCtx.quill.toJson(twitterUser),
         ),
-      )
-    ) yield upserted
-    val existedUser = findUserByEmail(twitterEmail)
-
-    ???
+      );
+      reloaded <- findUserById(userId)
+    ) yield reloaded.get
   }
 
   private def getTwitter4J(token: OAuth1AccessToken): Twitter = {
@@ -95,25 +104,6 @@ private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
   self: AuthenticationService =>
 
   private lazy val quill = self.apiCtx.quill
-
-  /** @internal
-    */
-  case class UserWithAuth(
-      user: T.User,
-      userOAuth1: Seq[T.UserOauth1],
-  ) {
-    def findByProvider(provider: String): Option[T.UserOauth1] = {
-      userOAuth1.find(_.provider == provider)
-    }
-
-  }
-
-  private def insertX(userId: Int): Quoted[EntityQuery[T.User]] = {
-    import quill._
-    quote {
-      query[T.User].filter(_.id == lift(userId))
-    }
-  }
 
   def findUserByEmail(email: String): IO[Option[UserWithAuth]] = {
     val findIdByEmail: IO[Option[Int]] = IO.blocking {
@@ -204,7 +194,7 @@ private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
             )
         }
 
-      val userId = (oauthMatch, emailMatch) match {
+      val userId: Int = (oauthMatch, emailMatch) match {
         // existing user with email + OAuth profile: update the OAuth part
         case (Some(m1), Some(m2)) if m1.user.id == m2.user.id =>
           run(updateOAuth(m1.findByProvider(initialOauth.provider).get, initialOauth))
