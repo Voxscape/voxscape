@@ -4,12 +4,10 @@ import cats.effect.IO
 import com.github.scribejava.core.model.OAuth1AccessToken
 import com.google.gson.Gson
 import com.typesafe.scalalogging.LazyLogging
-import io.circe.Json
 import io.getquill.{EntityQuery, Quoted}
 import io.jokester.nuthatch.infra.ApiContext
 import io.jokester.nuthatch.infra.Const.{OAuth1Provider, TempEmail}
 import io.jokester.nuthatch.quill.QuillJsonHelper
-import io.jokester.nuthatch.quill.generated.public.User
 import io.jokester.nuthatch.quill.generated.{public => T}
 import twitter4j.{Twitter, TwitterFactory, User => TwitterUser}
 import twitter4j.auth.AccessToken
@@ -59,7 +57,7 @@ private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationServic
     for (
       oauthMatch <- findUserByOAuth(
         OAuth1Provider.twitter,
-        Some(twitterUser.getId).map(_.toString).get,
+        Option(twitterUser.getId).map(_.toString).get,
       );
       emailMatch <- findUserByEmail(twitterEmail);
       upserted <- upsertOAuthUser(
@@ -98,7 +96,17 @@ private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
 
   private lazy val quill = self.apiCtx.quill
 
-  case class UserWithAuth  (user: T.User, userOAuth1: Seq[T.UserOauth1])
+  /** @internal
+    */
+  case class UserWithAuth(
+      user: T.User,
+      userOAuth1: Seq[T.UserOauth1],
+  ) {
+    def findByProvider(provider: String): Option[T.UserOauth1] = {
+      userOAuth1.find(_.provider == provider)
+    }
+
+  }
 
   private def insertX(userId: Int): Quoted[EntityQuery[T.User]] = {
     import quill._
@@ -142,7 +150,6 @@ private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
 
     val search: IO[Option[T.User]] = IO.blocking {
       import quill._
-      val f = quill.IO.apply()
 
       val matched: Seq[(T.UserOauth1, T.User)] = run(quote {
         query[T.UserOauth1]
@@ -185,19 +192,44 @@ private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
               _.accessTokenSecret -> lift(initialOauth.accessTokenSecret),
             )
         }
-      (oauthMatch, emailMatch) match {
-        case (Some(m1), Some(m2)) if m1.user.id == m2.user.id =>
 
+      val updateOAuth = (existed: T.UserOauth1, patch: T.UserOauth1) =>
+        quote {
+          query[T.UserOauth1]
+            .filter(_.id == lift(existed.id))
+            .update(
+              _.providerProfile   -> lift(patch.providerProfile),
+              _.accessToken       -> lift(patch.accessToken),
+              _.accessTokenSecret -> lift(patch.accessTokenSecret),
+            )
+        }
+
+      val userId = (oauthMatch, emailMatch) match {
+        // existing user with email + OAuth profile: update the OAuth part
+        case (Some(m1), Some(m2)) if m1.user.id == m2.user.id =>
+          run(updateOAuth(m1.findByProvider(initialOauth.provider).get, initialOauth))
+          m1.user.id
+        // existed user with only OAuth profile
+        case (Some(m1), None) =>
+          run(updateOAuth(m1.findByProvider(initialOauth.provider).get, initialOauth))
+          m1.user.id
+        // existed user without oauth profile: create the OAuth part
+        case (None, Some(m2)) =>
+          run(insertOAuth(m2.user.id))
+          m2.user.id
+        // new user
+        case (None, None) =>
+          transaction {
+            val newUserId = run(insertUser)
+            run(insertOAuth(newUserId))
+            newUserId
+          }
+        //
+        case _ => throw new AssertionError("user profile mismatch")
       }
-      val created = transaction {
-        val newUserId: Int = run(insertUser)
-        run(insertOAuth(newUserId))
-        newUserId
-      }
-      created
+      userId
     })
   }
-
 }
 
 private[authn] trait PasswordAuthn { self: AuthenticationService =>
