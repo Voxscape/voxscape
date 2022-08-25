@@ -2,7 +2,7 @@ package io.jokester.nuthatch
 
 import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.LazyLogging
-import io.jokester.nuthatch.infra.{ApiBinder, ApiContext, QuillFactory, RedisFactory}
+import io.jokester.nuthatch.infra.{ApiBinder, ApiContext}
 import cats.effect.{ExitCode, IO, IOApp, Resource}
 import com.comcast.ip4s.IpLiteralSyntax
 import io.jokester.api.OpenAPIBuilder
@@ -21,7 +21,7 @@ object ApiServer extends IOApp with LazyLogging {
 
   def runServer: IO[ExitCode] = {
     val rootConfig = ConfigFactory.load()
-    val apiContext = new ApiContext(rootConfig)
+    val apiContext = ApiContext.buildDefault(rootConfig)
     val authn = new AuthenticationService {
       protected override val apiCtx: ApiContext = apiContext
     };

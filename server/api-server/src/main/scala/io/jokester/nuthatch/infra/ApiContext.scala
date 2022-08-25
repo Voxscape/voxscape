@@ -4,16 +4,29 @@ import cats.effect.IO
 import cats.effect.kernel.Resource
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import com.zaxxer.hikari.HikariDataSource
 import redis.clients.jedis.Jedis
 
 import scala.util.{Failure, Try}
 
-class ApiContext(val rootConfig: Config) extends LazyLogging {
-  private val jedisPool = RedisFactory.poolFromConfig(rootConfig.getConfig("redis.default"))
-  def redis: Resource[IO, Jedis] = RedisFactory.wrapJedisPool(jedisPool)
+object ApiContext {
+  def buildDefault($rootConfig: Config): ApiContext = new ApiContext {
+    override def rootConfig: Config     = $rootConfig
+    override def redisConfig: Config    = rootConfig.getConfig("redis.default")
+    override def postgresConfig: Config = rootConfig.getConfig("database.default")
+  }
+}
 
-  private val quillResources =
-    QuillFactory.unsafeCreatePooledQuill(rootConfig.getConfig("database.default"))
+trait ApiContext extends LazyLogging {
+  def rootConfig: Config
+  protected def redisConfig: Config
+  protected def postgresConfig: Config
+
+  private val jedisPool          = RedisFactory.poolFromConfig(redisConfig)
+  val redis: Resource[IO, Jedis] = RedisFactory.wrapJedisPool(jedisPool)
+
+  protected val quillResources: (HikariDataSource, QuillFactory.PublicCtx) =
+    QuillFactory.unsafeCreatePooledQuill(postgresConfig)
 
   val quill: QuillFactory.PublicCtx = quillResources._2
 
