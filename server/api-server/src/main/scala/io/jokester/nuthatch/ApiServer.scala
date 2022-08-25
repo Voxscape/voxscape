@@ -22,7 +22,9 @@ object ApiServer extends IOApp with LazyLogging {
   def runServer: IO[ExitCode] = {
     val rootConfig = ConfigFactory.load()
     val apiContext = new ApiContext(rootConfig)
-    val authn      = new AuthenticationService(apiContext);
+    val authn = new AuthenticationService {
+      protected override val apiCtx: ApiContext = apiContext
+    };
 
     val apiRoutes: HttpRoutes[IO] =
       ApiBinder.buildRoutes(authn).tapWith(VerboseLogger.logReqRes[IO])

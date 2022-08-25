@@ -12,7 +12,7 @@ trait QuillJsonHelper {
 
   def toJson(obj: AnyRef): Json =
     parser
-      .parse(QuillJsonHelper.gson.toJson(QuillJsonHelper.gson))
+      .parse(QuillJsonHelper.gson.toJson(obj))
       .getOrElse(throw ServerError("error "))
 
   def fromJson[T](obj: Json, klass: Class[T]): T =
