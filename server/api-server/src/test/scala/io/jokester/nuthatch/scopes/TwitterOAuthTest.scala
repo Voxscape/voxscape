@@ -12,9 +12,7 @@ class TwitterOAuthTest extends AnyFlatSpec with BeforeAndAfterAll { self =>
     override protected val apiCtx: ApiContext = self.apiContext
   }
 
-  "AuthenticationService" should "run" in {
-
-  }
+  "AuthenticationService" should "run" in {}
 
   override def beforeAll(): Unit = {
     apiContext.cleanDb()

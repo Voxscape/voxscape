@@ -5,8 +5,14 @@ import cats.effect.IO
 import cats.effect.kernel.Resource
 import com.typesafe.config.Config
 import com.zaxxer.hikari.HikariDataSource
-import io.circe.{JsonObject, Json}
-import io.getquill.{PostgresDialect, PostgresJdbcContext, SnakeCase}
+import io.circe.{Json, JsonObject}
+import io.getquill.{
+  CompositeNamingStrategy2,
+  PostgresDialect,
+  PostgresEscape,
+  PostgresJdbcContext,
+  SnakeCase,
+}
 import io.jokester.nuthatch.quill.QuillJsonHelper
 import io.jokester.nuthatch.quill.generated.public.PublicExtensions
 import io.jokester.nuthatch.quill.generated.{public => T}
@@ -18,9 +24,13 @@ import java.time.OffsetDateTime
 import javax.sql.DataSource
 
 object QuillFactory {
+  val f = CompositeNamingStrategy2
   class PublicCtx(dataSource: DataSource with Closeable)
-      extends PostgresJdbcContext(SnakeCase, dataSource)
-      with PublicExtensions[PostgresDialect, SnakeCase.type]
+      extends PostgresJdbcContext(CompositeNamingStrategy2(SnakeCase, PostgresEscape), dataSource)
+      with PublicExtensions[
+        PostgresDialect,
+        CompositeNamingStrategy2[SnakeCase.type, PostgresEscape.type],
+      ]
       with QuillCirceJsonEncoding
       with QuillDatetimeEncoding
       with QuillJsonHelper

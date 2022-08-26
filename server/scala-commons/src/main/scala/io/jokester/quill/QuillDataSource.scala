@@ -9,14 +9,6 @@ import javax.sql.DataSource
 
 object QuillDataSource {
 
-  /** how table/columns are escaped in SQL
-    */
-  object FixedPostgresNaming extends SnakeCase {
-    override def table(s: String): String = s"""\"${super.table(s)}\""""
-
-    override def column(s: String): String = s"""\"${super.column(s)}\""""
-  }
-
   /** @param url
     *   JDBC URL like "jdbc:postgresql://localhost:61432/playground" (user / password in URL gets
     *   ignored)
