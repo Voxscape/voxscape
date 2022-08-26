@@ -23,6 +23,10 @@ devDeps:
 	@printf '\ek[docker-compose up]\e\\'
 	cd dev && exec docker-compose up
 
+devDepsFull:
+	@printf '\ek[docker-compose up]\e\\'
+	cd dev && exec docker-compose up hasura
+
 serverTxz:
 	cd server && exec sbt apiServer/packageXzTarball
 

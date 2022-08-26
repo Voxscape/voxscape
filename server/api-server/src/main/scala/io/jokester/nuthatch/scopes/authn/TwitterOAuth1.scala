@@ -23,7 +23,7 @@ private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationServic
 
   def buildTwitterEmail(twitterUser: TwitterUser): String = Option(twitterUser.getEmail)
     .map(_.toLowerCase)
-    .getOrElse(s"twitter_id=${twitterUser.getId}:${TempEmail.placeholderSuffix}")
+    .getOrElse(s"oauth1:twitter_id=${twitterUser.getId}:${TempEmail.placeholderSuffix}")
 
   def finishOAuth1Twitter(
       cred: AuthenticationApi.OAuth1.OAuth1TempCred,
