@@ -8,9 +8,9 @@ set -uex
 {
   cat <<'END'
 
-  DROP DATABASE IF EXISTS "playground_test" ;
-  CREATE DATABASE "playground_test" ;
-  \c playground_test;
+  DROP DATABASE IF EXISTS "nuthatch_test" ;
+  CREATE DATABASE "nuthatch_test" ;
+  \c nuthatch_test;
 
 END
 
