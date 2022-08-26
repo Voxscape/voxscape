@@ -1,9 +1,14 @@
 package io.jokester.nuthatch.infra
 
-object RedisKeys {
-  object auth {
-    // value: oauth_token_secret
-    def twitterOAuth1Token(oauthToken: String) = s"auth:twitterOAuth1:oauthToken:$oauthToken"
+trait RedisKeys { self: ApiContext =>
+  private lazy val keyPrefix = redisConfig.getString("key_prefix")
+  object redisKeys {
+    object authn {
+      // value: oauth_token_secret
+      def twitterOAuth1Token(oauthToken: String) =
+        s"${keyPrefix}:auth:twitterOAuth1:oauthToken:$oauthToken"
+
+    }
   }
 
 }

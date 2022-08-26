@@ -12,12 +12,12 @@ import scala.util.{Failure, Try}
 object ApiContext {
   def buildDefault($rootConfig: Config): ApiContext = new ApiContext {
     override def rootConfig: Config     = $rootConfig
-    override def redisConfig: Config    = rootConfig.getConfig("redis.default")
-    override def postgresConfig: Config = rootConfig.getConfig("database.default")
+    override def redisConfig: Config    = rootConfig.getConfig("redis")
+    override def postgresConfig: Config = rootConfig.getConfig("postgres")
   }
 }
 
-trait ApiContext extends LazyLogging {
+trait ApiContext extends LazyLogging with RedisKeys {
   def rootConfig: Config
   protected def redisConfig: Config
   protected def postgresConfig: Config

@@ -6,8 +6,8 @@ import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.model.{OAuth1AccessToken, OAuth1RequestToken}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
+import io.jokester.nuthatch.infra.ApiContext
 import io.jokester.nuthatch.infra.Const.OAuth1Provider
-import io.jokester.nuthatch.infra.{ApiContext, RedisKeys}
 import org.http4s.Query
 import redis.clients.jedis.Jedis
 
@@ -39,7 +39,7 @@ class TwitterOAuth1Flow(c: Config, ctx: ApiContext) extends LazyLogging {
   private def saveToken(reqToken: OAuth1RequestToken): IO[Unit] = redis.use(jedis =>
     IO.blocking {
       jedis.setex(
-        RedisKeys.auth.twitterOAuth1Token(reqToken.getToken),
+        ctx.redisKeys.authn.twitterOAuth1Token(reqToken.getToken),
         7200,
         reqToken.getTokenSecret,
       )
@@ -49,7 +49,7 @@ class TwitterOAuth1Flow(c: Config, ctx: ApiContext) extends LazyLogging {
   private def loadToken(oauthToken: String): IO[OAuth1RequestToken] = {
     redis.use(jedis =>
       IO.blocking {
-        val oauthTokenSecret = Option(jedis.get(RedisKeys.auth.twitterOAuth1Token(oauthToken)))
+        val oauthTokenSecret = Option(jedis.get(ctx.redisKeys.authn.twitterOAuth1Token(oauthToken)))
         new OAuth1RequestToken(
           oauthToken,
           oauthTokenSecret.getOrElse(throw new RuntimeException("invalid OAuth1 token")),
