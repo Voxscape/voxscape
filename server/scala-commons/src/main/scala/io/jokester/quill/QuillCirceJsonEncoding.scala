@@ -18,7 +18,7 @@ trait QuillCirceJsonEncoding {
     })
 
   implicit val jsonEncoder: self.type#Encoder[Json] = self.encoder(
-    Types.JAVA_OBJECT,
+    Types.OTHER,
     (index, value: Json, row) => {
       val jsonObject = new PGobject()
       jsonObject.setType("json")

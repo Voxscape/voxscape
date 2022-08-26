@@ -11,6 +11,7 @@ object AuthenticationApi {
   private val basePath = endpoint.in("authn").errorOut(OpenAPIConvention.defaultErrorOutputMapping)
 
   case class CurrentUser(
+      userId: Int,
       email: Option[String],
       isActivated: Boolean,
       profile: UserProfile = UserProfile(),

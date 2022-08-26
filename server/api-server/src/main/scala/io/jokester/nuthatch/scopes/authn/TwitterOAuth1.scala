@@ -22,7 +22,8 @@ private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationServic
   }
 
   def buildTwitterEmail(twitterUser: TwitterUser): String = Option(twitterUser.getEmail)
-    .getOrElse(s"twitterId=${twitterUser.getId}:${TempEmail.placeholderSuffix}")
+    .map(_.toLowerCase)
+    .getOrElse(s"twitter_id=${twitterUser.getId}:${TempEmail.placeholderSuffix}")
 
   def finishOAuth1Twitter(
       cred: AuthenticationApi.OAuth1.OAuth1TempCred,
@@ -35,7 +36,7 @@ private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationServic
         logger.debug("got user: {} / {}", gson.toJson(twitterUser), twitterUser.isVerified)
       };
       u <- upsertUser(twitterUser, token)
-    ) yield ???
+    ) yield u.asCurrentUser()
   }
 
   def upsertUser(

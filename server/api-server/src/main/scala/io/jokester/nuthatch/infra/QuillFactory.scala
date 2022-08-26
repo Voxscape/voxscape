@@ -37,6 +37,12 @@ object QuillFactory {
     )(ctx => IO.blocking({ ctx.close() }))
   }
 
+  def unsafeCreateNonPolledCtx(c: Config): (AutoCloseable, PublicCtx) = {
+    val simpleDataSource = QuillDataSource.simplePgDataSource(c.getString("url"))
+    val ctx              = new PublicCtx(simpleDataSource)
+    (simpleDataSource, ctx)
+  }
+
   def unsafeCreatePooledQuill(c: Config): (HikariDataSource, PublicCtx) = {
     val simpleDataSource = QuillDataSource.simplePgDataSource(c.getString("url"))
     val hikariDataSource = QuillDataSource.pooled(simpleDataSource)
