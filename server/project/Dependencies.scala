@@ -106,7 +106,7 @@ private object Versions {
   val http4s    = "0.23.14"
 
   // rdbms
-  val postgresql  = "42.3.6"
+  val postgresql  = "42.4.2"
   val quill       = "4.3.0"
   val scalikeJDBC = "3.5.0"
   val flyway      = "8.0.2"

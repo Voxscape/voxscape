@@ -22,15 +22,15 @@ trait ApiContext extends LazyLogging with RedisKeys {
   protected def redisConfig: Config
   protected def postgresConfig: Config
 
-  private val jedisPool          = RedisFactory.poolFromConfig(redisConfig)
-  val redis: Resource[IO, Jedis] = RedisFactory.wrapJedisPool(jedisPool)
+  private lazy val jedisPool          = RedisFactory.poolFromConfig(redisConfig)
+  lazy val redis: Resource[IO, Jedis] = RedisFactory.wrapJedisPool(jedisPool)
 
-  protected val quillResources: (HikariDataSource, QuillFactory.PublicCtx) =
+  protected lazy val quillResources: (HikariDataSource, QuillFactory.PublicCtx) =
     QuillFactory.unsafeCreatePooledQuill(postgresConfig)
 
-  val quill: QuillFactory.PublicCtx = quillResources._2
+  lazy val quill: QuillFactory.PublicCtx = quillResources._2
 
-  def close(): IO[Unit] = IO.blocking {
+  def unsafeClose(): Unit = {
     Try {
       logger.debug("closing Jedis pool")
 
@@ -41,5 +41,8 @@ trait ApiContext extends LazyLogging with RedisKeys {
       case Failure(exception) => logger.warn("error closing Jedis pool", exception)
       case _                  =>
     }
+
   }
+
+  def close(): IO[Unit] = IO { unsafeClose() }
 }
