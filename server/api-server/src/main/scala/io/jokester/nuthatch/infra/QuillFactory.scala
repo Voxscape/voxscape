@@ -1,36 +1,30 @@
 package io.jokester.nuthatch.infra
 
-import java.io.Closeable
 import cats.effect.IO
 import cats.effect.kernel.Resource
 import com.typesafe.config.Config
 import com.zaxxer.hikari.HikariDataSource
 import io.circe.{Json, JsonObject}
-import io.getquill.{
-  CompositeNamingStrategy2,
-  PostgresDialect,
-  PostgresEscape,
-  PostgresJdbcContext,
-  SnakeCase,
-}
+import io.getquill.{PostgresDialect, PostgresJdbcContext}
 import io.jokester.nuthatch.quill.QuillJsonHelper
 import io.jokester.nuthatch.quill.generated.public.PublicExtensions
 import io.jokester.nuthatch.quill.generated.{public => T}
-import io.jokester.quill.{QuillCirceJsonEncoding, QuillDataSource, QuillDatetimeEncoding}
+import io.jokester.quill.{
+  FixedPostgresNaming,
+  QuillCirceJsonEncoding,
+  QuillDataSource,
+  QuillDatetimeEncoding,
+}
 
+import java.io.Closeable
 import java.time.OffsetDateTime
-//import io.jokester.quill.QuillDataSource.FixedPostgresNaming
-
 import javax.sql.DataSource
 
 object QuillFactory {
-  val f = CompositeNamingStrategy2
+
   class PublicCtx(dataSource: DataSource with Closeable)
-      extends PostgresJdbcContext(CompositeNamingStrategy2(SnakeCase, PostgresEscape), dataSource)
-      with PublicExtensions[
-        PostgresDialect,
-        CompositeNamingStrategy2[SnakeCase.type, PostgresEscape.type],
-      ]
+      extends PostgresJdbcContext(FixedPostgresNaming, dataSource)
+      with PublicExtensions[PostgresDialect, FixedPostgresNaming.type]
       with QuillCirceJsonEncoding
       with QuillDatetimeEncoding
       with QuillJsonHelper

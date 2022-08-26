@@ -50,7 +50,7 @@ private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
         query[T.UserOauth1]
           .filter(r => r.provider == lift(provider) && r.providerId == lift(externalId))
           .join(query[T.User])
-          .on((oauth, user) => oauth.userId == user.id)
+          .on((oauth, u) => oauth.userId == u.id)
       })
       matched.headOption.map(_._2)
     }

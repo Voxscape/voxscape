@@ -4,6 +4,7 @@ import io.jokester.nuthatch.infra.{ApiContext, TestApiContext}
 import io.jokester.nuthatch.scopes.authn.AuthenticationService
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
+import twitter4j.User
 
 class TwitterOAuthTest extends AnyFlatSpec with BeforeAndAfterAll { self =>
 
@@ -13,6 +14,8 @@ class TwitterOAuthTest extends AnyFlatSpec with BeforeAndAfterAll { self =>
   }
 
   "AuthenticationService" should "run" in {}
+
+  "AuthenticationService" should "create user from authed twitter user" in {}
 
   override def beforeAll(): Unit = {
     apiContext.cleanDb()
