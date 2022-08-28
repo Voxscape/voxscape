@@ -22,13 +22,13 @@ trait ApiContext extends LazyLogging with RedisKeys {
   protected def redisConfig: Config
   protected def postgresConfig: Config
 
-  private lazy val jedisPool          = RedisFactory.poolFromConfig(redisConfig)
-  lazy val redis: Resource[IO, Jedis] = RedisFactory.wrapJedisPool(jedisPool)
+  private lazy val jedisPool     = RedisFactory.poolFromConfig(redisConfig)
+  def redis: Resource[IO, Jedis] = RedisFactory.wrapJedisPool(jedisPool)
 
-  protected lazy val quillResources: (AutoCloseable, QuillFactory.PublicCtx) =
+  private lazy val quillResources: (AutoCloseable, QuillFactory.PublicCtx) =
     QuillFactory.unsafeCreateNonPolledCtx(postgresConfig)
 
-  lazy val quill: QuillFactory.PublicCtx = quillResources._2
+  val quill: QuillFactory.PublicCtx = quillResources._2
 
   def unsafeClose(): Unit = {
     Try {

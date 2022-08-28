@@ -20,4 +20,4 @@ set -x
 
 pwd
 
-exec npm run hasura -- skip-update-check "$@"
+exec npm run hasura -- --skip-update-check "$@"
