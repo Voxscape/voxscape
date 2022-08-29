@@ -44,7 +44,7 @@ object ApiServer extends IOApp with LazyLogging {
     for (
       redisInfo1 <- IO.race(r, r);
       serverPair <- apiServer.allocated;
-      _          <- IO.race(TerminateCondition.enterPressed, IO.sleep(60.second));
+      _          <- TerminateCondition.enterPressed;
       _          <- serverPair._2;
       _          <- IO { logger.info("{} stopped", serverPair._1) };
       _          <- apiContext.close();
