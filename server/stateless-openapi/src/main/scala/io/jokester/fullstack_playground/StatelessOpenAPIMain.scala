@@ -2,7 +2,6 @@ package io.jokester.fullstack_playground
 
 import akka.http.scaladsl.server.Directives.pathPrefix
 import com.typesafe.scalalogging.LazyLogging
-import io.jokester.akka.AkkaHttpServer
 import io.jokester.fullstack_playground.todolist_api.{
   TodoApi,
   TodoApiAkkaBinding,
@@ -23,8 +22,7 @@ object StatelessOpenAPIMain extends App with LazyLogging {
       AkkaHttpServer.listenWithNewSystem(routeBuilder = { actorSystem =>
         implicit val ec = actorSystem.executionContext
 
-        /**
-          * CRUD
+        /** CRUD
           */
         val todoRoute = TodoApiAkkaBinding.buildTodoApiRoute(new TodoApiMemoryImpl())
 

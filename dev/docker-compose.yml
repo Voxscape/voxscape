@@ -1,4 +1,5 @@
 version: '3'
+name: nuthatch-dev
 
 services:
   pgsql:
@@ -30,7 +31,7 @@ services:
         - -U
         - pguser
         - -d
-        - playground
+        - nuthatch_dev
       interval: 1s
       timeout: 30s
       retries: 10
@@ -38,6 +39,7 @@ services:
   hasura: &hasura-base
     # see https://hub.docker.com/r/hasura/graphql-engine
     image: hasura/graphql-engine:v2.9.0.cli-migrations-v3
+    profiles: [NOAUTO]
     command: # see https://github.com/hasura/graphql-engine/blob/master/packaging/cli-migrations/v3/docker-entrypoint.sh
       - graphql-engine
       - serve
@@ -47,7 +49,7 @@ services:
       # start console with ./hasura/hasura-cli.sh
       HASURA_GRAPHQL_ENABLE_CONSOLE: "false"
       HASURA_GRAPHQL_ADMIN_SECRET: 'super_secret_admin_secret'
-      HASURA_GRAPHQL_EVENTS_FETCH_INTERVAL: "600000" # not using events anyway
+      HASURA_GRAPHQL_EVENTS_FETCH_INTERVAL: "0" # not using events anyway
       HASURA_GRAPHQL_SCHEMA_SYNC_POLL_INTERVAL: '0' # not storing metadata in kvs
       HASURA_GRAPHQL_UNAUTHORIZED_ROLE: guest
       HASURA_GRAPHQL_DEV_MODE: 'true'
@@ -61,3 +63,16 @@ services:
     depends_on:
       pgsql:
         condition: service_healthy
+  redis:
+    image: redis:7
+    ports:
+      - 62379:6379
+    command:
+      - redis-server
+      - --save
+      - '60'
+      - '1'
+      - --loglevel
+      - warning
+    volumes:
+      - ./data-redis:/data

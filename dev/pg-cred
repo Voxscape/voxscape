@@ -1,5 +1,5 @@
 # vim: ft=sh
 export PGHOST="${PGHOST:-127.0.0.1}"
-export PGPORT="${PGPORT:-61432}"
+export PGPORT="${PGPORT:-62432}"
 export PGUSER="${PGUSER:-pguser}"
 export PGPASSWORD="${PGPASSWORD:-secret}"

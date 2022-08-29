@@ -14,9 +14,7 @@ import sttp.tapir.server.akkahttp.AkkaHttpServerInterpreter
 import scala.language.implicitConversions
 import scala.concurrent.{ExecutionContext, Future}
 
-/**
-  *
-  */
+/** */
 object TodoApiAkkaBinding {
 
   def buildTodoApiRoute(impl: TodoApiService)(implicit ec: ExecutionContext): Route = {
@@ -35,21 +33,6 @@ object TodoApiAkkaBinding {
         ),
       )
     serverImplRoute
-
-  }
-
-  def exmaple(): Unit = {
-
-    // the endpoint: single fixed path input ("hello"), single query parameter
-    // corresponds to: GET /hello?name=...
-    val helloWorld: PublicEndpoint[String, Unit, String, Any] =
-      endpoint.get.in("hello").in(query[String]("name")).out(stringBody)
-
-    // converting an endpoint to a route (providing server-side logic); extension method comes from imported packages
-    val helloWorldRoute: Route =
-      AkkaHttpServerInterpreter().toRoute(
-        helloWorld.serverLogicSuccess(name => Future.successful(s"Hello, $name!")),
-      )
 
   }
 }

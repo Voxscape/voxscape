@@ -11,8 +11,7 @@ import sttp.tapir._
 
 import java.time.OffsetDateTime
 
-/**
-  * TODO: validation
+/** TODO: validation
   */
 object UserTodoApi extends UserApi with TodoApi {
 
@@ -30,9 +29,7 @@ object UserTodoApi extends UserApi with TodoApi {
         .in("user_todo_api")
         .errorOut(defaultErrorOutputMapping)
 
-    /**
-      *
-      */
+    /** */
     private val authedBasePath: Endpoint[TaintedToken, Unit, ApiError, Unit, Any] = {
       implicit val x = Codec.string
 

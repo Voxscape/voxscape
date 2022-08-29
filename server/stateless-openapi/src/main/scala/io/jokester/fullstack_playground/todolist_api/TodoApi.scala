@@ -3,11 +3,11 @@ package io.jokester.fullstack_playground.todolist_api
 import io.circe.generic.auto._
 import io.jokester.api.OpenAPIBuilder
 import io.jokester.api.OpenAPIConvention._
+import sttp.apispec.openapi.OpenAPI
 import sttp.model.StatusCode
 import sttp.tapir._
 import sttp.tapir.generic.auto._
 import sttp.tapir.json.circe.jsonBody
-import sttp.tapir.openapi.OpenAPI
 
 import java.time.Instant
 
@@ -41,9 +41,10 @@ object TodoApi {
 
   case class CreateTodoIntent(title: String, desc: String)
 
-  /**
-    * @note must not "extends AnyVal" or there will be mismatch between OpenAPI / Scala
-    * @fixme this does not make "todos" required in OpenAPI
+  /** @note
+    *   must not "extends AnyVal" or there will be mismatch between OpenAPI / Scala
+    * @fixme
+    *   this does not make "todos" required in OpenAPI
     */
   case class TodoList(todos: Seq[Todo])
 
