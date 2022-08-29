@@ -25,7 +25,7 @@ devDeps:
 
 devDepsFull:
 	@printf '\ek[docker-compose up]\e\\'
-	cd dev && exec docker-compose up hasura
+	cd dev && COMPOSE_PROFILES=NOAUTO exec docker-compose up
 
 serverTxz:
 	cd server && exec sbt apiServer/packageXzTarball
