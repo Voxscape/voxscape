@@ -17,24 +17,32 @@
   },
   "homepage": "https://github.com/jokester/fullstack-playground#readme",
   "dependencies": {
-    "tslib": "^2"
+    "debug": "^4.3.4",
+    "tslib": "^2",
+    "@jokester/ts-commonutil": "^0.3.8"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.7",
     "@types/node": "^16",
     "@types/jest": "^28",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "gts": "^3.1.0",
     "eslint-plugin-import": "^2.26.0",
     "jest": "^28",
     "ts-jest": "^28",
-    "typescript": "^4.7"
+    "typescript": "^4.8"
   },
-  "resolutions": {
-    "@types/node": "=16",
+  "overrides": {
+    "@types/node": "^16",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "tslib": "^2"
   },
   "workspaces": [
     "web",
     "hasura",
-    "scripts"
+    "scripts",
+    "packages/vox.ts"
   ]
 }

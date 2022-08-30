@@ -1,6 +1,5 @@
 import { useApiClient } from '../../api/use-api-client';
 import type React from 'react';
-import { Button } from '@blueprintjs/core';
 import { FaIcon } from '@jokester/ts-commonutil/lib/react/component/font-awesome';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -38,8 +37,8 @@ export const TwitterOAuth1Button: React.FC = () => {
   }, [router]);
 
   return (
-    <Button type="button" onClick={onClick}>
+    <button type="button" onClick={onClick}>
       Login With Twitter <FaIcon icon="twitter" />
-    </Button>
+    </button>
   );
 };

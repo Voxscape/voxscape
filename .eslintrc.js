@@ -2,7 +2,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'react-hooks'],
   extends: [
-    '../node_modules/gts/',
+    './node_modules/gts/',
     'plugin:react/recommended',
     // "eslint:recommended", // not enabling: it reports many TS idioms as error
     'plugin:@typescript-eslint/eslint-recommended',
@@ -40,6 +40,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'warn',
     'no-inner-declarations': 'warn',
     'node/no-extraneous-import': 0,
+    "node/no-unpublished-import": 0,
     'no-useless-escape': 'warn',
     'no-constant-condition': 'warn',
     'no-irregular-whitespace': 'warn',
