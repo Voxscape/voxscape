@@ -22,6 +22,7 @@
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@jokester/ts-commonutil": "^0.3.8",
+    "@jokester/vox.ts": "*",
     "classnames": "^2.3.1",
     "clsx": "^1.2.1",
     "date-fns": "^2.29.1",
@@ -33,13 +34,13 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-use": "^17.4.0",
-    "@jokester/vox.ts": "*",
     "rxjs": "^7.5.5",
     "tslib": "^2",
     "use-constant": "^1.1.0"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^12",
+    "@next/eslint-plugin-next": "^12.2.5",
     "@types/debug": "^4.1.7",
     "@types/lodash-es": "^4.17.6",
     "@types/node": "16",
