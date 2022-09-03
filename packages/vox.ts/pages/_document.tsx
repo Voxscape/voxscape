@@ -1,7 +1,9 @@
 import React from 'react';
 import Document, { Html, Main, NextScript, Head } from 'next/document';
+import { cssLinks } from '../src/demo/components/default-meta';
 
 const defaultStyleSheets = [
+  cssLinks.tailwind,
   <link
     key="font-roboto"
     rel="stylesheet"

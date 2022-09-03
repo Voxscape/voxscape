@@ -1,11 +1,11 @@
 import { FC } from 'react';
 import { BabylonDemo } from '../../src/demo/babylon/babylon-demo';
-import { DefaultMeta } from '../../src/demo/components/default-meta';
+import { DefaultMeta } from '../../src/components/meta/default-meta';
 
 const BabylonDemoPage: FC = () => {
   return (
     <div>
-      <DefaultMeta />
+      <DefaultMeta title="vox model rendered in Babylon.js" />
       <BabylonDemo />
     </div>
   );

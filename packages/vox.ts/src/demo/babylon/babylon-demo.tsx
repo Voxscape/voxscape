@@ -8,6 +8,7 @@ import { renderPlayground } from './render-playground';
 import { binaryConversion } from '../../util/binary-conversion';
 import { basicParser } from '../../parser/basic-parser';
 import { renderModel } from './render-vox-model';
+import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 
 export const BabylonDemo: React.FC = () => {
   const [model, setModel] = useState<null | ParsedVoxFile>(null);
@@ -111,32 +112,29 @@ const BabylonModelRenderer: React.FC<{ onReset?(): void; model?: ParsedVoxFile }
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const babylonCtx = useBabylonContext(canvasRef);
 
-  const started = useRef(false);
+  useAsyncEffect(
+    async (mounted, effectReleased) => {
+      if (!babylonCtx) {
+        return;
+      }
 
-  useEffect(() => {
-    if (!babylonCtx) {
-      return;
-    } else if (started.current) {
-      return;
-    }
-    started.current = true;
-    let effectRunning = true;
+      // fixme: should re-init scene when model changes
+      createRefAxes(100, babylonCtx.scene, babylonCtx.deps);
+      babylonCtx.engine.start();
 
-    // fixme: should re-init scene when model changes
-    createRefAxes(100, babylonCtx.scene, babylonCtx.deps);
-    babylonCtx.engine.start();
+      if (props.model && props.model.models.length) {
+        renderModel(babylonCtx, props.model.models[0], props.model, () => !mounted.current);
+      } else {
+        babylonCtx.camera.setRadius(50);
+        renderPlayground(babylonCtx);
+      }
 
-    if (props.model && props.model.models.length) {
-      renderModel(babylonCtx, props.model.models[0], props.model, () => !effectRunning);
-    } else {
-      babylonCtx.camera.setRadius(50);
-      renderPlayground(babylonCtx);
-    }
-    return () => {
-      babylonCtx.engine.stop();
-      effectRunning = false;
-    };
-  }, [babylonCtx, props.model]);
+      effectReleased.then(() => {
+        babylonCtx.engine.stop();
+      });
+    },
+    [babylonCtx, props.model],
+  );
 
   const [enableInspector, setEnableInspector] = useState(false);
   useBabylonInspector(babylonCtx, enableInspector);

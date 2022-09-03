@@ -33,6 +33,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-use": "^17.4.0",
+    "@jokester/vox.ts": "*",
     "rxjs": "^7.5.5",
     "tslib": "^2",
     "use-constant": "^1.1.0"

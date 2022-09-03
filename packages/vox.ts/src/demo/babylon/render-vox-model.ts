@@ -1,9 +1,7 @@
 import { BabylonContext } from './init-babylon';
 import { ParsedVoxFile, VoxelModel } from '../../types/vox-types';
 import { BabylonMeshBuilder } from '../../babylon/babylon-mesh-builder';
-import { wait } from '../../util/timing';
-
-const logger = console;
+import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 
 export async function renderModel(
   ctx: BabylonContext,
