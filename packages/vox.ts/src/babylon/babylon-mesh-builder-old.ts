@@ -4,7 +4,7 @@ import { Color4 } from '@babylonjs/core/Maths';
 import * as VoxTypes from '../types/vox-types';
 import { BabylonDeps } from './babylon-deps';
 import { buildBabylonColor } from './util';
-import { DefaultMap } from '../util/default-map';
+import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 
 interface ReadonlyVoxelMesh {
   findVoxelMesh(x: number, y: number, z: number): null | Mesh;

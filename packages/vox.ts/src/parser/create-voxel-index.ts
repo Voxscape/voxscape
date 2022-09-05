@@ -1,5 +1,5 @@
 import * as VoxTypes from '../types/vox-types';
-import { DefaultMap } from '../util/default-map';
+import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 
 export function createVoxelIndex(
   voxels: readonly VoxTypes.Voxel[],

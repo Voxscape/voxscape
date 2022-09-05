@@ -3,7 +3,7 @@ import { Scene } from '@babylonjs/core/scene';
 import { Mesh, MeshBuilder } from '@babylonjs/core/Meshes';
 import { Vector3, Color4 } from '@babylonjs/core/Maths';
 import vox from 'vox.js';
-import { DefaultMap } from '../util/default-map';
+import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 
 const white = { r: 0, b: 0, g: 0 } as const;
 
