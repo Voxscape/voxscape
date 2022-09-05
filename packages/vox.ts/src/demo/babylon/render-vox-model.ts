@@ -8,7 +8,7 @@ export async function renderModel(
   voxModel: VoxelModel,
   voxFile: ParsedVoxFile,
   shouldBreak?: () => boolean,
-) {
+): Promise<void> {
   const firstModel = voxModel;
   // new mesh builder
   const started = BabylonMeshBuilder.progessive(voxModel, voxFile.palette, 'first-model', ctx.scene, ctx.deps, 100);
