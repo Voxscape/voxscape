@@ -15,8 +15,9 @@ export async function renderModel(
 
   ctx.camera.setRadius(Math.max(2 * firstModel.size.x, 2 * firstModel.size.y, 2 * firstModel.size.z));
 
-  for (const p of started) {
-    await wait(0.02e3); // and do next step
+  for (const progress of started) {
+    console.debug('progress', progress);
+    await wait(0.01e3); // and do next step
     if (shouldBreak?.()) break;
   }
 }

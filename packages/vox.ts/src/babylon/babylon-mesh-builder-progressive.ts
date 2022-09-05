@@ -123,8 +123,18 @@ export function* buildBabylonMeshProgressive(
 
   yield progress;
 
+  /**
+   * TODO: this is creating too many meshes
+   * to try:
+   * 1. a better meshing algorithm
+   * 2. do
+   * 3. all voxels in 1 mesh, with a complicated material
+   */
   let numSubMesh = 0;
   for (const c of extractSurfaces(model.voxels, palette, batchSize, deps)) {
+    /**
+     * FIXME: kkk
+     */
     const subMesh = MeshBuilder.CreatePolyhedron(`submesh-${++numSubMesh}`, c);
     subMesh.parent = root; // must preserve local transform of subMesh
 
@@ -163,7 +173,6 @@ function* extractSurfaces(
   batchSize: number,
   deps: BabylonDeps,
 ): Generator<CustomPolyhedronProps & { progress: number }> {
-  const { Color4 } = deps;
   const voxelIndex = createVoxelIndex(voxels);
 
   const faceColors: Color4[] = [];
@@ -256,10 +265,9 @@ function* extractSurfaces(
         }
 
         if (batchSize && !(++numProcessedVoxels % batchSize)) {
-          // interrupt
           const progress = numProcessedVoxels / voxels.length;
           yield {
-            progress: numProcessedVoxels / voxels.length,
+            progress,
             faceColors: faceColors.slice(),
             custom: {
               vertex: vertex.slice(),

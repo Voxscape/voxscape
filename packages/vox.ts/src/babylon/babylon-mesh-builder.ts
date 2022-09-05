@@ -13,7 +13,7 @@ export const BabylonMeshBuilder = {
     scene: Scene,
     deps: BabylonDeps,
   ): BabylonMeshBuildProgress {
-    return Iterators.last(buildBabylonMeshProgressive(model, palette, meshName, scene, deps, 0))!;
+    return Iterators.last(buildBabylonMeshProgressive(model, palette, meshName, scene, deps, 100))!;
   },
 
   async async(
