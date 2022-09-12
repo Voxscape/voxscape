@@ -13,7 +13,10 @@ export async function renderModel(
   // new mesh builder
   const started = BabylonMeshBuilder.progessive(voxModel, voxFile.palette, 'first-model', ctx.scene, ctx.deps, 1000);
 
-  ctx.camera.setRadius(Math.max(2 * firstModel.size.x, 2 * firstModel.size.y, 2 * firstModel.size.z));
+  ctx.camera.setRadius(
+    0.2 * Math.min(firstModel.size.x, firstModel.size.y, firstModel.size.z),
+    1.5 * Math.max(firstModel.size.x, firstModel.size.y, firstModel.size.z),
+  );
 
   for await (const progress of started) {
     console.debug('progress', progress);

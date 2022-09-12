@@ -45,6 +45,8 @@ export async function* buildBabylonMeshProgressive(
 ): AsyncGenerator<BabylonMeshBuildProgress> {
   const { Mesh, MeshBuilder, Vector3, Matrix, Quaternion } = deps;
 
+  console.debug('buildBabylonMeshProgressive', model, palette);
+
   // vox (or MagicaVoxel): x-right / y-'deep' / z-top
   // babylon: x-right / z-'deep' / y-top
   const root = new Mesh(meshName, scene);
@@ -148,9 +150,14 @@ export async function* buildBabylonMeshProgressive(
   }
 
   if (c) {
+    console.debug('building final mesh', c);
     const voxelsMesh = MeshBuilder.CreatePolyhedron(`voxels`, c);
-    voxelsMesh.visibility = 0;
-    await new Promise<void>((f) => voxelsMesh.optimizeIndices(() => f()));
+    if (0) {
+      voxelsMesh.visibility = 0;
+      await new Promise<void>((f) => voxelsMesh.optimizeIndices(() => f()));
+      voxelsMesh.visibility = 1;
+      console.debug('optimized');
+    }
     voxelsMesh.parent = root;
   }
 
@@ -267,7 +274,7 @@ function* extractSurfaces(
             [x + 1, y + 1, z + 1],
           );
 
-          const color = colorMap.getOrCreate(v.colorIndex);
+          const color = buildBabylonColor(palette[v.colorIndex], deps);
 
           // 1 face = 2 colored facets
           for (let i = 0; i < numCreatedFaces; i++) {

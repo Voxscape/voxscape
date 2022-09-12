@@ -1,4 +1,4 @@
-import * as VoxTypes from '../types/vox-types';
+import type * as VoxTypes from '../types/vox-types';
 import { Chunk, RiffLense } from '../util/riff-lense';
 import { defaultPaletteBytes } from './default-palette';
 
@@ -39,11 +39,20 @@ export function basicParser(bytes: ArrayBuffer, flipYZ = false): VoxTypes.Parsed
         case 'LAYR':
         case 'MATL':
         case 'rOBJ':
-          // TODO: support extension chunks
+        case 'STRING':
+        case 'DICT':
+        case 'ROTATION':
+        case 'NOTE':
+        case 'IMAP':
+          /**
+           * TODO: support extension chunks.
+           * see https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox-extension.txt
+           */
+          console.warn(`vox.ts: unsupported ${chunk.id} chunk at offset 0x${chunk.start.toString(16)}`);
           break;
 
         default:
-          throw new Error(`unexpected '${chunk.id}' chunk at offset=0x${chunk.start.toString(16)}`);
+          console.warn(`vox.ts: unknown ${chunk.id} chunk at offset 0x${chunk.start.toString(16)}`);
       }
     }
   }

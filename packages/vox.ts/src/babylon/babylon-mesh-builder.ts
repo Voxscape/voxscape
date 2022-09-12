@@ -6,24 +6,4 @@ import { BabylonMeshBuildProgress, buildBabylonMeshProgressive } from './babylon
 
 export const BabylonMeshBuilder = {
   progessive: buildBabylonMeshProgressive,
-  sync(
-    model: VoxTypes.VoxelModel,
-    palette: VoxTypes.VoxelPalette,
-    meshName: string,
-    scene: Scene,
-    deps: BabylonDeps,
-  ): BabylonMeshBuildProgress {
-    return Iterators.last(buildBabylonMeshProgressive(model, palette, meshName, scene, deps, 100))!;
-  },
-
-  async async(
-    model: VoxTypes.VoxelModel,
-    palette: VoxTypes.VoxelPalette,
-    meshName: string,
-    scene: Scene,
-    deps: BabylonDeps,
-  ) {
-    const all = await Iterators.toArrayAsync(buildBabylonMeshProgressive(model, palette, meshName, scene, deps), 0.1e3);
-    return all[all.length - 1];
-  },
 } as const;
