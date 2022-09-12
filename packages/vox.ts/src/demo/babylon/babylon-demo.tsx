@@ -17,7 +17,9 @@ export const BabylonDemo: React.FC<{ path?: ModelPath }> = (props) => {
   useAsyncEffect(
     async (mounted) => {
       if (props.path?.file) {
-        const blob = await fetch('/ref-models-2/' + props.path.file).then((_) => _.blob());
+        const blob = await fetch('/ref-models-2/' + encodeURIComponent(props.path.file).replaceAll('%2F', '/')).then(
+          (_) => _.blob(),
+        );
         const parsed = basicParser(await binaryConversion.blob.toArrayBuffer(blob));
         setModel(parsed);
       }

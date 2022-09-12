@@ -58,7 +58,7 @@ const ModelPickerCell: React.FC<{ file: IndexedFile }> = ({ file }) => {
     <div>
       {file.modelMeta.map((m, modelIndex) => (
         <div key={modelIndex}>
-          model#{modelIndex}: {m.x}x{m.y}x{m.z}, {m.numVoxel} voxels
+          model#{modelIndex}: {m.x}x{m.y}x{m.z} / {m.numVoxel} voxels
           <br />
           <Button type="button" onClick={() => onOpenViewer(modelIndex)}>
             preview
