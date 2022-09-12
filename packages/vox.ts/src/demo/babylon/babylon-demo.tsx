@@ -1,23 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ParsedVoxFile } from '../../types/vox-types';
-import { useBabylonContext, useBabylonInspector } from './init-babylon';
-import classNames from 'classnames';
 import { useMounted } from '../components/hooks/use-mounted';
-import { createRefAxes } from './deps/create-ref-axes';
-import { renderPlayground } from './render-playground';
 import { binaryConversion } from '../../util/binary-conversion';
 import { basicParser } from '../../parser/basic-parser';
-import { renderModel } from './render-vox-model';
+import { BabylonModelRenderer } from './babylon-model-renderer';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 
-export const BabylonDemo: React.FC = () => {
+interface ModelPath {
+  file: string;
+  modelId: string;
+}
+
+export const BabylonDemo: React.FC<{ path?: ModelPath }> = (props) => {
   const [model, setModel] = useState<null | ParsedVoxFile>(null);
+
+  useAsyncEffect(
+    async (mounted) => {
+      if (props.path?.file) {
+        const blob = await fetch('/ref-models-2/' + props.path.file).then((_) => _.blob());
+        const parsed = basicParser(await binaryConversion.blob.toArrayBuffer(blob));
+        setModel(parsed);
+      }
+    },
+    [props.path],
+  );
 
   if (model) {
     return (
       <div className="p-4">
         <h1 className="mb-2 text-xl">model viewer</h1>
-        <BabylonModelRenderer model={model} onReset={() => setModel(null)} />;
+        <BabylonModelRenderer
+          modelFile={model}
+          modelIndex={Number(props.path?.modelId)}
+          onReset={() => setModel(null)}
+        />
       </div>
     );
   } else {
@@ -104,53 +120,6 @@ const BabylonFilePicker: React.FC<{ onModelRead?(got: ParsedVoxFile): void }> = 
           </li>
         ))}
       </ul>
-    </div>
-  );
-};
-
-const BabylonModelRenderer: React.FC<{ onReset?(): void; model?: ParsedVoxFile }> = (props) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const babylonCtx = useBabylonContext(canvasRef);
-
-  useAsyncEffect(
-    async (mounted, effectReleased) => {
-      if (!babylonCtx) {
-        return;
-      }
-
-      // fixme: should re-init scene when model changes
-      createRefAxes(100, babylonCtx.scene, babylonCtx.deps);
-      babylonCtx.engine.start();
-
-      if (props.model && props.model.models.length) {
-        renderModel(babylonCtx, props.model.models[0], props.model, () => !mounted.current);
-      } else {
-        babylonCtx.camera.setRadius(50);
-        renderPlayground(babylonCtx);
-      }
-
-      effectReleased.then(() => {
-        babylonCtx.engine.stop();
-      });
-    },
-    [babylonCtx, props.model],
-  );
-
-  const [enableInspector, setEnableInspector] = useState(false);
-  useBabylonInspector(babylonCtx, enableInspector);
-
-  return (
-    <div className={classNames('py-24')}>
-      <canvas ref={canvasRef} className={classNames('bg-white mx-auto')} style={{ width: 640, height: 480 }} />
-      <hr />
-      <p className="p-2 space-x-2">
-        <button type="button" className="p-2" onClick={() => setEnableInspector(!enableInspector)}>
-          {enableInspector ? 'disable inspector' : 'enable inspector'}
-        </button>
-        <button type="button" onClick={props.onReset}>
-          reset
-        </button>
-      </p>
     </div>
   );
 };
