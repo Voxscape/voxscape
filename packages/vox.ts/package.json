@@ -31,6 +31,8 @@
     "@babylonjs/post-processes": "^5.21.0",
     "@babylonjs/procedural-textures": "^5.21.0",
     "@babylonjs/serializers": "^5.21.0",
+    "@blueprintjs/core": "^4.9.4",
+    "@blueprintjs/table": "^4.6.5",
     "@types/debug": "^4.1.7",
     "@types/jest": "^28",
     "@types/lodash-es": "^4.17.6",
