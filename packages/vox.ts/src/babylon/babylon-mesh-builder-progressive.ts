@@ -5,6 +5,7 @@ import type { BabylonDeps } from './babylon-deps';
 import * as VoxTypes from '../types/vox-types';
 import { buildBabylonColor } from './util';
 import { createVoxelIndex } from '../parser/create-voxel-index';
+import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 
 export interface BabylonMeshBuildProgress {
   startAt: number;
@@ -130,18 +131,25 @@ export function* buildBabylonMeshProgressive(
    * 2. do
    * 3. all voxels in 1 mesh, with a complicated material
    */
-  let numSubMesh = 0;
-  for (const c of extractSurfaces(model.voxels, palette, batchSize, deps)) {
+  let c: null | CustomPolyhedronProps = null;
+  for (const p of extractSurfaces(model.voxels, palette, batchSize, deps)) {
     /**
      * FIXME: kkk
      */
-    const subMesh = MeshBuilder.CreatePolyhedron(`submesh-${++numSubMesh}`, c);
-    subMesh.parent = root; // must preserve local transform of subMesh
+    // const subMesh = MeshBuilder.CreatePolyhedron(`submesh-${++numSubMesh}`, c);
+    // subMesh.parent = root; // must preserve local transform of subMesh
+
+    c = p;
 
     yield {
       ...progress,
-      progress: c.progress,
+      progress: p.progress,
     };
+  }
+
+  if (c) {
+    const voxelsMesh = MeshBuilder.CreatePolyhedron(`voxels`, c);
+    voxelsMesh.parent = root;
   }
 
   yield {
@@ -179,6 +187,7 @@ function* extractSurfaces(
   const vertex: [number, number, number][] = [];
   const face: [number, number, number][] = [];
 
+  const colorMap = new DefaultMap<number, Color4>((colorIndex) => buildBabylonColor(palette[colorIndex], deps));
   let numProcessedVoxels = 0;
 
   /** FIXME: we should merge faces when possible */
@@ -256,7 +265,7 @@ function* extractSurfaces(
             [x + 1, y + 1, z + 1],
           );
 
-          const color = buildBabylonColor(palette[v.colorIndex], deps);
+          const color = colorMap.getOrCreate(v.colorIndex);
 
           // 1 face = 2 colored facets
           for (let i = 0; i < numCreatedFaces; i++) {
@@ -268,10 +277,10 @@ function* extractSurfaces(
           const progress = numProcessedVoxels / voxels.length;
           yield {
             progress,
-            faceColors: faceColors.slice(),
+            faceColors,
             custom: {
-              vertex: vertex.slice(),
-              face: face.slice(),
+              vertex,
+              face,
             },
           };
         }
