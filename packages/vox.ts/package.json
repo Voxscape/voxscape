@@ -1,14 +1,10 @@
 {
-  "name": "@jokester/vox.ts",
+  "name": "@voxscape/vox.ts",
   "version": "0.1.0",
   "author": "Wang Guan <momocraft@gmail.com>",
-  "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "export": "next export",
-    "analyze": "BUNDLE_ANALYZE=both next build",
-    "start": "NODE_ENV=production next start",
+    "build": "rm -rf lib tsconfig.dist.tsbuildinfo && tsc --project tsconfig.dist.json",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",

@@ -17,7 +17,7 @@ export interface BabylonContext {
   scene: Scene;
   camera: {
     instance: ArcRotateCamera;
-    setRadius(lowerDistance: number, upperDistance: number): void;
+    setRadius(lowerDistance: number, upperDistance?: number): void;
   };
   deps: typeof babylonAllDeps;
 
@@ -120,7 +120,7 @@ function initBabylon(canvas: HTMLCanvasElement, deps: typeof babylonAllDeps): Ba
     scene,
     camera: {
       instance: camera,
-      setRadius(lower: number, upper: number) {
+      setRadius(lower: number, upper = lower) {
         camera.lowerRadiusLimit = lower;
         camera.upperRadiusLimit = upper;
       },
