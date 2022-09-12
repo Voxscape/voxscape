@@ -35,14 +35,14 @@ const Neighbors = [
  * @param batchSize
  * @returns {Generator<BabylonMeshBuildProgress>}
  */
-export function* buildBabylonMeshProgressive(
+export async function* buildBabylonMeshProgressive(
   model: VoxTypes.VoxelModel,
   palette: VoxTypes.VoxelPalette,
   meshName: string,
   scene: Scene,
   deps: BabylonDeps,
   batchSize = 0,
-): Generator<BabylonMeshBuildProgress> {
+): AsyncGenerator<BabylonMeshBuildProgress> {
   const { Mesh, MeshBuilder, Vector3, Matrix, Quaternion } = deps;
 
   // vox (or MagicaVoxel): x-right / y-'deep' / z-top
@@ -149,6 +149,8 @@ export function* buildBabylonMeshProgressive(
 
   if (c) {
     const voxelsMesh = MeshBuilder.CreatePolyhedron(`voxels`, c);
+    voxelsMesh.visibility = 0;
+    await new Promise<void>((f) => voxelsMesh.optimizeIndices(() => f()));
     voxelsMesh.parent = root;
   }
 

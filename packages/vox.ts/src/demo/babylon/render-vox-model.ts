@@ -11,11 +11,11 @@ export async function renderModel(
 ): Promise<void> {
   const firstModel = voxModel;
   // new mesh builder
-  const started = BabylonMeshBuilder.progessive(voxModel, voxFile.palette, 'first-model', ctx.scene, ctx.deps, 100);
+  const started = BabylonMeshBuilder.progessive(voxModel, voxFile.palette, 'first-model', ctx.scene, ctx.deps, 1000);
 
   ctx.camera.setRadius(Math.max(2 * firstModel.size.x, 2 * firstModel.size.y, 2 * firstModel.size.z));
 
-  for (const progress of started) {
+  for await (const progress of started) {
     console.debug('progress', progress);
     await wait(0.01e3); // and do next step
     if (shouldBreak?.()) break;
