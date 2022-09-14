@@ -1,22 +1,21 @@
 package io.jokester.nuthatch
 
-import com.typesafe.config.{Config, ConfigFactory}
-import com.typesafe.scalalogging.LazyLogging
-import io.jokester.nuthatch.infra.{ApiBinder, ApiContext}
 import cats.effect.{ExitCode, IO, IOApp, Resource}
 import com.comcast.ip4s.IpLiteralSyntax
+import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.scalalogging.LazyLogging
 import io.jokester.api.OpenAPIBuilder
 import io.jokester.cats_effect.TerminateCondition
 import io.jokester.http4s.VerboseLogger
+import io.jokester.nuthatch.infra.{ApiBinder, ApiContext}
 import io.jokester.nuthatch.scopes.authn.AuthenticationService
-import org.http4s.{HttpApp, HttpRoutes, Request}
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.{Router, Server}
+import org.http4s.{HttpApp, HttpRoutes}
 
 import java.nio.file.{Files, Path}
-import scala.concurrent.duration._
 
-object ApiServer extends IOApp with LazyLogging {
+object Main extends IOApp with LazyLogging {
   val config: Config = ConfigFactory.load()
 
   def runServer: IO[ExitCode] = {
@@ -66,6 +65,7 @@ object ApiServer extends IOApp with LazyLogging {
       case List("writeOpenApiSpec", dest) => exportApiSpec(dest)
       case List()                         => runServer
       case List("runServer")              => runServer
+      case "batch" :: command :: rest     => Scripts.runScript(command, rest)
       case _ => IO.println(s"command not recognized: $args").map(_ => ExitCode.Error)
     }
   }
