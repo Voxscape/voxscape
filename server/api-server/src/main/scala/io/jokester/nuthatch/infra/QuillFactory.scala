@@ -5,7 +5,7 @@ import cats.effect.kernel.Resource
 import com.typesafe.config.Config
 import com.zaxxer.hikari.HikariDataSource
 import io.circe.{Json, JsonObject}
-import io.getquill.{PostgresDialect, PostgresJdbcContext}
+import io.getquill.{PostgresDialect, PostgresJdbcContext, Query}
 import io.jokester.nuthatch.quill.QuillJsonHelper
 import io.jokester.nuthatch.quill.generated.public.PublicExtensions
 import io.jokester.nuthatch.quill.generated.{public => T}
@@ -28,7 +28,17 @@ object QuillFactory {
       with QuillCirceJsonEncoding
       with QuillDatetimeEncoding
       with QuillJsonHelper
-      with PublicCtxDummyFactory
+      with PublicCtxDummyFactory {
+    import cats.effect.{IO => CatsIO}
+    def testConnection(): CatsIO[Boolean] = {
+      CatsIO {
+        val q = quote {
+          sql"SELECT 1".as[Query[Int]]
+        }
+        run(q) == 1
+      }
+    }
+  }
 
   def createNonPooledCtx(c: Config): Resource[IO, PublicCtx] = {
     val simpleDataSource = QuillDataSource.simplePgDataSource(c.getString("url"))

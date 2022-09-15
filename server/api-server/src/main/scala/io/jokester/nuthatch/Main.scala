@@ -55,6 +55,7 @@ object Main extends IOApp with LazyLogging {
   def testDeps(serviceBundle: ServiceBundle): IO[ExitCode] = {
     for (
       redisInfo <- serviceBundle.apiContext.redis.use(jedis => IO.blocking(jedis.info()));
+      _         <- serviceBundle.apiContext.quill.testConnection();
       _         <- IO.print(redisInfo.linesIterator.take(5).toSeq)
     ) yield ExitCode.Success
   }
@@ -73,12 +74,16 @@ object Main extends IOApp with LazyLogging {
       case List() =>
         val serviceBundle = buildServiceBundle()
         testDeps(serviceBundle) <* shutdown(serviceBundle)
-      case List("writeOpenApiSpec", dest) => exportApiSpec(dest)
+      case List("writeOpenApiSpec", dest) =>
+        exportApiSpec(dest)
       case List("runServer") =>
         val serviceBundle = buildServiceBundle()
         runServer(serviceBundle) <* shutdown(serviceBundle)
-      case "batch" :: command :: rest => Scripts.runScript(command, rest)
-      case _ => IO.println(s"command not recognized: $args").map(_ => ExitCode.Error)
+      case "runScript" :: rest =>
+        val serviceBundle = buildServiceBundle()
+        new Scripts(serviceBundle).runScript(rest) <* shutdown(serviceBundle)
+      case _ =>
+        IO.println(s"command not recognized: $args").map(_ => ExitCode.Error)
     }
   }
 }
