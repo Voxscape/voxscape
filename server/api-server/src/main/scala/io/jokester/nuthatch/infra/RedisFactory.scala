@@ -10,10 +10,9 @@ import scala.util.{Success, Using, Try}
 object RedisFactory extends LazyLogging {
   def poolFromConfig(c: Config): JedisPool = {
     if (c.isResolved) {
-      val host = c.getString("host")
-      val port = c.getInt("port")
-
-      val pool = new JedisPool(host, port)
+      // e.g. redis://:password@host:port/0
+      val url  = c.getString("url")
+      val pool = new JedisPool(url)
 
       val conn = pool.getResource
       val info = Try { conn.info() }

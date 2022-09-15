@@ -7,7 +7,7 @@ import com.typesafe.scalalogging.LazyLogging
 import io.jokester.api.OpenAPIBuilder
 import io.jokester.cats_effect.TerminateCondition
 import io.jokester.http4s.VerboseLogger
-import io.jokester.nuthatch.infra.{ApiBinder, ApiContext}
+import io.jokester.nuthatch.infra.{ApiBinder, ApiContext, ServiceBundle}
 import io.jokester.nuthatch.scopes.authn.AuthenticationService
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.{Router, Server}
@@ -18,15 +18,11 @@ import java.nio.file.{Files, Path}
 object Main extends IOApp with LazyLogging {
   val config: Config = ConfigFactory.load()
 
-  def runServer: IO[ExitCode] = {
-    val rootConfig = ConfigFactory.load()
-    val apiContext = ApiContext.buildDefault(rootConfig)
-    val authn = new AuthenticationService {
-      protected override val apiCtx: ApiContext = apiContext
-    };
+  def buildServiceBundle(): ServiceBundle = ServiceBundle.build(ConfigFactory.load())
 
+  def runServer(serviceBundle: ServiceBundle): IO[ExitCode] = {
     val apiRoutes: HttpRoutes[IO] =
-      ApiBinder.buildRoutes(authn).tapWith(VerboseLogger.logReqRes[IO])
+      ApiBinder.buildRoutes(serviceBundle.authn).tapWith(VerboseLogger.logReqRes[IO])
 
     val httpApp: HttpApp[IO] =
       Router[IO]("/api/nuthatch_v1" -> apiRoutes, "/" -> VerboseLogger.notFound).orNotFound
@@ -38,16 +34,28 @@ object Main extends IOApp with LazyLogging {
       .withHttpApp(httpApp)
       .build
 
-    val r = apiContext.redis.use(jedis => IO.blocking(jedis.info()));
+    val r = serviceBundle.apiContext.redis.use(jedis => IO.blocking(jedis.info()));
 
     for (
       redisInfo1 <- IO.race(r, r);
       serverPair <- apiServer.allocated;
       _          <- TerminateCondition.enterPressed;
       _          <- serverPair._2;
-      _          <- IO { logger.info("{} stopped", serverPair._1) };
-      _          <- apiContext.close();
-      _          <- IO { logger.info("shutting down") }
+      _          <- IO { logger.info("{} stopped", serverPair._1) }
+    ) yield ExitCode.Success
+  }
+
+  def shutdown(serviceBundle: ServiceBundle): IO[Unit] = {
+    for (
+      _ <- serviceBundle.apiContext.close();
+      _ <- IO { logger.info("shutting down") }
+    ) yield ()
+  }
+
+  def testDeps(serviceBundle: ServiceBundle): IO[ExitCode] = {
+    for (
+      redisInfo <- serviceBundle.apiContext.redis.use(jedis => IO.blocking(jedis.info()));
+      _         <- IO.print(redisInfo.linesIterator.take(5).toSeq)
     ) yield ExitCode.Success
   }
 
@@ -62,10 +70,14 @@ object Main extends IOApp with LazyLogging {
 
   def run(args: List[String]): IO[ExitCode] = {
     args match {
+      case List() =>
+        val serviceBundle = buildServiceBundle()
+        testDeps(serviceBundle) <* shutdown(serviceBundle)
       case List("writeOpenApiSpec", dest) => exportApiSpec(dest)
-      case List()                         => runServer
-      case List("runServer")              => runServer
-      case "batch" :: command :: rest     => Scripts.runScript(command, rest)
+      case List("runServer") =>
+        val serviceBundle = buildServiceBundle()
+        runServer(serviceBundle) <* shutdown(serviceBundle)
+      case "batch" :: command :: rest => Scripts.runScript(command, rest)
       case _ => IO.println(s"command not recognized: $args").map(_ => ExitCode.Error)
     }
   }
