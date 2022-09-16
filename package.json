@@ -1,5 +1,5 @@
 {
-  "name": "fullstack-playground",
+  "name": "voxscape-site",
   "version": "0.1.0",
   "description": "---",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jokester/fullstack-playground.git"
+    "url": "git+https://github.com/Voxscape/site.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jokester/fullstack-playground/issues"
+    "url": "https://github.com/Voxscape/site/issues"
   },
-  "homepage": "https://github.com/jokester/fullstack-playground#readme",
+  "homepage": "https://github.com/Voxscape/site",
   "dependencies": {
     "debug": "^4.3.4",
     "tslib": "^2",
