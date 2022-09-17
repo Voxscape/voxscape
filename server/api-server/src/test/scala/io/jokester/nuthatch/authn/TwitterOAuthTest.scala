@@ -10,7 +10,7 @@ class TwitterOAuthTest extends AnyFlatSpec with BeforeAndAfterAll { self =>
 
   private lazy val apiContext = TestAppContext.build()
   private val testee = new AuthenticationService {
-    override protected val apiCtx: AppContext = self.apiContext
+    override protected val appCtx: AppContext = self.apiContext
   }
 
   "AuthenticationService" should "run" in {}

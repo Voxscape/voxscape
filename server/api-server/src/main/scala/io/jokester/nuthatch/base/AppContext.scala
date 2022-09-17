@@ -5,10 +5,8 @@ import cats.effect.kernel.Resource
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import redis.clients.jedis.Jedis
-import twitter4j.conf.Configuration
-import twitter4j.{HttpClientConfiguration, TwitterFactory}
+import twitter4j.{TwitterFactory}
 
-import java.util.Properties
 import scala.util.{Failure, Try}
 
 object AppContext {
@@ -32,7 +30,10 @@ trait AppContext extends LazyLogging with RedisKeys {
 
   val quill: QuillFactory.PublicCtx = quillResources._2
 
-  def getTwitterFactory: TwitterFactory = ???
+  lazy val twitterFactory: TwitterFactory = {
+    val conf = rootConfig.getConfig("twitter_oauth1")
+    TwitterProvider.getTwitterFactory(conf)
+  }
 
   def unsafeClose(): Unit = {
     Try {

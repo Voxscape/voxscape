@@ -1,12 +1,15 @@
 package io.jokester.nuthatch.authn
 
 import cats.effect.IO
+import io.jokester.nuthatch.generated.quill.{public => T}
 
 private[authn] trait PasswordAuth { self: AuthenticationService =>
 
   def attemptSignup(
       cred: AuthenticationApi.Password.EmailSignUpRequest,
-  ): IO[AuthenticationApi.CurrentUser] = ???
+  ): IO[AuthenticationApi.CurrentUser] = IO {
+    ???
+  }
 
   def attemptLogin(
       cred: AuthenticationApi.Password.EmailLoginCred,

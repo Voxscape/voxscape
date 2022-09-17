@@ -8,7 +8,7 @@ import io.jokester.nuthatch.generated.quill.{public => T}
 private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
   self: AuthenticationService =>
 
-  private lazy val quill = self.apiCtx.quill
+  private lazy val quill = self.appCtx.quill
 
   def findUserByEmail(email: String): IO[Option[UserWithAuth]] = {
     val findIdByEmail: IO[Option[Int]] = IO.blocking {

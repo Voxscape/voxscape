@@ -12,7 +12,7 @@ object AppRoot {
 }
 
 final class AppRoot(val apiContext: AppContext) {
-  val authn = new AuthenticationService {
-    protected override val apiCtx: AppContext = apiContext
+  val authn: AuthenticationService = new AuthenticationService {
+    protected override val appCtx: AppContext = apiContext
   }
 }
