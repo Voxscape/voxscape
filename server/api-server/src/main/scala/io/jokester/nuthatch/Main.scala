@@ -8,7 +8,6 @@ import io.jokester.api.OpenAPIBuilder
 import io.jokester.cats_effect.TerminateCondition
 import io.jokester.http4s.VerboseLogger
 import io.jokester.nuthatch.infra.{ApiBinder, ApiContext, ServiceBundle}
-import io.jokester.nuthatch.scopes.authn.AuthenticationService
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.{Router, Server}
 import org.http4s.{HttpApp, HttpRoutes}

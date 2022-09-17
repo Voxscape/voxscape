@@ -33,7 +33,7 @@ class Scripts(serviceBundle: ServiceBundle) extends LazyLogging {
         token <- maybeToken.fold[IO[OAuth1AccessToken]](
           IO.raiseError(OpenAPIConvention.NotFound("token not found")),
         )(IO.pure);
-        fetched <- TwitterClientService(token).fetchFollowers()
+        fetched <- TwitterClientService(serviceBundle.apiContext, token).fetchFollowers()
       ) yield ExitCode.Success
 
     }
