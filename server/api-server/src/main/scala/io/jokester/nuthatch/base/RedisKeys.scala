@@ -1,6 +1,6 @@
-package io.jokester.nuthatch.infra
+package io.jokester.nuthatch.base
 
-trait RedisKeys { self: ApiContext =>
+trait RedisKeys { self: AppContext =>
   private lazy val keyPrefix = redisConfig.getString("key_prefix")
   object redisKeys {
     object authn {

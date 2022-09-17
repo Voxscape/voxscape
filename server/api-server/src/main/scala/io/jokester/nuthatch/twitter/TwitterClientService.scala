@@ -1,13 +1,13 @@
-package io.jokester.nuthatch.scopes.twitter
+package io.jokester.nuthatch.twitter
 
 import cats.effect.IO
 import com.github.scribejava.core.model.OAuth1AccessToken
 import com.typesafe.scalalogging.LazyLogging
-import io.jokester.nuthatch.infra.ApiContext
+import io.jokester.nuthatch.base.AppContext
 import twitter4j.TwitterFactory
 import twitter4j.auth.AccessToken
 
-case class TwitterClientService(apiCtx: ApiContext, accessToken: OAuth1AccessToken)
+case class TwitterClientService(apiCtx: AppContext, accessToken: OAuth1AccessToken)
     extends LazyLogging {
 
   private lazy val client = new TwitterFactory().getInstance(
@@ -21,7 +21,6 @@ case class TwitterClientService(apiCtx: ApiContext, accessToken: OAuth1AccessTok
 
       logger.debug("got followers {}", followers)
     }
-//    IO.raiseError(new RuntimeException("not implemented"))
   }
 
 }

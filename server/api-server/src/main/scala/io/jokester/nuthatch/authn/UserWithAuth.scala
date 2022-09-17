@@ -1,6 +1,7 @@
-package io.jokester.nuthatch.scopes.authn
-import io.jokester.nuthatch.infra.Const.TempEmail
-import io.jokester.nuthatch.quill.generated.{public => T}
+package io.jokester.nuthatch.authn
+
+import io.jokester.nuthatch.generated.quill.{public => T}
+import io.jokester.nuthatch.consts._
 
 /** @internal
   */

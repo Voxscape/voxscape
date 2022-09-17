@@ -1,4 +1,4 @@
-package io.jokester.nuthatch.infra
+package io.jokester.nuthatch.base
 
 import cats.effect.IO
 import cats.effect.kernel.Resource
@@ -6,9 +6,8 @@ import com.typesafe.config.Config
 import com.zaxxer.hikari.HikariDataSource
 import io.circe.{Json, JsonObject}
 import io.getquill.{PostgresDialect, PostgresJdbcContext, Query}
-import io.jokester.nuthatch.quill.QuillJsonHelper
-import io.jokester.nuthatch.quill.generated.public.PublicExtensions
-import io.jokester.nuthatch.quill.generated.{public => T}
+import io.jokester.nuthatch.generated.quill.public.PublicExtensions
+import io.jokester.nuthatch.generated.quill.{public => T}
 import io.jokester.quill.{
   FixedPostgresNaming,
   QuillCirceJsonEncoding,

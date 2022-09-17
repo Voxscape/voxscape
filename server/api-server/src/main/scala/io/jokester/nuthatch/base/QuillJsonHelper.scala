@@ -1,4 +1,4 @@
-package io.jokester.nuthatch.quill
+package io.jokester.nuthatch.base
 
 import com.google.gson.Gson
 import io.circe.{Json, parser}

@@ -1,4 +1,4 @@
-package io.jokester.nuthatch.scopes.authn
+package io.jokester.nuthatch.authn
 
 import io.circe.generic.auto._
 import io.jokester.api.OpenAPIConvention

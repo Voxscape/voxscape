@@ -1,23 +1,25 @@
-package io.jokester.nuthatch.infra
+package io.jokester.nuthatch.base
 
 import cats.effect.IO
 import cats.effect.kernel.Resource
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import com.zaxxer.hikari.HikariDataSource
 import redis.clients.jedis.Jedis
+import twitter4j.conf.Configuration
+import twitter4j.{HttpClientConfiguration, TwitterFactory}
 
+import java.util.Properties
 import scala.util.{Failure, Try}
 
-object ApiContext {
-  def buildDefault($rootConfig: Config): ApiContext = new ApiContext {
+object AppContext {
+  def buildDefault($rootConfig: Config): AppContext = new AppContext {
     override def rootConfig: Config     = $rootConfig
     override def redisConfig: Config    = rootConfig.getConfig("redis")
     override def postgresConfig: Config = rootConfig.getConfig("postgres")
   }
 }
 
-trait ApiContext extends LazyLogging with RedisKeys {
+trait AppContext extends LazyLogging with RedisKeys {
   def rootConfig: Config
   protected def redisConfig: Config
   protected def postgresConfig: Config
@@ -29,6 +31,8 @@ trait ApiContext extends LazyLogging with RedisKeys {
     QuillFactory.unsafeCreatePooledQuill(postgresConfig)
 
   val quill: QuillFactory.PublicCtx = quillResources._2
+
+  def getTwitterFactory: TwitterFactory = ???
 
   def unsafeClose(): Unit = {
     Try {

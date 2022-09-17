@@ -7,7 +7,7 @@ import com.typesafe.scalalogging.LazyLogging
 import io.jokester.api.OpenAPIBuilder
 import io.jokester.cats_effect.TerminateCondition
 import io.jokester.http4s.VerboseLogger
-import io.jokester.nuthatch.infra.{ApiBinder, ApiContext, ServiceBundle}
+import io.jokester.nuthatch.base.{ApiBinder, AppContext}
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.{Router, Server}
 import org.http4s.{HttpApp, HttpRoutes}
@@ -17,9 +17,9 @@ import java.nio.file.{Files, Path}
 object Main extends IOApp with LazyLogging {
   val config: Config = ConfigFactory.load()
 
-  def buildServiceBundle(): ServiceBundle = ServiceBundle.build(ConfigFactory.load())
+  def buildServiceBundle(): AppRoot = AppRoot.build(ConfigFactory.load())
 
-  def runServer(serviceBundle: ServiceBundle): IO[ExitCode] = {
+  def runServer(serviceBundle: AppRoot): IO[ExitCode] = {
     val apiRoutes: HttpRoutes[IO] =
       ApiBinder.buildRoutes(serviceBundle.authn).tapWith(VerboseLogger.logReqRes[IO])
 
@@ -44,14 +44,14 @@ object Main extends IOApp with LazyLogging {
     ) yield ExitCode.Success
   }
 
-  def shutdown(serviceBundle: ServiceBundle): IO[Unit] = {
+  def shutdown(serviceBundle: AppRoot): IO[Unit] = {
     for (
       _ <- serviceBundle.apiContext.close();
       _ <- IO { logger.info("shutting down") }
     ) yield ()
   }
 
-  def testDeps(serviceBundle: ServiceBundle): IO[ExitCode] = {
+  def testDeps(serviceBundle: AppRoot): IO[ExitCode] = {
     for (
       redisInfo <- serviceBundle.apiContext.redis.use(jedis => IO.blocking(jedis.info()));
       _         <- serviceBundle.apiContext.quill.testConnection();

@@ -1,11 +1,12 @@
-package io.jokester.nuthatch.infra
+package io.jokester.nuthatch
 
 import com.typesafe.config.{Config, ConfigFactory}
-import io.jokester.nuthatch.quill.generated.{public => T}
+import io.jokester.nuthatch.base.AppContext
+import io.jokester.nuthatch.generated.quill.{public => T}
 
-object TestApiContext {
-  def build(): ApiContext with TestHelper = {
-    new ApiContext with TestHelper {
+object TestAppContext {
+  def build(): AppContext with TestHelper = {
+    new AppContext with TestHelper {
       override def rootConfig: Config = ConfigFactory.load()
       logger.debug("got rootConfig: {}", rootConfig)
 
@@ -16,7 +17,7 @@ object TestApiContext {
 
   }
 
-  trait TestHelper { self: ApiContext =>
+  trait TestHelper { self: AppContext =>
 
     def cleanDb(): Unit = {
       import quill._

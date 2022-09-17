@@ -11,7 +11,7 @@ import org.postgresql.ds.PGSimpleDataSource
 object RdbCodegenMain extends App with LazyLogging {
   logger.debug("started")
 
-  val destPkg = "io.jokester.nuthatch.quill.generated"
+  val destPkg = "io.jokester.nuthatch.generated.quill"
 
   lazy val simplePgDataSource = {
     val pgDataSource = new PGSimpleDataSource()

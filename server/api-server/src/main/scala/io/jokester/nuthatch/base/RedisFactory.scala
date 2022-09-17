@@ -1,11 +1,12 @@
-package io.jokester.nuthatch.infra
+package io.jokester.nuthatch.base
+
 import cats.effect.kernel.Resource.ExitCase
 import cats.effect.{IO, Resource}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import redis.clients.jedis.{Jedis, JedisPool}
 
-import scala.util.{Success, Using, Try}
+import scala.util.{Success, Try}
 
 object RedisFactory extends LazyLogging {
   def poolFromConfig(c: Config): JedisPool = {

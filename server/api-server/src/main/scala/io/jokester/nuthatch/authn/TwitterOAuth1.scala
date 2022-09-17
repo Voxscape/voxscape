@@ -1,12 +1,12 @@
-package io.jokester.nuthatch.scopes.authn
+package io.jokester.nuthatch.authn
 
 import cats.effect.IO
 import com.github.scribejava.core.model.OAuth1AccessToken
 import com.google.gson.Gson
-import io.jokester.nuthatch.infra.Const.{OAuth1Provider, TempEmail}
 import twitter4j.auth.AccessToken
 import twitter4j.conf.ConfigurationBuilder
 import twitter4j.{Twitter, TwitterFactory, User => TwitterUser}
+import io.jokester.nuthatch.consts._
 
 private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationService =>
 

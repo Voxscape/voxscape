@@ -1,4 +1,4 @@
-package io.jokester.nuthatch.quill.generated.public
+package io.jokester.nuthatch.generated.quill.public
 
 case class UserPassword(id: Int, userId: Int, passwordHash: String, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
 

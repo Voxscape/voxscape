@@ -1,13 +1,14 @@
-package io.jokester.nuthatch.infra
+package io.jokester.nuthatch.base
 
-import cats.effect.{Clock, IO}
+import cats.effect.IO
 import cats.syntax.either._
 import com.typesafe.scalalogging.LazyLogging
-import io.jokester.nuthatch.scopes.authn.{AuthenticationApi, AuthenticationService}
+import io.jokester.api.OpenAPIConvention.{ApiError, BadRequest, ServerError}
+import io.jokester.nuthatch.authn.{AuthenticationApi, AuthenticationService}
+import io.jokester.nuthatch.consts._
 import org.http4s.HttpRoutes
 import sttp.tapir.Endpoint
 import sttp.tapir.server.http4s.Http4sServerInterpreter
-import io.jokester.api.OpenAPIConvention._
 
 object ApiBinder extends LazyLogging {
 
@@ -25,14 +26,14 @@ object ApiBinder extends LazyLogging {
       List(
         // OAuth1
         AuthenticationApi.OAuth1.startAuth.serverLogic {
-          case Const.OAuth1Provider.twitter =>
+          case OAuth1Provider.twitter =>
             authn.startOAuth1Twitter.attempt.map(launderServerError)
           case _ => IO.raiseError(BadRequest("unsupported provider"))
         },
         AuthenticationApi.OAuth1.finishAuth.serverLogic { req =>
           {
             req.provider match {
-              case Const.OAuth1Provider.twitter =>
+              case OAuth1Provider.twitter =>
                 authn
                   .finishOAuth1Twitter(req)
                   .attempt

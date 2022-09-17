@@ -1,16 +1,16 @@
-package io.jokester.nuthatch.scopes
+package io.jokester.nuthatch.authn
 
-import io.jokester.nuthatch.infra.{ApiContext, TestApiContext}
-import io.jokester.nuthatch.scopes.authn.AuthenticationService
+import io.jokester.nuthatch.TestAppContext
+import io.jokester.nuthatch.authn.AuthenticationService
+import io.jokester.nuthatch.base.AppContext
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
-import twitter4j.User
 
 class TwitterOAuthTest extends AnyFlatSpec with BeforeAndAfterAll { self =>
 
-  private lazy val apiContext = TestApiContext.build()
+  private lazy val apiContext = TestAppContext.build()
   private val testee = new AuthenticationService {
-    override protected val apiCtx: ApiContext = self.apiContext
+    override protected val apiCtx: AppContext = self.apiContext
   }
 
   "AuthenticationService" should "run" in {}

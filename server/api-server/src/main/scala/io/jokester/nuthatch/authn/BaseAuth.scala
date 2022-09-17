@@ -1,9 +1,9 @@
-package io.jokester.nuthatch.scopes.authn
+package io.jokester.nuthatch.authn
 
 import cats.effect.IO
 import com.typesafe.scalalogging.LazyLogging
-import io.jokester.nuthatch.quill.QuillJsonHelper
-import io.jokester.nuthatch.quill.generated.{public => T}
+import io.jokester.nuthatch.base.QuillJsonHelper
+import io.jokester.nuthatch.generated.quill.{public => T}
 
 private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
   self: AuthenticationService =>

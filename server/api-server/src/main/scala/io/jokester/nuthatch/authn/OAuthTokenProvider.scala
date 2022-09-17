@@ -1,4 +1,5 @@
-package io.jokester.nuthatch.scopes.authn
+package io.jokester.nuthatch.authn
+
 import cats.effect.IO
 import com.github.scribejava.core.model.OAuth1AccessToken
 
