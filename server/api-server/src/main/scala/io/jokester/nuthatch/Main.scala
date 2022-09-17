@@ -39,7 +39,7 @@ object Main extends IOApp with LazyLogging {
     for (
       redisInfo1 <- IO.race(r, r);
       serverPair <- apiServer.allocated;
-      _          <- TerminateCondition.enterPressed;
+      _          <- IO.race(TerminateCondition.enterPressed, TerminateCondition.sigTerm);
       _          <- serverPair._2;
       _          <- IO { logger.info("{} stopped", serverPair._1) }
     ) yield ExitCode.Success
