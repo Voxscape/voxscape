@@ -1,5 +1,7 @@
 package io.jokester.nuthatch.authn
 
+import com.typesafe.scalalogging.LazyLogging
+import io.circe.Json
 import io.circe.generic.auto._
 import io.jokester.api.OpenAPIConvention
 import sttp.tapir._
@@ -22,8 +24,26 @@ object AuthenticationApi {
     * @param twitterUsername
     */
   case class UserProfile(
+      username: Option[String] = None,
       twitterUsername: Option[String] = None,
-  )
+  ) {
+
+    def toJson: Json = {
+      import io.circe.generic.semiauto._
+      val encoder = deriveEncoder[UserProfile]
+      encoder(this)
+    }
+  }
+
+  object UserProfile extends LazyLogging {
+    import io.circe.generic.semiauto._
+
+    private val decoder = deriveDecoder[UserProfile]
+
+    def fromJson(json: Json): UserProfile = {
+      decoder.decodeJson(json).getOrElse(UserProfile())
+    }
+  }
 
   object OAuth1 {
     case class OAuth1LoginIntent(externalUrl: String)
@@ -45,7 +65,11 @@ object AuthenticationApi {
   }
 
   object Password {
-    case class EmailSignUpRequest(email: String, initialPassword: String)
+    case class EmailSignUpRequest(
+        email: String,
+        initialPassword: String,
+        initialProfile: Option[UserProfile],
+    )
 
     val requestPasswordSignUp
         : Endpoint[Unit, EmailSignUpRequest, OpenAPIConvention.ApiError, CurrentUser, Any] =

@@ -10,7 +10,7 @@ private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
 
   private lazy val quill = self.appCtx.quill
 
-  def findUserByEmail(email: String): IO[Option[UserWithAuth]] = {
+  def findUserByEmail(email: String): IO[Option[UserAuthBundle]] = {
     val findIdByEmail: IO[Option[Int]] = IO.blocking {
       import quill._
       val users: Seq[T.User] = run {
@@ -25,7 +25,7 @@ private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
     })
   }
 
-  def findUserById(userId: Int): IO[Option[UserWithAuth]] = IO.blocking {
+  def findUserById(userId: Int): IO[Option[UserAuthBundle]] = IO.blocking {
     import quill._
     val load = quote {
       query[T.User]
@@ -40,12 +40,12 @@ private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
 
     loaded.headOption match {
       case Some(row) =>
-        Some(UserWithAuth(row._1, userOAuth1 = loaded.flatMap(_._2), userPassword = row._3))
+        Some(UserAuthBundle(row._1, userOAuth1 = loaded.flatMap(_._2), userPassword = row._3))
       case _ => None
     }
   }
 
-  def findUserByOAuth(provider: String, externalId: String): IO[Option[UserWithAuth]] = {
+  def findUserByOAuth(provider: String, externalId: String): IO[Option[UserAuthBundle]] = {
 
     val search: IO[Option[T.User]] = IO.blocking {
       import quill._
@@ -66,8 +66,8 @@ private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
   }
 
   def upsertOAuthUser(
-      oauthMatch: Option[UserWithAuth],
-      emailMatch: Option[UserWithAuth],
+      oauthMatch: Option[UserAuthBundle],
+      emailMatch: Option[UserAuthBundle],
       initialUser: T.User,
       initialOauth: T.UserOauth1,
   ): IO[Int] = {

@@ -42,7 +42,7 @@ private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationServic
   def upsertUser(
       twitterUser: TwitterUser,
       token: OAuth1AccessToken,
-  ): IO[UserWithAuth] = {
+  ): IO[UserAuthBundle] = {
 
     val twitterEmail = buildTwitterEmail(twitterUser)
 

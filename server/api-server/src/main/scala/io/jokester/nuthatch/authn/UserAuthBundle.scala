@@ -2,10 +2,11 @@ package io.jokester.nuthatch.authn
 
 import io.jokester.nuthatch.generated.quill.{public => T}
 import io.jokester.nuthatch.consts._
+import org.springframework.security.crypto.bcrypt.BCrypt
 
 /** @internal
   */
-private[authn] case class UserWithAuth(
+private[authn] case class UserAuthBundle(
     user: T.User,
     userOAuth1: Seq[T.UserOauth1],
     userPassword: Option[T.UserPassword] = None,
@@ -22,4 +23,9 @@ private[authn] case class UserWithAuth(
       isActivated = email.isDefined,
     )
   }
+
+  def hasPassword: Boolean = userPassword.isDefined
+
+  def passwordMatch(plaintext: String): Boolean =
+    userPassword.exists(u => BCrypt.checkpw(plaintext, u.passwordHash))
 }
