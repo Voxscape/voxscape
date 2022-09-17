@@ -4,11 +4,11 @@ import sbt._
 object Dependencies {
   lazy val basicDeps: Seq[ModuleID] = Seq(
     // logging
-    "com.typesafe.scala-logging" %% "scala-logging"  % "3.9.5",
-    "org.slf4j"                   % "jcl-over-slf4j" % "1.7.36",
-    "org.slf4j"                   % "slf4j-api"      % "1.7.36",
-    "ch.qos.logback"  % "logback-classic" % "1.3.0-alpha10", // this provides SLF4J backend
-    "commons-logging" % "commons-logging" % "1.2",
+    "com.typesafe.scala-logging" %% "scala-logging"   % "3.9.5",
+    "org.slf4j"                   % "jcl-over-slf4j"  % "2.0.0",
+    "org.slf4j"                   % "slf4j-api"       % "2.0.0",
+    "ch.qos.logback"              % "logback-classic" % "1.4.0", // this provides SLF4J backend
+    "commons-logging"             % "commons-logging" % "1.2",
     // config
     "com.typesafe"     % "config" % "1.4.2",
     "com.google.guava" % "guava"  % "31.1-jre",
@@ -18,12 +18,14 @@ object Dependencies {
   )
 
   lazy val twitterSdkDeps: Seq[ModuleID] = Seq(
-    /** https://github.com/redouane59/twittered newer (API v1+v2) but incomplete
+    /** twitterd
+      * @see
+      *   {https://github.com/redouane59/twittered} newer (API v1+v2) but incomplete (API v2 itself
+      *   is incomplete too)
       */
-    "io.github.redouane59.twitter" % "twittered" % "2.17" exclude ("org.yaml", "snakeyaml"),
+//    "io.github.redouane59.twitter" % "twittered" % "2.17" exclude ("org.yaml", "snakeyaml"),
 
-    /** https://twitter4j.org/en/index.html works but less up-to-date ?
-      */
+    /** @see {https://twitter4j.org/en/index.html} a more complete, 1.1-only API client */
     "org.twitter4j" % "twitter4j-core"   % "4.0.7",
     "org.twitter4j" % "twitter4j-stream" % "4.0.7",
   )
@@ -48,9 +50,9 @@ object Dependencies {
   ).map(_ % Versions.circe)
 
   lazy val authDeps: Seq[ModuleID] = Seq(
-    "org.springframework.security" % "spring-security-crypto" % "5.7.2",
+    "org.springframework.security" % "spring-security-crypto" % "5.7.3",
     "com.github.scribejava"        % "scribejava-apis"        % "8.3.1",
-    "com.github.jwt-scala"        %% "jwt-circe"              % "9.0.6",
+    "com.github.jwt-scala"        %% "jwt-circe"              % "9.1.1",
   )
 
   lazy val redisDeps: Seq[ModuleID] = Seq(
@@ -106,7 +108,7 @@ private object Versions {
   val http4s    = "0.23.14"
 
   // rdbms
-  val postgresql  = "42.4.2"
+  val postgresql  = "42.5.0"
   val quill       = "4.3.0"
   val scalikeJDBC = "3.5.0"
   val flyway      = "8.0.2"
