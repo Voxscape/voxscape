@@ -51,7 +51,7 @@ object AuthenticationApi {
         : Endpoint[Unit, EmailSignUpRequest, OpenAPIConvention.ApiError, CurrentUser, Any] =
       basePath.post.in("password").in(jsonBody[EmailSignUpRequest]).out(jsonBody[CurrentUser])
 
-    case class EmailLoginCred(email: String, initialPassword: String)
+    case class EmailLoginCred(email: String, password: String)
 
     val requestPasswordLogin
         : Endpoint[Unit, EmailLoginCred, OpenAPIConvention.ApiError, CurrentUser, Any] =

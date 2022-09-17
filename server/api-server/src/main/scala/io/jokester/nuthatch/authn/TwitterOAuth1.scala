@@ -71,7 +71,6 @@ private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationServic
   }
 
   private def getTwitter4J(token: OAuth1AccessToken): Twitter = {
-    val factory = TwitterProvider.getTwitterFactory(twitterOAuth1Config)
-    factory.getInstance(new AccessToken(token.getToken, token.getTokenSecret))
+    appCtx.twitterFactory.getInstance(new AccessToken(token.getToken, token.getTokenSecret))
   }
 }

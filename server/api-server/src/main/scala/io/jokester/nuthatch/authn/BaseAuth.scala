@@ -27,17 +27,21 @@ private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
 
   def findUserById(userId: Int): IO[Option[UserWithAuth]] = IO.blocking {
     import quill._
-    val findUser = quote {
+    val load = quote {
       query[T.User]
         .filter(_.id == lift(userId))
         .leftJoin(query[T.UserOauth1])
         .on((user, userOauth) => user.id == userOauth.userId)
+        .leftJoin(query[T.UserPassword])
+        .on((userAndUserOAuth, userPassword) => userAndUserOAuth._1.id == userPassword.userId)
     }
-    val found: Seq[(T.User, Option[T.UserOauth1])] = run(findUser)
+    val loaded: Seq[(T.User, Option[T.UserOauth1], Option[T.UserPassword])] =
+      run(load).map(row => (row._1._1, row._1._2, row._2))
 
-    found.headOption match {
-      case Some(row) => Some(UserWithAuth(row._1, found.flatMap(_._2)))
-      case _         => None
+    loaded.headOption match {
+      case Some(row) =>
+        Some(UserWithAuth(row._1, userOAuth1 = loaded.flatMap(_._2), userPassword = row._3))
+      case _ => None
     }
   }
 

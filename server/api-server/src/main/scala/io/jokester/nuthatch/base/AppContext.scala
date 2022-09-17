@@ -30,9 +30,11 @@ trait AppContext extends LazyLogging with RedisKeys {
 
   val quill: QuillFactory.PublicCtx = quillResources._2
 
-  lazy val twitterFactory: TwitterFactory = {
-    val conf = rootConfig.getConfig("twitter_oauth1")
-    TwitterProvider.getTwitterFactory(conf)
+  lazy val twitterFactory: TwitterFactory =
+    TwitterProvider.getTwitterFactory(providerConfig.twitterOauth1)
+
+  protected object providerConfig {
+    val twitterOauth1: Config = rootConfig.getConfig("twitter_oauth1")
   }
 
   def unsafeClose(): Unit = {
