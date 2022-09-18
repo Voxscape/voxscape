@@ -36,15 +36,11 @@ export function* extractSurfacesGreedy(
   const indexXyz = createVoxelIndexFull(model.voxels, ['x', 'y', 'z']);
   indexXyz.forEach((grid, x) => {
     grid.forEach((row, y) => {
+      /**
+       * looking along z+ direction
+       */
       for (let start = 0; start < row.voxels.length; ) {
-        let count = 1;
-        while (
-          start + count < row.voxels.length &&
-          row.voxels[start + count].colorIndex === row.voxels[start].colorIndex &&
-          row.voxels[start + count].z === 1 + row.voxels[start + count - 1].z
-        ) {
-          ++count;
-        }
+        const count = findVoxelSegment(row.voxels, 'z', start);
 
         const firstVoxel = row.voxels[start];
         const lastVoxel = row.voxels[start + count - 1];
@@ -70,6 +66,26 @@ type AxisSpec = 'x' | 'y' | 'z';
 interface IndexedRow {
   voxels: VoxTypes.Voxel[];
   set: Set<number>;
+}
+
+/**
+ * find
+ * @param voxels
+ * @param axis
+ * @param start
+ * @return count of voxels, minimum of 1
+ */
+export function findVoxelSegment(voxels: readonly VoxTypes.Voxel[], axis: AxisSpec, start: number): number {
+  let count = 1;
+  while (
+    start + count < voxels.length &&
+    voxels[start + count].colorIndex === voxels[start].colorIndex &&
+    voxels[start + count][axis] === 1 + voxels[start + count - 1][axis]
+  ) {
+    ++count;
+  }
+
+  return count;
 }
 
 function createVoxelIndexFull(

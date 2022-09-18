@@ -1,6 +1,6 @@
 module.exports = {
   preset: 'ts-jest/presets/js-with-ts',
-  roots: ['src', 'test'],
+  roots: ['src'],
   transformIgnorePatterns: ['<rootDir>/node_modules/.*\\.js', '<rootDir>/build/.*\\.js'],
   testMatch: ['**/*\\.(spec|test)\\.(ts|js|tsx|jsx)'],
   collectCoverageFrom: ['src/**/*.(ts|tsx)', '!out/', '!build/', '!**/node_modules', '!/coverage'],
@@ -15,6 +15,7 @@ module.exports = {
     'ts-jest': {
       tsconfig: {
         jsx: 'react',
+        skipLibCheck: true,
       },
     },
   },
