@@ -17,11 +17,11 @@ import java.nio.file.{Files, Path}
 object Main extends IOApp with LazyLogging {
   val config: Config = ConfigFactory.load()
 
-  def buildServiceBundle(): AppRoot = AppRoot.build(ConfigFactory.load())
+  private def buildApp(): AppRoot = AppRoot.build(ConfigFactory.load())
 
-  def runServer(serviceBundle: AppRoot): IO[ExitCode] = {
+  def runServer(appRoot: AppRoot): IO[ExitCode] = {
     val apiRoutes: HttpRoutes[IO] =
-      ApiBinder.buildRoutes(serviceBundle.authn).tapWith(VerboseLogger.logReqRes[IO])
+      ApiBinder.buildRoutes(appRoot).tapWith(VerboseLogger.logReqRes[IO])
 
     val httpApp: HttpApp[IO] =
       Router[IO]("/api/nuthatch_v1" -> apiRoutes, "/" -> VerboseLogger.notFound).orNotFound
@@ -33,7 +33,7 @@ object Main extends IOApp with LazyLogging {
       .withHttpApp(httpApp)
       .build
 
-    val r = serviceBundle.apiContext.redis.use(jedis => IO.blocking(jedis.info()));
+    val r = appRoot.apiContext.redis.use(jedis => IO.blocking(jedis.info()));
 
     for (
       redisInfo1 <- IO.race(r, r);
@@ -71,15 +71,15 @@ object Main extends IOApp with LazyLogging {
   def run(args: List[String]): IO[ExitCode] = {
     args match {
       case List() =>
-        val serviceBundle = buildServiceBundle()
+        val serviceBundle = buildApp()
         testDeps(serviceBundle) <* shutdown(serviceBundle)
       case List("writeOpenApiSpec", dest) =>
         exportApiSpec(dest)
       case List("runServer") =>
-        val serviceBundle = buildServiceBundle()
+        val serviceBundle = buildApp()
         runServer(serviceBundle) <* shutdown(serviceBundle)
       case "runScript" :: rest =>
-        val serviceBundle = buildServiceBundle()
+        val serviceBundle = buildApp()
         new Scripts(serviceBundle).runScript(rest) <* shutdown(serviceBundle)
       case _ =>
         IO.println(s"command not recognized: $args").map(_ => ExitCode.Error)

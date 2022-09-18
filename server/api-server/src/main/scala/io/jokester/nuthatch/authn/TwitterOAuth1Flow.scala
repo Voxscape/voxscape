@@ -11,8 +11,10 @@ import io.jokester.nuthatch.consts._
 import org.http4s.Query
 import redis.clients.jedis.Jedis
 
-class TwitterOAuth1Flow(c: Config, ctx: AppContext) extends LazyLogging {
+class TwitterOAuth1Flow(ctx: AppContext) extends LazyLogging {
   private def redis: Resource[IO, Jedis] = ctx.redis
+
+  def c: Config = ctx.providers.twitter.oauth1Config
 
   def issueTwitterOAuthUrl(
       query: Query = Query.empty,

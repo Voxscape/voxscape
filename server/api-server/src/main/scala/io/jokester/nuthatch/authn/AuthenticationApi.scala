@@ -4,6 +4,7 @@ import com.typesafe.scalalogging.LazyLogging
 import io.circe.Json
 import io.circe.generic.auto._
 import io.jokester.api.OpenAPIConvention
+import io.jokester.circe.JsonSerializable
 import sttp.tapir._
 import sttp.tapir.generic.auto._
 import sttp.tapir.json.circe.jsonBody
@@ -19,14 +20,8 @@ object AuthenticationApi {
       profile: UserProfile = UserProfile(),
   )
 
-  /** @param email
-    * @param isActivated
-    * @param twitterUsername
-    */
-  case class UserProfile(
-      username: Option[String] = None,
-      twitterUsername: Option[String] = None,
-  ) {
+  case class UserProfile(username: Option[String] = None, twitterUsername: Option[String] = None)
+      extends JsonSerializable[UserProfile] {
 
     def toJson: Json = {
       import io.circe.generic.semiauto._
@@ -36,6 +31,7 @@ object AuthenticationApi {
   }
 
   object UserProfile extends LazyLogging {
+
     import io.circe.generic.semiauto._
 
     private val decoder = deriveDecoder[UserProfile]
@@ -56,6 +52,7 @@ object AuthenticationApi {
         .name("authnOauth1StartAuth")
 
     case class OAuth1TempCred(provider: String, oauthToken: String, oauthVerifier: String)
+
     val finishAuth: Endpoint[Unit, OAuth1TempCred, OpenAPIConvention.ApiError, CurrentUser, Any] =
       basePath.post
         .name("authnOauth1FinishAuth")
@@ -71,15 +68,30 @@ object AuthenticationApi {
         initialProfile: Option[UserProfile],
     )
 
-    val requestPasswordSignUp
-        : Endpoint[Unit, EmailSignUpRequest, OpenAPIConvention.ApiError, CurrentUser, Any] =
-      basePath.post.in("password").in(jsonBody[EmailSignUpRequest]).out(jsonBody[CurrentUser])
+    val signUp: Endpoint[Unit, EmailSignUpRequest, OpenAPIConvention.ApiError, CurrentUser, Any] =
+      basePath.post
+        .in("password")
+        .in(jsonBody[EmailSignUpRequest])
+        .out(jsonBody[CurrentUser])
+        .name("authnPasswordSignup")
 
-    case class EmailLoginCred(email: String, password: String)
+    case class EmailLoginRequest(email: String, password: String)
 
-    val requestPasswordLogin
-        : Endpoint[Unit, EmailLoginCred, OpenAPIConvention.ApiError, CurrentUser, Any] =
-      basePath.post.in("password").in(jsonBody[EmailLoginCred]).out(jsonBody[CurrentUser])
+    val login: Endpoint[Unit, EmailLoginRequest, OpenAPIConvention.ApiError, CurrentUser, Any] =
+      basePath.post
+        .in("password")
+        .in(jsonBody[EmailLoginRequest])
+        .out(jsonBody[CurrentUser])
+        .name("authnPasswordLogin")
+
+    case class EmailConfirmRequest(email: String, token: String)
+
+    val confirmEmail: Endpoint[Unit, EmailConfirmRequest, OpenAPIConvention.ApiError, Unit, Any] =
+      basePath.post
+        .in("password")
+        .in(jsonBody[EmailConfirmRequest])
+        .out(jsonBody[Unit])
+        .name("authnPasswordConfirmEmail")
   }
 
 }

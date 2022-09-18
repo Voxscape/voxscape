@@ -7,6 +7,7 @@ case class MailIntent(recipient: String, title: String, body: String) {}
 
 trait Mailer {
   def send(intent: MailIntent): IO[Unit]
+  def send(recipient: String, title: String, body: String): IO[Unit]
 }
 
 object DummyMailer extends Mailer with LazyLogging {
@@ -16,7 +17,10 @@ object DummyMailer extends Mailer with LazyLogging {
       logger.info("title: {}", intent.title)
       logger.info("body: {}", intent.body)
     }
-
   }
+
+  override def send(recipient: String, title: String, body: String): IO[Unit] = send(
+    MailIntent(recipient, title, body),
+  )
 
 }

@@ -2,13 +2,12 @@ package io.jokester.nuthatch.authn
 
 import cats.effect.IO
 import com.typesafe.scalalogging.LazyLogging
-import io.jokester.nuthatch.base.QuillJsonHelper
+import io.jokester.nuthatch.base.{AppContext, QuillFactory, QuillJsonHelper}
 import io.jokester.nuthatch.generated.quill.{public => T}
 
 private[authn] trait BaseAuth extends LazyLogging with QuillJsonHelper {
-  self: AuthenticationService =>
-
-  private lazy val quill = self.appCtx.quill
+  protected def appCtx: AppContext
+  protected val quill: QuillFactory.PublicCtx = appCtx.quill
 
   def findUserByEmail(email: String): IO[Option[UserAuthBundle]] = {
     val findIdByEmail: IO[Option[Int]] = IO.blocking {

@@ -10,6 +10,12 @@ object QuillJsonHelper {
 
 trait QuillJsonHelper {
 
+  /** @deprecated
+    *   only use on object that cannot have derived Json decoder/encoder
+    * @param obj
+    *   a object
+    * @return
+    */
   def toJson(obj: AnyRef): Json =
     parser
       .parse(QuillJsonHelper.gson.toJson(obj))

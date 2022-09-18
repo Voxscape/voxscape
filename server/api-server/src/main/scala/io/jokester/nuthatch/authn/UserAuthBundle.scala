@@ -20,7 +20,7 @@ private[authn] case class UserAuthBundle(
     AuthenticationApi.CurrentUser(
       userId = user.id,
       email = email,
-      isActivated = email.isDefined,
+      isActivated = isEmailVerified,
     )
   }
 
@@ -28,4 +28,8 @@ private[authn] case class UserAuthBundle(
 
   def passwordMatch(plaintext: String): Boolean =
     userPassword.exists(u => BCrypt.checkpw(plaintext, u.passwordHash))
+
+  def isEmailVerified: Boolean = hasEmail
+
+  def hasEmail: Boolean = !user.email.endsWith(TempEmail.placeholderSuffix)
 }

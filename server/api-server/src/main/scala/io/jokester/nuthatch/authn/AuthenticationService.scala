@@ -5,8 +5,9 @@ import io.jokester.nuthatch.base.AppContext
 
 trait AuthenticationService
     extends TwitterOAuth1
+    with EmailSignup
+    with EmailLogin
     with OAuthTokenProvider
-    with PasswordAuth
     with LazyLogging {
   protected def appCtx: AppContext
 }

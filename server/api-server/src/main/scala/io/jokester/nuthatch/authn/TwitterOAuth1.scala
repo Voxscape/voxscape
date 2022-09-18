@@ -10,10 +10,8 @@ import twitter4j.{Twitter, User => TwitterUser}
 
 private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationService =>
 
-  private lazy val twitterOAuth1Config = appCtx.rootConfig.getConfig("twitter_oauth1")
-
   private lazy val twitterOAuth1: TwitterOAuth1Flow =
-    new TwitterOAuth1Flow(twitterOAuth1Config, appCtx)
+    new TwitterOAuth1Flow(appCtx)
 
   private val gson = new Gson()
 
@@ -71,6 +69,7 @@ private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationServic
   }
 
   private def getTwitter4J(token: OAuth1AccessToken): Twitter = {
-    appCtx.twitterFactory.getInstance(new AccessToken(token.getToken, token.getTokenSecret))
+    appCtx.providers.twitter.twitterFactory
+      .getInstance(new AccessToken(token.getToken, token.getTokenSecret))
   }
 }

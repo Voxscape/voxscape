@@ -1,8 +1,7 @@
 package io.jokester.nuthatch.authn
 
-import io.jokester.nuthatch.TestAppContext
 import io.jokester.nuthatch.authn.AuthenticationService
-import io.jokester.nuthatch.base.AppContext
+import io.jokester.nuthatch.base.{AppContext, TestAppContext}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 

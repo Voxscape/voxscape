@@ -4,6 +4,7 @@ import cats.effect.IO
 import cats.syntax.either._
 import com.typesafe.scalalogging.LazyLogging
 import io.jokester.api.OpenAPIConvention.{ApiError, BadRequest, ServerError}
+import io.jokester.nuthatch.AppRoot
 import io.jokester.nuthatch.authn.{AuthenticationApi, AuthenticationService}
 import io.jokester.nuthatch.consts._
 import org.http4s.HttpRoutes
@@ -15,12 +16,15 @@ object ApiBinder extends LazyLogging {
   def apiList: Seq[Endpoint[_, _, _, _, _]] = Seq(
     AuthenticationApi.OAuth1.startAuth,
     AuthenticationApi.OAuth1.finishAuth,
-    AuthenticationApi.Password.requestPasswordLogin,
-    AuthenticationApi.Password.requestPasswordSignUp,
+    AuthenticationApi.Password.confirmEmail,
+    AuthenticationApi.Password.signUp,
+    AuthenticationApi.Password.signUp,
   )
 
-  def buildRoutes(authn: AuthenticationService): HttpRoutes[IO] = {
+  def buildRoutes(root: AppRoot): HttpRoutes[IO] = {
     val interpreter = Http4sServerInterpreter[IO]()
+
+    val authn = root.authn
 
     interpreter.toRoutes(
       List(
@@ -43,6 +47,9 @@ object ApiBinder extends LazyLogging {
           }
         },
         // Password
+        AuthenticationApi.Password.signUp.serverLogic(req => {
+          authn.emailPasswordSignup(req).map(_.asCurrentUser()).attempt.map(launderServerError)
+        }),
       ),
     )
 
