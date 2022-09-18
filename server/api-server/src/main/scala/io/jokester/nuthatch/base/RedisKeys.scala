@@ -1,11 +1,10 @@
 package io.jokester.nuthatch.base
 
 trait RedisKeys {
-  self: AppContext =>
-  private lazy val keyPrefix = redisConfig.getString("key_prefix")
+  self: AppContextBase =>
 
   object redisKeys {
-    case class RedisKVPair(key: String, value: String)
+    private lazy val keyPrefix = redisConfig.getString("key_prefix")
 
     object authn {
       // value: oauth_token_secret

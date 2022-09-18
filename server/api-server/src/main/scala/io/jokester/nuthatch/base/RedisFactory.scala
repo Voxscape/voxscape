@@ -16,7 +16,9 @@ object RedisFactory extends LazyLogging {
       val pool = new JedisPool(url)
 
       val conn = pool.getResource
-      val info = Try { conn.info() }
+      val info = Try {
+        conn.info()
+      }
       conn.close()
       info match {
         case Success(_) =>
@@ -27,6 +29,8 @@ object RedisFactory extends LazyLogging {
     }
     throw new RuntimeException("Failed connecting to Redis")
   }
+
+  def resourceFromConfig(c: Config): Resource[IO, Jedis] = wrapJedisPool(poolFromConfig(c))
 
   def wrapJedisPool(jedisPool: JedisPool): Resource[IO, Jedis] = {
     Resource.applyCase(IO {
@@ -43,6 +47,7 @@ object RedisFactory extends LazyLogging {
               logger.debug("returning jedis: {} / {}", System.identityHashCode(jedis), exitCase)
               jedisPool.returnBrokenResource(jedis)
             }
+
           /** Including ExitCase.Cancelled , */
 
           case _ =>

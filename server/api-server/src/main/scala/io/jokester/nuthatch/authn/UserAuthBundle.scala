@@ -1,7 +1,7 @@
 package io.jokester.nuthatch.authn
 
-import io.jokester.nuthatch.generated.quill.{public => T}
 import io.jokester.nuthatch.consts._
+import io.jokester.nuthatch.generated.quill.{public => T}
 import org.springframework.security.crypto.bcrypt.BCrypt
 
 /** @internal

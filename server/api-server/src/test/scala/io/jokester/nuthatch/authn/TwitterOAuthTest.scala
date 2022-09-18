@@ -1,27 +1,16 @@
 package io.jokester.nuthatch.authn
 
-import io.jokester.nuthatch.authn.AuthenticationService
-import io.jokester.nuthatch.base.{AppContext, TestAppContext}
+import io.jokester.nuthatch.base.{AppContextBase, TestContext}
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 
-class TwitterOAuthTest extends AnyFlatSpec with BeforeAndAfterAll { self =>
+class TwitterOAuthTest extends AnyFlatSpec with BeforeAndAfterAll with TestContext {
 
-  private lazy val apiContext = TestAppContext.build()
-  private val testee = new AuthenticationService {
-    override protected val appCtx: AppContext = self.apiContext
+  private val testee = new TwitterOAuth1 with BaseAuth {
+    override protected def appCtx: AppContextBase = testAppContext
   }
 
   "AuthenticationService" should "run" in {}
 
   "AuthenticationService" should "create user from authed twitter user" in {}
-
-  override def beforeAll(): Unit = {
-    apiContext.cleanDb()
-  }
-
-  override def afterAll(): Unit = {
-    apiContext.unsafeClose()
-  }
-
 }

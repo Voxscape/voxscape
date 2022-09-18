@@ -3,11 +3,11 @@ package io.jokester.nuthatch.authn
 import cats.effect.IO
 import io.jokester.api.OpenAPIConvention
 import io.jokester.api.OpenAPIConvention.BadRequest
-import io.jokester.nuthatch.authn.AuthenticationApi.{Password, UserProfile}
+import io.jokester.nuthatch.authn.AuthenticationApi.Password
 import io.jokester.nuthatch.generated.quill.{public => T}
 import org.http4s.Query
 import org.springframework.security.crypto.bcrypt.BCrypt
-import redis.clients.jedis.params.{GetExParams, SetParams}
+import redis.clients.jedis.params.SetParams
 
 import java.util.UUID
 

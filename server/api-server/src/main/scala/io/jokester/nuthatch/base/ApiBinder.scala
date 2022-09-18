@@ -5,7 +5,7 @@ import cats.syntax.either._
 import com.typesafe.scalalogging.LazyLogging
 import io.jokester.api.OpenAPIConvention.{ApiError, BadRequest, ServerError}
 import io.jokester.nuthatch.AppRoot
-import io.jokester.nuthatch.authn.{AuthenticationApi, AuthenticationService}
+import io.jokester.nuthatch.authn.AuthenticationApi
 import io.jokester.nuthatch.consts._
 import org.http4s.HttpRoutes
 import sttp.tapir.Endpoint

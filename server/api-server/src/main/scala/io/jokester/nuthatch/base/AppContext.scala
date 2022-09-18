@@ -11,39 +11,32 @@ import twitter4j.TwitterFactory
 import scala.util.{Failure, Try}
 
 object AppContext {
-  def buildDefault($rootConfig: Config): AppContext = new AppContext {
-    override def rootConfig: Config = $rootConfig
+  def buildDefault($rootConfig: Config): AppContext = new AppContext($rootConfig)
 
-    override def redisConfig: Config = rootConfig.getConfig("redis")
-
-    override def postgresConfig: Config = rootConfig.getConfig("postgres")
-  }
 }
 
 /** dependency root of all other services
   */
-trait AppContext extends LazyLogging with RedisKeys {
-  def rootConfig: Config
+class AppContext(val rootConfig: Config) extends AppContextBase with LazyLogging {
 
-  protected def redisConfig: Config
+  protected def redisConfig: Config = rootConfig.getConfig("redis")
 
-  protected def postgresConfig: Config
+  private def postgresConfig: Config = rootConfig.getConfig("postgres")
 
-  private val jedisPool = RedisFactory.poolFromConfig(redisConfig)
-
-  def redis: Resource[IO, Jedis] = RedisFactory.wrapJedisPool(jedisPool)
+  override val redis: Resource[IO, Jedis] =
+    RedisFactory.wrapJedisPool(RedisFactory.poolFromConfig(redisConfig))
 
   private val quillResources: (AutoCloseable, QuillFactory.PublicCtx) =
     QuillFactory.unsafeCreatePooledQuill(postgresConfig)
 
-  val quill: QuillFactory.PublicCtx = quillResources._2
+  override val quill: QuillFactory.PublicCtx = quillResources._2
 
   object providers extends Providers {
     protected override val rootConfig: Config = AppContext.this.rootConfig
   }
 
   object web extends WebConfig {
-    protected override val siteConfig: Config = rootConfig.getConfig("site")
+    protected override val siteConfig: Config = AppContext.this.rootConfig.getConfig("site")
   }
 
   def unsafeClose(): Unit = {
@@ -63,6 +56,17 @@ trait AppContext extends LazyLogging with RedisKeys {
   def close(): IO[Unit] = IO {
     unsafeClose()
   }
+}
+
+trait AppContextBase extends RedisKeys {
+  protected def redisConfig: Config
+  def providers: Providers
+
+  val quill: QuillFactory.PublicCtx
+
+  def web: WebConfig
+
+  def redis: Resource[IO, Jedis]
 }
 
 /** external service

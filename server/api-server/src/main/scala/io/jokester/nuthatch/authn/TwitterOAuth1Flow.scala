@@ -6,12 +6,12 @@ import com.github.scribejava.core.builder.ServiceBuilder
 import com.github.scribejava.core.model.{OAuth1AccessToken, OAuth1RequestToken}
 import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
-import io.jokester.nuthatch.base.AppContext
+import io.jokester.nuthatch.base.AppContextBase
 import io.jokester.nuthatch.consts._
 import org.http4s.Query
 import redis.clients.jedis.Jedis
 
-class TwitterOAuth1Flow(ctx: AppContext) extends LazyLogging {
+class TwitterOAuth1Flow(ctx: AppContextBase) extends LazyLogging {
   private def redis: Resource[IO, Jedis] = ctx.redis
 
   def c: Config = ctx.providers.twitter.oauth1Config

@@ -5,10 +5,9 @@ import io.circe.Json
 import io.circe.generic.auto._
 import io.jokester.api.OpenAPIConvention
 import io.jokester.circe.JsonSerializable
-import sttp.tapir._
 import sttp.tapir.generic.auto._
 import sttp.tapir.json.circe.jsonBody
-import sttp.tapir.{Endpoint, endpoint, path}
+import sttp.tapir._
 
 object AuthenticationApi {
   private val basePath = endpoint.in("authn").errorOut(OpenAPIConvention.defaultErrorOutputMapping)

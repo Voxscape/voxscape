@@ -3,12 +3,11 @@ package io.jokester.nuthatch.authn
 import cats.effect.IO
 import com.github.scribejava.core.model.OAuth1AccessToken
 import com.google.gson.Gson
-import io.jokester.nuthatch.base.TwitterProvider
 import io.jokester.nuthatch.consts._
 import twitter4j.auth.AccessToken
 import twitter4j.{Twitter, User => TwitterUser}
 
-private[authn] trait TwitterOAuth1 extends BaseAuth { self: AuthenticationService =>
+private[authn] trait TwitterOAuth1 { self: BaseAuth =>
 
   private lazy val twitterOAuth1: TwitterOAuth1Flow =
     new TwitterOAuth1Flow(appCtx)
