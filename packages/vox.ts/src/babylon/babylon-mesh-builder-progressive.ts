@@ -4,7 +4,6 @@ import type { Color4 } from '@babylonjs/core/Maths';
 import type { BabylonDeps } from './babylon-deps';
 import * as VoxTypes from '../types/vox-types';
 import { buildBabylonColor } from './util';
-import { createVoxelIndex } from '../parser/create-voxel-index';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 
 export interface BabylonMeshBuildProgress {
@@ -85,7 +84,6 @@ export async function* buildBabylonMeshProgressive(
    * 0 0 1 0
    * 0 1 0 0
    * 0 0 0 1
-   * @type {Matrix}
    */
   const m = Matrix.FromValues(
     1,
@@ -127,7 +125,7 @@ export async function* buildBabylonMeshProgressive(
   yield progress;
 
   /**
-   * TODO: this is creating too many meshes
+   * TODO: this is creating too many surfaces
    * to try:
    * 1. a better meshing algorithm
    * 2. do
@@ -153,7 +151,9 @@ export async function* buildBabylonMeshProgressive(
     console.debug('building final mesh', c);
     const voxelsMesh = MeshBuilder.CreatePolyhedron(`voxels`, c);
     if (0) {
+      // this is slow and causes blurry color
       voxelsMesh.visibility = 0;
+      console.debug('optimizing indexes');
       await new Promise<void>((f) => voxelsMesh.optimizeIndices(() => f()));
       voxelsMesh.visibility = 1;
       console.debug('optimized');
@@ -274,7 +274,8 @@ function* extractSurfaces(
             [x + 1, y + 1, z + 1],
           );
 
-          const color = buildBabylonColor(palette[v.colorIndex], deps);
+          // const color = buildBabylonColor(palette[v.colorIndex], deps);
+          const color = colorMap.getOrCreate(v.colorIndex);
 
           // 1 face = 2 colored facets
           for (let i = 0; i < numCreatedFaces; i++) {
@@ -305,4 +306,31 @@ function* extractSurfaces(
       face,
     },
   };
+}
+
+/**
+ * @deprecated a more generic version: {@name createVoxelIndexFull}
+ * @param voxels
+ */
+export function createVoxelIndex(
+  voxels: readonly VoxTypes.Voxel[],
+): ReadonlyMap<number, ReadonlyMap<number, ReadonlyMap<number, VoxTypes.Voxel>>> {
+  // vox: x-right / y-'deep' / z-top or 'gravity'
+  // babylon: x-right / z-'deep' / y-top
+  // we use x => y => z => voxel here
+  const index = new DefaultMap<
+    number, // x
+    DefaultMap<
+      number, // y
+      Map<
+        number, // z
+        VoxTypes.Voxel
+      >
+    >
+  >((x) => new DefaultMap<number, Map<number, VoxTypes.Voxel>>((y) => new Map()));
+  for (const v of voxels) {
+    index.getOrCreate(v.x).getOrCreate(v.y).set(v.z, v);
+  }
+
+  return index;
 }
