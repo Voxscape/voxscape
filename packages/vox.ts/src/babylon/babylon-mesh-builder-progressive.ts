@@ -5,6 +5,7 @@ import type { BabylonDeps } from './babylon-deps';
 import * as VoxTypes from '../types/vox-types';
 import { buildBabylonColor } from './util';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
+import { createModelFrameMesh, createNormalizationTransform } from './mesh-helpers';
 
 export interface BabylonMeshBuildProgress {
   startAt: number;
@@ -51,69 +52,15 @@ export async function* buildBabylonMeshProgressive(
   const root = new Mesh(meshName, scene);
 
   {
-    const 〇 = 0;
-    const x = model.size.x + 1;
-    const y = model.size.y + 1;
-    const z = model.size.z + 1;
-    const frame = MeshBuilder.CreateLineSystem(
-      'frame',
-      {
-        lines: [
-          [
-            new Vector3(〇, 〇, 〇),
-            new Vector3(x, 〇, 〇),
-            new Vector3(x, y, 〇),
-            new Vector3(〇, y, 〇),
-            new Vector3(〇, 〇, 〇),
-            new Vector3(〇, 〇, z),
-            new Vector3(〇, y, z),
-            new Vector3(x, y, z),
-            new Vector3(x, 〇, z),
-            new Vector3(x, 〇, 〇),
-          ],
-        ],
-      },
-      scene,
-    );
-    frame.parent = root;
+    const frameMesh = createModelFrameMesh(deps, model.size, scene, root);
   }
 
-  /**
-   * a transform that swaps y/z
-   * 1 0 0 0
-   * 0 0 1 0
-   * 0 1 0 0
-   * 0 0 0 1
-   */
-  const m = Matrix.FromValues(
-    1,
-    0,
-    0,
-    0, //
-    0,
-    0,
-    1,
-    0, //
-    0,
-    1,
-    0,
-    0, //
-    -(model.size.x + 1) / 2, // translation-x
-    -(model.size.z + 1) / 2,
-    -(model.size.y + 1) / 2,
-    1, //
-  );
+  {
+    const normalize = createNormalizationTransform(deps, model.size);
 
-  if (1) {
-    const scale = new Vector3();
-    const rotation = new Quaternion();
-    const translation = new Vector3();
-    m.decompose(scale, rotation, translation);
-    console.log('decomposed', scale, rotation, translation);
-
-    root.position = translation;
-    root.rotationQuaternion = rotation;
-    root.scaling = scale;
+    root.position = normalize.translation;
+    root.rotationQuaternion = normalize.rotation;
+    root.scaling = normalize.scale;
   }
 
   const progress: BabylonMeshBuildProgress = {
@@ -206,7 +153,7 @@ function* extractSurfaces(
       for (const [z, v] of xyEdge.entries()) {
         /**
          * notation:
-         * voxel {x=a, y=b, z=c} corresponds to box {a<=x<a+1, b<=y<b+1, c-1<=z<c+1}
+         * voxel {x=a, y=b, z=c} corresponds to cube {a<=x<a+1, b<=y<b+1, c<=z<c+1}
          */
         const vertexOffset = vertex.length;
 
