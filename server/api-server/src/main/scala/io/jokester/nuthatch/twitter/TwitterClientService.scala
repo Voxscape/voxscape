@@ -1,7 +1,5 @@
 package io.jokester.nuthatch.twitter
 
-import cats.data.Ior
-import cats.data.Ior.Both
 import cats.effect.IO
 import com.github.scribejava.core.model.OAuth1AccessToken
 import com.typesafe.scalalogging.LazyLogging
@@ -24,6 +22,18 @@ case class TwitterClientService(appCtx: AppContextBase, accessToken: OAuth1Acces
 
       logger.debug("got followers {}", followers)
     }
+  }
+
+  def fetchTweets(): IO[Unit] = {
+    for (
+      _c <- client.allocated;
+      (client, release) = _c;
+      tweets <- IO(client.getUserTimeline)
+    ) yield {
+      logger.debug("got tweets: {}", Seq.empty)
+
+    }
+
   }
 
 }

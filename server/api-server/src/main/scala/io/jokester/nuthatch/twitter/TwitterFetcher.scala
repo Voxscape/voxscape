@@ -1,13 +1,13 @@
 package io.jokester.nuthatch.twitter
 
 import cats.data.Ior
-import cats.data.Ior.Both
 import cats.effect.IO
+
+import scala.jdk.CollectionConverters._
 
 case class TwitterFetcher[A <: twitter4j.TwitterResponse](
     private val fetchPage: Long => IO[twitter4j.PagableResponseList[A]],
 ) {
-  Both
   def fetchAll(): IO[Ior[Throwable, Seq[A]]] = {
     for (
       firstPage <- fetchPage(0).attempt;
@@ -20,21 +20,22 @@ case class TwitterFetcher[A <: twitter4j.TwitterResponse](
 
   private def fetchMore(
       acc: Seq[A],
-      prev: twitter4j.PagableResponseList[A],
+      lastFetch: twitter4j.PagableResponseList[A],
   ): IO[Ior[Throwable, Seq[A]]] = {
+
     // TODO: we can consume prev.status
-    val c: Seq[A] = ???
-    if (!prev.hasNext()) {
+    val c: Seq[A] = lastFetch.asScala.toSeq
+    if (!lastFetch.hasNext) {
       return IO.pure(Ior.Right(acc ++ c))
-    } else {
-      for (
-        nextPage <- fetchPage(1).attempt;
-        merged <- nextPage match {
-          case Left(e)  => IO.pure(Ior.Both(e, acc))
-          case Right(p) => fetchMore(acc ++ c, p)
-        }
-      ) yield merged
     }
+
+    for (
+      nextPage <- fetchPage(lastFetch.getNextCursor).attempt;
+      merged <- nextPage match {
+        case Left(e)  => IO.pure(Ior.Both(e, acc))
+        case Right(p) => fetchMore(acc ++ c, p)
+      }
+    ) yield merged
   }
 
 }
