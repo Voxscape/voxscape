@@ -2,7 +2,7 @@ package io.jokester.nuthatch
 
 import com.typesafe.config.Config
 import io.jokester.nuthatch.authn.AuthenticationService
-import io.jokester.nuthatch.base.AppContext
+import io.jokester.nuthatch.base.{AppContext, AppContextBase}
 
 object AppRoot {
   def build(rootConfig: Config): AppRoot = {
@@ -11,8 +11,8 @@ object AppRoot {
   }
 }
 
-final class AppRoot(val apiContext: AppContext) {
+final class AppRoot(val apiContext: AppContextBase) {
   val authn: AuthenticationService = new AuthenticationService {
-    protected override val appCtx: AppContext = apiContext
+    protected override val appCtx: AppContextBase = apiContext
   }
 }

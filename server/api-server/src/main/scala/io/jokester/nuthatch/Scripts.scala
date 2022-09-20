@@ -34,7 +34,7 @@ class Scripts(serviceBundle: AppRoot) extends LazyLogging {
           case Some(t) => IO.pure(t)
           case _       => IO.raiseError(OpenAPIConvention.NotFound("token not found"))
         };
-        fetched <- TwitterClientService(serviceBundle.apiContext, token).fetchFollowers()
+        fetched <- TwitterClientService(serviceBundle.apiContext, token).syncFollowers()
       ) yield ExitCode.Success
 
     }

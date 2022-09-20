@@ -26,9 +26,11 @@ private[authn] trait TwitterOAuth1 { self: BaseAuth =>
       cred: AuthenticationApi.OAuth1.OAuth1TempCred,
   ): IO[AuthenticationApi.CurrentUser] = {
     for (
-      token       <- twitterOAuth1.exchangeToken(cred.oauthToken, cred.oauthVerifier);
-      _           <- IO { logger.debug("got token: {}", new Gson().toJson(token)) };
-      twitterUser <- IO.blocking(getTwitter4J(token).verifyCredentials());
+      token <- twitterOAuth1.exchangeToken(cred.oauthToken, cred.oauthVerifier);
+      _     <- IO { logger.debug("got token: {}", new Gson().toJson(token)) };
+      twitterUser <- appCtx.providers.twitter
+        .twitterClient(token.getToken, token.getTokenSecret)
+        .use(c => IO(c.verifyCredentials()));
       _ <- IO {
         logger.debug("got user: {} / {}", gson.toJson(twitterUser), twitterUser.isVerified)
       };
@@ -67,8 +69,4 @@ private[authn] trait TwitterOAuth1 { self: BaseAuth =>
     ) yield reloaded.get
   }
 
-  private def getTwitter4J(token: OAuth1AccessToken): Twitter = {
-    appCtx.providers.twitter.twitterFactory
-      .getInstance(new AccessToken(token.getToken, token.getTokenSecret))
-  }
 }

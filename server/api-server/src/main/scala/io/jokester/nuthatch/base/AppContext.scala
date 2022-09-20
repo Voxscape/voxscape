@@ -6,7 +6,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import org.http4s.Query
 import redis.clients.jedis.Jedis
-import twitter4j.TwitterFactory
+import twitter4j.{Twitter, TwitterFactory}
 
 import scala.util.{Failure, Try}
 
@@ -31,8 +31,10 @@ class AppContext(val rootConfig: Config) extends AppContextBase with LazyLogging
 
   override val quill: QuillFactory.PublicCtx = quillResources._2
 
-  object providers extends Providers {
+  override val providers = new Providers {
     protected override val rootConfig: Config = AppContext.this.rootConfig
+
+    override def twitter: TwitterProvider = new TwitterProvider {}
   }
 
   object web extends WebConfig {
@@ -53,13 +55,14 @@ class AppContext(val rootConfig: Config) extends AppContextBase with LazyLogging
 
   }
 
-  def close(): IO[Unit] = IO {
+  override def close(): IO[Unit] = IO {
     unsafeClose()
   }
 }
 
 trait AppContextBase extends RedisKeys {
   protected def redisConfig: Config
+
   def providers: Providers
 
   val quill: QuillFactory.PublicCtx
@@ -67,6 +70,8 @@ trait AppContextBase extends RedisKeys {
   def web: WebConfig
 
   def redis: Resource[IO, Jedis]
+
+  def close(): IO[Unit]
 }
 
 /** external service
@@ -76,12 +81,29 @@ private[base] trait Providers {
 
   val mailer: Mailer = DummyMailer
 
-  object twitter {
-    val oauth1Config: Config = rootConfig.getConfig("twitter_oauth1")
+  trait TwitterProvider {
+    def oauth1Config: Config = rootConfig.getConfig("twitter_oauth1")
 
-    lazy val twitterFactory: TwitterFactory =
-      TwitterProvider.getTwitterFactory(oauth1Config)
+    def twitterFactory: Resource[IO, TwitterFactory] = {
+      import twitter4j.conf.ConfigurationBuilder
+
+      Resource.pure({
+        new TwitterFactory(
+          new ConfigurationBuilder()
+            .setOAuthConsumerKey(oauth1Config.getString("consumer_key"))
+            .setOAuthConsumerSecret(oauth1Config.getString("consumer_secret"))
+            .build(),
+        )
+      })
+    }
+
+    def twitterClient(accessToken: String, accessTokenSecret: String): Resource[IO, Twitter] = {
+      import twitter4j.auth.AccessToken
+      twitterFactory.map(_.getInstance(new AccessToken(accessToken, accessTokenSecret)))
+    }
   }
+
+  def twitter: TwitterProvider
 }
 
 /** web stuff
