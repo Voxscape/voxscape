@@ -9,6 +9,6 @@ object OAuth1Provider {
 object TempEmail {
   val placeholderSuffix = "@@@placeholder"
   def oauth1DummyEmail(provider: String, externalId: String): String = {
-    s"oauth1:provider=${provider}:externalId=${externalId}:${TempEmail.placeholderSuffix}"
+    s"oauth1:provider=${provider}:external_id=${externalId}:${TempEmail.placeholderSuffix}"
   }
 }

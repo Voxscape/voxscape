@@ -30,9 +30,10 @@ class Scripts(serviceBundle: AppRoot) extends LazyLogging {
     def run: IO[ExitCode] = {
       for (
         maybeToken <- serviceBundle.authn.loadOAuth1Token(userId, OAuth1Provider.twitter);
-        token <- maybeToken.fold[IO[OAuth1AccessToken]](
-          IO.raiseError(OpenAPIConvention.NotFound("token not found")),
-        )(IO.pure);
+        token <- maybeToken match {
+          case Some(t) => IO.pure(t)
+          case _       => IO.raiseError(OpenAPIConvention.NotFound("token not found"))
+        };
         fetched <- TwitterClientService(serviceBundle.apiContext, token).fetchFollowers()
       ) yield ExitCode.Success
 
