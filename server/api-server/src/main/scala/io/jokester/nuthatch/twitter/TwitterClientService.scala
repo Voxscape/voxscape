@@ -12,26 +12,23 @@ case class TwitterClientService(appCtx: AppContextBase, accessToken: OAuth1Acces
   private def client =
     appCtx.providers.twitter.twitterClient(accessToken.getToken, accessToken.getTokenSecret)
 
-  def syncFollowers(): IO[Unit] = client.use(c => fetchFollowers(0, c))
+  def fetchOwnId: IO[Long] = useClient(_.verifyCredentials().getId)
 
-  def fetchFollowers(userId: Long, client: Twitter): IO[Unit] = {
+  private def useClient[A](f: Twitter => A): IO[A] = client.use(t => IO(f(t)))
+
+  def fetchFollowers(): IO[Unit] = {
     for (
-      ownId     <- IO(client.getId);
-      followers <- IO(client.getFollowersList(ownId, 0))
+      ownId     <- fetchOwnId;
+      followers <- useClient(_.getFollowersList(ownId, -1))
     ) yield {
 
-      logger.debug("got followers {}", followers)
+      logger.debug("got followers {}", followers.toArray.toSeq)
     }
   }
 
   def fetchTweets(): IO[Unit] = {
-    for (
-      _c <- client.allocated;
-      (client, release) = _c;
-      tweets <- IO(client.getUserTimeline)
-    ) yield {
-      logger.debug("got tweets: {}", Seq.empty)
-
+    for (tweets <- useClient(_.getUserTimeline)) yield {
+      logger.debug("got tweets: {}", tweets.toArray.toSeq)
     }
 
   }
