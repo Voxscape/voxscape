@@ -1,0 +1,58 @@
+{
+  "name": "@voxscape/vox.ts",
+  "version": "0.1.0",
+  "author": "Wang Guan <momocraft@gmail.com>",
+  "scripts": {
+    "dev": "next dev",
+    "build": "rm -rf lib tsconfig.dist.tsbuildinfo && tsc --project tsconfig.dist.json",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --watch --noEmit",
+    "prettier": "prettier",
+    "lint": "    eslint '@(src|pages)/**/*.@(ts|js|tsx|jsx)'",
+    "lint:fix": "eslint '@(src|pages)/**/*.@(ts|js|tsx|jsx)' --fix"
+  },
+  "dependencies": {
+    "@jokester/ts-commonutil": "^0.3.8"
+  },
+  "files": [],
+  "peerDependencies": {
+    "tslib": "^2.1.0"
+  },
+  "devDependencies": {
+    "@babylonjs/core": "^5.21.0",
+    "@babylonjs/gui": "^5.21.0",
+    "@babylonjs/gui-editor": "^5.21.0",
+    "@babylonjs/inspector": "^5.2.1",
+    "@babylonjs/loaders": "^5.21.0",
+    "@babylonjs/materials": "^5.21.0",
+    "@babylonjs/post-processes": "^5.21.0",
+    "@babylonjs/procedural-textures": "^5.21.0",
+    "@babylonjs/serializers": "^5.21.0",
+    "@blueprintjs/core": "^4.9.4",
+    "@blueprintjs/table": "^4.6.5",
+    "@types/debug": "^4.1.7",
+    "@types/jest": "^28",
+    "@types/lodash-es": "^4.17.6",
+    "@types/node": "16",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@types/three": "^0.143.2",
+    "clsx": "^1.2.1",
+    "debug": "^4.3.4",
+    "jest": "^28",
+    "next": "^12",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "three": "^0.143.0",
+    "ts-jest": "^28",
+    "typescript": "^4.8",
+    "vox.js": "^1.1.0"
+  },
+  "engines": {
+    "node": ">=16",
+    "npm": ">=8"
+  }
+}

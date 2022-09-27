@@ -1,0 +1,13 @@
+body {
+  background: black;
+  color: white;
+}
+canvas {
+  &:focus {
+    outline: none;
+  }
+}
+
+@import "~@blueprintjs/table/lib/css/table.css";
+@import "~@blueprintjs/core/lib/css/blueprint.css";
+@import "~@blueprintjs/popover2/lib/css/blueprint-popover2.css";
