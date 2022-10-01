@@ -16,7 +16,7 @@ object TestAppContext {
 
       override def redisConfig: Config = rootConfig.getConfig("test.redis")
 
-      override val quill: QuillFactory.PublicCtx =
+      override val quill: QuillFactory.RdbContext =
         QuillFactory.unsafeCreateNonPolledCtx(rootConfig.getConfig("test.postgres"))._2
 
       override def redis: Resource[IO, Jedis] = RedisFactory.resourceFromConfig(redisConfig)

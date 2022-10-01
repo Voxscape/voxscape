@@ -7,6 +7,7 @@ import com.zaxxer.hikari.HikariDataSource
 import io.circe.{Json, JsonObject}
 import io.getquill.{PostgresDialect, PostgresJdbcContext, Query}
 import io.jokester.nuthatch.generated.quill.public.PublicExtensions
+import io.jokester.nuthatch.generated.quill.twitter.TwitterExtensions
 import io.jokester.nuthatch.generated.quill.{public => T}
 import io.jokester.quill.{
   FixedPostgresNaming,
@@ -21,14 +22,17 @@ import javax.sql.DataSource
 
 object QuillFactory {
 
-  class PublicCtx(dataSource: DataSource with Closeable)
+  class RdbContext(dataSource: DataSource with Closeable)
       extends PostgresJdbcContext(FixedPostgresNaming, dataSource)
       with PublicExtensions[PostgresDialect, FixedPostgresNaming.type]
+      with TwitterExtensions[PostgresDialect, FixedPostgresNaming.type]
       with QuillCirceJsonEncoding
       with QuillDatetimeEncoding
       with QuillJsonHelper
       with PublicCtxDummyFactory {
+
     import cats.effect.{IO => CatsIO}
+
     def testConnection(): CatsIO[Boolean] = {
       CatsIO {
         val q = quote {
@@ -39,24 +43,28 @@ object QuillFactory {
     }
   }
 
-  def createNonPooledCtx(c: Config): Resource[IO, PublicCtx] = {
+  def createNonPooledCtx(c: Config): Resource[IO, RdbContext] = {
     val simpleDataSource = QuillDataSource.simplePgDataSource(c.getString("url"))
     Resource.make(
-      IO.blocking(new PublicCtx(simpleDataSource)),
-    )(ctx => IO.blocking({ ctx.close() }))
+      IO.blocking(new RdbContext(simpleDataSource)),
+    )(ctx =>
+      IO.blocking({
+        ctx.close()
+      }),
+    )
   }
 
-  def unsafeCreateNonPolledCtx(c: Config): (AutoCloseable, PublicCtx) = {
+  def unsafeCreateNonPolledCtx(c: Config): (AutoCloseable, RdbContext) = {
     val simpleDataSource = QuillDataSource.simplePgDataSource(c.getString("url"))
-    val ctx              = new PublicCtx(simpleDataSource)
+    val ctx              = new RdbContext(simpleDataSource)
     (simpleDataSource, ctx)
   }
 
-  def unsafeCreatePooledQuill(c: Config): (HikariDataSource, PublicCtx) = {
+  def unsafeCreatePooledQuill(c: Config): (HikariDataSource, RdbContext) = {
     val simpleDataSource = QuillDataSource.simplePgDataSource(c.getString("url"))
     val hikariDataSource = QuillDataSource.pooled(simpleDataSource)
 
-    val ctx = new PublicCtx(hikariDataSource)
+    val ctx = new RdbContext(hikariDataSource)
     (hikariDataSource, ctx)
   }
 

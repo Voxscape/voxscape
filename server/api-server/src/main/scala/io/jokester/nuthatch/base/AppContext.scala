@@ -26,10 +26,10 @@ class AppContext(val rootConfig: Config) extends AppContextBase with LazyLogging
   override val redis: Resource[IO, Jedis] =
     RedisFactory.wrapJedisPool(RedisFactory.poolFromConfig(redisConfig))
 
-  private val quillResources: (AutoCloseable, QuillFactory.PublicCtx) =
+  private val quillResources: (AutoCloseable, QuillFactory.RdbContext) =
     QuillFactory.unsafeCreatePooledQuill(postgresConfig)
 
-  override val quill: QuillFactory.PublicCtx = quillResources._2
+  override val quill: QuillFactory.RdbContext = quillResources._2
 
   override val providers = new Providers {
     protected override val rootConfig: Config = AppContext.this.rootConfig
@@ -65,7 +65,7 @@ trait AppContextBase extends RedisKeys {
 
   def providers: Providers
 
-  val quill: QuillFactory.PublicCtx
+  val quill: QuillFactory.RdbContext
 
   def web: WebConfig
 
