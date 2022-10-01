@@ -51,6 +51,8 @@ case class TwitterClientService(
       override def doFetch(cursor: Long): IO[IDs] = useClient(
         _.getFollowersIDs(twitterUserId, cursor, 5000),
       )
+
+      override val apiTag: String = "followers_ids"
     }
   }
 
@@ -64,6 +66,8 @@ case class TwitterClientService(
       override def doFetch(cursor: Long): IO[ApiRes] = useClient(
         _.getFollowersList(twitterUserId, cursor, 200),
       )
+
+      override val apiTag: String = "followers"
     }
   }
 
@@ -76,6 +80,8 @@ case class TwitterClientService(
       )
 
       override def extractValues(apiRes: ApiRes): Seq[TwitterUser] = apiRes.asScala.toSeq
+
+      override val apiTag: String = "friends"
     }
 
   }

@@ -5,8 +5,6 @@ import cats.effect.IO
 import com.typesafe.scalalogging.LazyLogging
 import twitter4j.{CursorSupport, TwitterException}
 
-import scala.jdk.CollectionConverters._
-
 trait TwitterFetcher[A] extends LazyLogging {
 
   type ApiRes <: twitter4j.TwitterResponse with CursorSupport
@@ -17,9 +15,11 @@ trait TwitterFetcher[A] extends LazyLogging {
 
   def fetchAll(): IO[Ior[Throwable, Seq[A]]] = fetchHead(Int.MaxValue)
 
+  def apiTag: String = "(unknown)"
+
   def fetchHead(limit: Int): IO[Ior[Throwable, Seq[A]]] = {
     for (
-      firstPage <- doFetch(-1).attempt;
+      firstPage <- doFetch(-1).flatTap(tapLog).attempt;
       merged <- firstPage match {
         case Left(e)  => IO.pure(Ior.Left(e))
         case Right(p) => fetchMore(extractValues(p), p, limit)
@@ -47,5 +47,16 @@ trait TwitterFetcher[A] extends LazyLogging {
         case Right(p) => fetchMore(acc ++ extractValues(p), p, limit)
       }
     ) yield merged
+  }
+
+  private def tapLog(apiRes: ApiRes): IO[ApiRes] = {
+    logger.debug(
+      s"twitter {} rate limit: {} / {}. resetting in {} seconds.",
+      apiTag,
+      apiRes.getRateLimitStatus.getRemaining,
+      apiRes.getRateLimitStatus.getLimit,
+      apiRes.getRateLimitStatus.getSecondsUntilReset,
+    )
+    IO.pure(apiRes)
   }
 }
