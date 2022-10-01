@@ -1,8 +1,8 @@
 package io.jokester.nuthatch.twitter
 
-import io.jokester.nuthatch.authn.OAuthTokenProvider
+import io.jokester.nuthatch.authn.OAuthCredProvider
 
 object UserTwitterStream {
 
-  def find(provider: OAuthTokenProvider): Unit = {}
+  def find(provider: OAuthCredProvider): Unit = {}
 }

@@ -7,5 +7,5 @@ trait AuthenticationService
     with TwitterOAuth1
     with EmailSignup
     with EmailLogin
-    with OAuthTokenProvider
+    with OAuthCredProvider
     with LazyLogging {}

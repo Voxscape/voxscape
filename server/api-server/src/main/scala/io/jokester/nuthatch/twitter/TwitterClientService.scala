@@ -1,28 +1,38 @@
 package io.jokester.nuthatch.twitter
 
+import cats.data.Ior
 import cats.effect.IO
 import com.github.scribejava.core.model.OAuth1AccessToken
 import com.typesafe.scalalogging.LazyLogging
 import io.jokester.nuthatch.base.AppContextBase
-import twitter4j.Twitter
+import twitter4j.{Twitter, User => TwitterUser}
 
-case class TwitterClientService(appCtx: AppContextBase, accessToken: OAuth1AccessToken)
-    extends LazyLogging {
+/** use cases as a twitter user
+  */
+case class TwitterClientService(
+    appCtx: AppContextBase,
+    twitterUserId: Long,
+    accessToken: OAuth1AccessToken,
+) extends LazyLogging {
 
   private def client =
     appCtx.providers.twitter.twitterClient(accessToken.getToken, accessToken.getTokenSecret)
 
-  def fetchOwnId: IO[Long] = useClient(_.verifyCredentials().getId)
+  /** only use when user id is not known this is a rate-limited API
+    */
+  private def fetchOwnId: IO[Long] = useClient(_.verifyCredentials().getId)
 
   private def useClient[A](f: Twitter => A): IO[A] = client.use(t => IO(f(t)))
 
-  def fetchFollowers(): IO[Unit] = {
-    for (
-      ownId     <- fetchOwnId;
-      followers <- useClient(_.getFollowersList(ownId, -1))
-    ) yield {
+  def fetchFollowers(): IO[Ior[Throwable, Seq[TwitterUser]]] = {
+    val fetcher =
+      TwitterFetcher[TwitterUser](cursor => useClient(_.getFollowersList(twitterUserId, cursor)))
+    fetcher.fetchAll()
+  }
 
-      logger.debug("got followers {}", followers.toArray.toSeq)
+  def fetchFriends(): IO[Unit] = {
+    for (friends <- useClient(_.getFriendsList(twitterUserId, -1))) yield {
+      logger.debug("got {} friends", friends.size)
     }
   }
 
