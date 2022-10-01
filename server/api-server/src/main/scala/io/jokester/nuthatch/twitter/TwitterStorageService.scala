@@ -24,6 +24,9 @@ class TwitterStorageService(ctx: AppContextBase) {
               .insert(
                 _.twitterUserId      -> u.twitterId,
                 _.twitterUserProfile -> u.twitterProfile,
+              )
+              .onConflictUpdate(_.twitterUserId)((t, e) =>
+                t.twitterUserProfile -> e.twitterUserProfile,
               ),
           )
 
