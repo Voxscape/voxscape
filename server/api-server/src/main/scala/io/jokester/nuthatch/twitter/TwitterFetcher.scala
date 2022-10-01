@@ -2,40 +2,45 @@ package io.jokester.nuthatch.twitter
 
 import cats.data.Ior
 import cats.effect.IO
+import com.typesafe.scalalogging.LazyLogging
+import twitter4j.TwitterException
 
 import scala.jdk.CollectionConverters._
 
 case class TwitterFetcher[A <: twitter4j.TwitterResponse](
-    private val fetchPage: Long => IO[twitter4j.PagableResponseList[A]],
-) {
-  def fetchAll(): IO[Ior[Throwable, Seq[A]]] = {
+    fetchPage: Long => IO[twitter4j.PagableResponseList[A]],
+) extends LazyLogging {
+  def fetchAll(): IO[Ior[Throwable, Seq[A]]] = fetchHead(Int.MaxValue)
+
+  def fetchHead(limit: Int): IO[Ior[Throwable, Seq[A]]] = {
     for (
-      firstPage <- fetchPage(0).attempt;
+      firstPage <- fetchPage(-1).attempt;
       merged <- firstPage match {
         case Left(e)  => IO.pure(Ior.Left(e))
-        case Right(p) => fetchMore(Seq.empty, p)
+        case Right(p) => fetchMore(p.asScala.toSeq, p, limit)
       }
     ) yield merged
   }
 
   private def fetchMore(
       acc: Seq[A],
-      lastFetch: twitter4j.PagableResponseList[A],
+      previousFetch: twitter4j.PagableResponseList[A],
+      limit: Int,
   ): IO[Ior[Throwable, Seq[A]]] = {
 
-    // TODO: we can consume prev.status
-    val c: Seq[A] = lastFetch.asScala.toSeq
-    if (!lastFetch.hasNext) {
-      return IO.pure(Ior.Right(acc ++ c))
+    if (!(previousFetch.hasNext && acc.size < limit)) {
+      return IO.pure(Ior.Right(acc))
+    }
+    if (previousFetch.getRateLimitStatus.getRemaining <= 0) {
+      return IO.pure(Ior.Both(new TwitterException("rate limit exceeded"), acc))
     }
 
     for (
-      nextPage <- fetchPage(lastFetch.getNextCursor).attempt;
-      merged <- nextPage match {
+      fetch <- fetchPage(previousFetch.getNextCursor).attempt;
+      merged <- fetch match {
         case Left(e)  => IO.pure(Ior.Both(e, acc))
-        case Right(p) => fetchMore(acc ++ c, p)
+        case Right(p) => fetchMore(acc ++ p.asScala, p, limit)
       }
     ) yield merged
   }
-
 }
