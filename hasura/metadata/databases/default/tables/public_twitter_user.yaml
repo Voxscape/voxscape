@@ -1,3 +1,3 @@
 table:
   name: twitter_user
-  schema: twitter
+  schema: public
