@@ -1,5 +1,6 @@
 package io.jokester.nuthatch
 
+import cats.data.Ior
 import cats.effect.{ExitCode, IO}
 import com.typesafe.scalalogging.LazyLogging
 import io.jokester.api.OpenAPIConvention
@@ -40,10 +41,25 @@ class Scripts(serviceBundle: AppRoot) extends LazyLogging {
           cred.providerUserId.toLong,
           cred.accessToken,
         );
-        _        <- IO.sleep(1.seconds);
-        fetched  <- twitterClientService.fetchFollowers();
-        _        <- IO.sleep(1.seconds);
-        timeline <- twitterClientService.fetchTweets()
+        followers <- twitterClientService.fetchFollowers();
+        _ <- IO {
+          followers match {
+            case Ior.Left(a)  => logger.error("fetchFollower failed", a)
+            case Ior.Right(b) => logger.info("fetchFollowers succeeded: {} followers", b.length)
+            case Ior.Both(a, b) =>
+              logger.info("fetchFollowers partially succeeded: {} followers / {}", b.length, a)
+          }
+        };
+        _       <- IO.sleep(1.seconds);
+        friends <- twitterClientService.fetchFriends();
+        _ <- IO {
+          friends match {
+            case Ior.Left(a)  => logger.error("fetchFriends failed", a)
+            case Ior.Right(b) => logger.info("fetchFriends succeeded: {} friends", b.length)
+            case Ior.Both(a, b) =>
+              logger.info("fetchFriends partially succeeded: {} friends / {}", b.length, a)
+          }
+        }
       ) yield ExitCode.Success
 
     }

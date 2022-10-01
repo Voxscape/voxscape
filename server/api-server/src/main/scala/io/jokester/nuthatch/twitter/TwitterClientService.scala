@@ -25,15 +25,13 @@ case class TwitterClientService(
   private def useClient[A](f: Twitter => A): IO[A] = client.use(t => IO(f(t)))
 
   def fetchFollowers(): IO[Ior[Throwable, Seq[TwitterUser]]] = {
-    val fetcher =
-      TwitterFetcher[TwitterUser](cursor => useClient(_.getFollowersList(twitterUserId, cursor)))
-    fetcher.fetchAll()
+    TwitterFetcher[TwitterUser](cursor => useClient(_.getFollowersList(twitterUserId, cursor)))
+      .fetchAll()
   }
 
-  def fetchFriends(): IO[Unit] = {
-    for (friends <- useClient(_.getFriendsList(twitterUserId, -1))) yield {
-      logger.debug("got {} friends", friends.size)
-    }
+  def fetchFriends(): IO[Ior[Throwable, Seq[TwitterUser]]] = {
+    TwitterFetcher[TwitterUser](cursor => useClient(_.getFriendsList(twitterUserId, cursor)))
+      .fetchAll()
   }
 
   def fetchTweets(): IO[Unit] = {
