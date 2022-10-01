@@ -3,28 +3,33 @@ package io.jokester.nuthatch.twitter
 import cats.data.Ior
 import cats.effect.IO
 import com.typesafe.scalalogging.LazyLogging
-import twitter4j.TwitterException
+import twitter4j.{CursorSupport, TwitterException}
 
 import scala.jdk.CollectionConverters._
 
-case class TwitterFetcher[A <: twitter4j.TwitterResponse](
-    fetchPage: Long => IO[twitter4j.PagableResponseList[A]],
-) extends LazyLogging {
+trait TwitterFetcher[A] extends LazyLogging {
+
+  type ApiRes <: twitter4j.TwitterResponse with CursorSupport
+
+  def doFetch(cursor: Long): IO[ApiRes]
+
+  def extractValues(apiRes: ApiRes): Seq[A]
+
   def fetchAll(): IO[Ior[Throwable, Seq[A]]] = fetchHead(Int.MaxValue)
 
   def fetchHead(limit: Int): IO[Ior[Throwable, Seq[A]]] = {
     for (
-      firstPage <- fetchPage(-1).attempt;
+      firstPage <- doFetch(-1).attempt;
       merged <- firstPage match {
         case Left(e)  => IO.pure(Ior.Left(e))
-        case Right(p) => fetchMore(p.asScala.toSeq, p, limit)
+        case Right(p) => fetchMore(extractValues(p), p, limit)
       }
     ) yield merged
   }
 
   private def fetchMore(
       acc: Seq[A],
-      previousFetch: twitter4j.PagableResponseList[A],
+      previousFetch: ApiRes,
       limit: Int,
   ): IO[Ior[Throwable, Seq[A]]] = {
 
@@ -36,10 +41,10 @@ case class TwitterFetcher[A <: twitter4j.TwitterResponse](
     }
 
     for (
-      fetch <- fetchPage(previousFetch.getNextCursor).attempt;
+      fetch <- doFetch(previousFetch.getNextCursor).attempt;
       merged <- fetch match {
         case Left(e)  => IO.pure(Ior.Both(e, acc))
-        case Right(p) => fetchMore(acc ++ p.asScala, p, limit)
+        case Right(p) => fetchMore(acc ++ extractValues(p), p, limit)
       }
     ) yield merged
   }
