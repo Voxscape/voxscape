@@ -6,6 +6,9 @@ import java.sql.Types
 import java.time.OffsetDateTime
 
 /** low-level bindings
+  *
+  * @deprecated
+  *   not required in quill 4.5
   */
 trait QuillDatetimeEncoding {
 

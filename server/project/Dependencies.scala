@@ -5,9 +5,9 @@ object Dependencies {
   lazy val basicDeps: Seq[ModuleID] = Seq(
     // logging
     "com.typesafe.scala-logging" %% "scala-logging"   % "3.9.5",
-    "org.slf4j"                   % "jcl-over-slf4j"  % "2.0.0",
-    "org.slf4j"                   % "slf4j-api"       % "2.0.0",
-    "ch.qos.logback"              % "logback-classic" % "1.4.0", // this provides SLF4J backend
+    "org.slf4j"                   % "jcl-over-slf4j"  % "2.0.1",
+    "org.slf4j"                   % "slf4j-api"       % "2.0.1",
+    "ch.qos.logback"              % "logback-classic" % "1.4.1", // this provides SLF4J backend
     "commons-logging"             % "commons-logging" % "1.2",
     // config
     "com.typesafe"     % "config" % "1.4.2",
@@ -109,7 +109,7 @@ private object Versions {
 
   // rdbms
   val postgresql  = "42.5.0"
-  val quill       = "4.3.0"
+  val quill       = "4.5.0"
   val scalikeJDBC = "3.5.0"
   val flyway      = "8.0.2"
 

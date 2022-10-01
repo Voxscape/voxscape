@@ -7,8 +7,6 @@ import io.jokester.api.OpenAPIConvention
 import io.jokester.nuthatch.consts._
 import io.jokester.nuthatch.twitter.TwitterClientService
 
-import scala.concurrent.duration.DurationInt
-
 class Scripts(serviceBundle: AppRoot) extends LazyLogging {
   def runScript(command: List[String]): IO[ExitCode] = {
     logger.debug("interpreting script command: {}", command)

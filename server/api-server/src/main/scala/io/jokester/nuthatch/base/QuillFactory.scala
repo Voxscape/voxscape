@@ -9,12 +9,7 @@ import io.getquill.{PostgresDialect, PostgresJdbcContext, Query}
 import io.jokester.nuthatch.generated.quill.public.PublicExtensions
 import io.jokester.nuthatch.generated.quill.twitter.TwitterExtensions
 import io.jokester.nuthatch.generated.quill.{public => T}
-import io.jokester.quill.{
-  FixedPostgresNaming,
-  QuillCirceJsonEncoding,
-  QuillDataSource,
-  QuillDatetimeEncoding,
-}
+import io.jokester.quill.{FixedPostgresNaming, QuillCirceJsonEncoding, QuillDataSource}
 
 import java.io.Closeable
 import java.time.OffsetDateTime
@@ -23,11 +18,10 @@ import javax.sql.DataSource
 object QuillFactory {
 
   class RdbContext(dataSource: DataSource with Closeable)
-      extends PostgresJdbcContext(FixedPostgresNaming, dataSource)
+    extends PostgresJdbcContext(FixedPostgresNaming, dataSource)
       with PublicExtensions[PostgresDialect, FixedPostgresNaming.type]
       with TwitterExtensions[PostgresDialect, FixedPostgresNaming.type]
       with QuillCirceJsonEncoding
-      with QuillDatetimeEncoding
       with QuillJsonHelper
       with PublicCtxDummyFactory {
 
