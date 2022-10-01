@@ -48,7 +48,7 @@ class Scripts(serviceBundle: AppRoot) extends LazyLogging {
               logger.info("fetchFollowers partially succeeded: {} followers / {}", b.length, a)
           }
         };
-        _       <- IO.sleep(1.seconds);
+        _       <- serviceBundle.twitter.storage.upsertUsers(followers.getOrElse(Seq.empty));
         friends <- twitterClientService.fetchFriends();
         _ <- IO {
           friends match {
@@ -57,7 +57,8 @@ class Scripts(serviceBundle: AppRoot) extends LazyLogging {
             case Ior.Both(a, b) =>
               logger.info("fetchFriends partially succeeded: {} friends / {}", b.length, a)
           }
-        }
+        };
+        _ <- serviceBundle.twitter.storage.upsertUsers(friends.getOrElse(Seq.empty))
       ) yield ExitCode.Success
 
     }

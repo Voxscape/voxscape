@@ -7,7 +7,6 @@ import com.zaxxer.hikari.HikariDataSource
 import io.circe.{Json, JsonObject}
 import io.getquill.{PostgresDialect, PostgresJdbcContext, Query}
 import io.jokester.nuthatch.generated.quill.public.PublicExtensions
-import io.jokester.nuthatch.generated.quill.twitter.TwitterExtensions
 import io.jokester.nuthatch.generated.quill.{public => T}
 import io.jokester.quill.{FixedPostgresNaming, QuillCirceJsonEncoding, QuillDataSource}
 
@@ -18,9 +17,8 @@ import javax.sql.DataSource
 object QuillFactory {
 
   class RdbContext(dataSource: DataSource with Closeable)
-    extends PostgresJdbcContext(FixedPostgresNaming, dataSource)
+      extends PostgresJdbcContext(FixedPostgresNaming, dataSource)
       with PublicExtensions[PostgresDialect, FixedPostgresNaming.type]
-      with TwitterExtensions[PostgresDialect, FixedPostgresNaming.type]
       with QuillCirceJsonEncoding
       with QuillJsonHelper
       with PublicCtxDummyFactory {
