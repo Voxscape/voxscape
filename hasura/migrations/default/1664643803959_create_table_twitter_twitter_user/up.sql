@@ -1,0 +1,1 @@
+CREATE TABLE "twitter"."twitter_user" ("id" serial NOT NULL, "twitter_id" bigint NOT NULL, "twitter_profile" jsonb NOT NULL, "created_at" timestamptz NOT NULL DEFAULT now(), PRIMARY KEY ("id") );COMMENT ON TABLE "twitter"."twitter_user" IS E'append-only warehouse table';
