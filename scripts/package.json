@@ -1,8 +1,10 @@
 {
+  "name": "@voxscape/scripts",
+  "private": true,
+  "version": "0.0.1",
   "scripts": {
-    "openapi-generator-cli":     "openapi-generator-cli"
+    "openapi-generator-cli": "openapi-generator-cli"
   },
-  "dependencies": {},
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.1"
   }

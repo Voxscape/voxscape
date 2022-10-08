@@ -13,11 +13,11 @@ apiSpec:
 
 web:
 	@printf '\ek[web]next dev\e\\'
-	cd web && npm i && exec npm run dev
+	cd web && yarn && exec yarn dev
 
 webTsc:
 	@printf '\ek[web]tsc watch\e\\'
-	cd web && exec npm run typecheck:watch
+	cd web && exec yarn typecheck:watch
 
 devDeps:
 	@printf '\ek[docker-compose up]\e\\'
