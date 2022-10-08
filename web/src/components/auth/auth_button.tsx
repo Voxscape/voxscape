@@ -24,6 +24,7 @@ export const TwitterOAuth1Button: React.FC = () => {
 
 export function useOAuthCallback(): void {
   const apiClient = useApiClient();
+  const router = useRouter();
   useEffect(() => {
     const query = router.query as { provider: string; oauth_token: string; oauth_verifier: string };
 
@@ -44,6 +45,4 @@ export function useOAuthCallback(): void {
     }
     return () => {};
   }, [router]);
-
-  const router = useRouter();
 }
