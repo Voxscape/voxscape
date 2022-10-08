@@ -22,7 +22,7 @@
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@jokester/ts-commonutil": "^0.3.8",
-    "@jokester/vox.ts": "*",
+    "@voxscape/vox.ts": "*",
     "classnames": "^2.3.1",
     "clsx": "^1.2.1",
     "date-fns": "^2.29.1",
