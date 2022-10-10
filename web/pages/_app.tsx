@@ -1,13 +1,15 @@
 import React from 'react';
-import App, { AppProps } from 'next/app';
+import App, { AppType } from 'next/app';
 import '../src/app.scss';
 import { DefaultMeta } from '../src/components/meta/default-meta';
 import Head from 'next/head';
+import { ChakraProvider } from '@chakra-ui/react';
+import { chakraTheme } from '../src/config/chakra-theme';
 
-const CustomApp: React.FC<AppProps> & Partial<Pick<typeof App, 'getInitialProps'>> = (props) => {
+const CustomApp: AppType = (props) => {
   const { Component, pageProps } = props;
   return (
-    <>
+    <ChakraProvider theme={chakraTheme}>
       <Head>
         <meta
           key="meta-viewport"
@@ -17,10 +19,10 @@ const CustomApp: React.FC<AppProps> & Partial<Pick<typeof App, 'getInitialProps'
       </Head>
       <DefaultMeta />
       <Component {...pageProps} />
-    </>
+    </ChakraProvider>
   );
 };
 
-// CustomApp.getInitialProps = App.getInitialProps;
+CustomApp.getInitialProps = App.getInitialProps;
 
 export default CustomApp;

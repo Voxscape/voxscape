@@ -2807,6 +2807,7 @@ __metadata:
     clsx: ^1.2.1
     date-fns: ^2.29.1
     debug: ^4.3.4
+    eslint: <8
     eslint-plugin-react: ^7.30.1
     eslint-plugin-react-hooks: ^4.6.0
     fp-ts: ^2
@@ -5552,7 +5553,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^7.10.0":
+"eslint@npm:<8, eslint@npm:^7.10.0":
   version: 7.32.0
   resolution: "eslint@npm:7.32.0"
   dependencies:
