@@ -19,8 +19,9 @@
     "lint:fix": "eslint '@(src|pages)/**/*.@(ts|js|tsx|jsx)' --fix"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.0",
-    "@emotion/styled": "^11.10.0",
+    "@chakra-ui/react": "^2.3.5",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
     "@jokester/ts-commonutil": "^0.3.8",
     "@voxscape/vox.ts": "*",
     "classnames": "^2.3.1",
@@ -28,6 +29,7 @@
     "date-fns": "^2.29.1",
     "debug": "^4.3.4",
     "fp-ts": "^2",
+    "framer-motion": "^7.5.3",
     "immer": "^9.0.15",
     "lodash-es": "^4.17.21",
     "next": "^12",
