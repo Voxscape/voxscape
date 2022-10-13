@@ -1,33 +1,20 @@
 package io.jokester.nuthatch.generated.quill.public
 
-case class UserPassword(id: Int, userId: Int, passwordHash: String, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
-
 case class TwitterUser(id: Int, twitterUserId: Long, twitterUserProfile: io.circe.Json, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
 
 case class User(id: Int, email: String, profile: Option[io.circe.Json], createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
 
 case class UserOauth1(id: Int, userId: Int, provider: String, accessToken: String, accessTokenSecret: String, providerId: String, providerProfile: io.circe.Json, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
 
+case class UserPassword(id: Int, userId: Int, passwordHash: String, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
+
+case class TwitterFriendship(id: Long, twitterUserId1: Long, twitterUserId2: Long, following12: Boolean, following21: Boolean, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
+
 trait PublicExtensions[+Idiom <: io.getquill.idiom.Idiom, +Naming <: io.getquill.NamingStrategy] {
   this:io.getquill.context.Context[Idiom, Naming] =>
 
   object PublicSchema {
-    object UserPasswordDao {
-        def query = quote {
-            querySchema[UserPassword](
-              "public.user_password",
-              _.id -> "id",
-              _.userId -> "user_id",
-              _.passwordHash -> "password_hash",
-              _.createdAt -> "created_at",
-              _.updatedAt -> "updated_at"
-            )
-                      
-          }
-                    
-      }
-
-      object TwitterUserDao {
+    object TwitterUserDao {
         def query = quote {
             querySchema[TwitterUser](
               "public.twitter_user",
@@ -68,6 +55,38 @@ trait PublicExtensions[+Idiom <: io.getquill.idiom.Idiom, +Naming <: io.getquill
               _.accessTokenSecret -> "access_token_secret",
               _.providerId -> "provider_id",
               _.providerProfile -> "provider_profile",
+              _.createdAt -> "created_at",
+              _.updatedAt -> "updated_at"
+            )
+                      
+          }
+                    
+      }
+
+      object UserPasswordDao {
+        def query = quote {
+            querySchema[UserPassword](
+              "public.user_password",
+              _.id -> "id",
+              _.userId -> "user_id",
+              _.passwordHash -> "password_hash",
+              _.createdAt -> "created_at",
+              _.updatedAt -> "updated_at"
+            )
+                      
+          }
+                    
+      }
+
+      object TwitterFriendshipDao {
+        def query = quote {
+            querySchema[TwitterFriendship](
+              "public.twitter_friendship",
+              _.id -> "id",
+              _.twitterUserId1 -> "twitter_user_id_1",
+              _.twitterUserId2 -> "twitter_user_id_2",
+              _.following12 -> "following_1_2",
+              _.following21 -> "following_2_1",
               _.createdAt -> "created_at",
               _.updatedAt -> "updated_at"
             )
