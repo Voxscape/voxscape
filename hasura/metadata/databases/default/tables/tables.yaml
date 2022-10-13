@@ -1,3 +1,4 @@
+- "!include public_twitter_friendship.yaml"
 - "!include public_twitter_user.yaml"
 - "!include public_user.yaml"
 - "!include public_user_oauth1.yaml"
