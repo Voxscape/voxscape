@@ -37,4 +37,38 @@ class TwitterStorageService(ctx: AppContextBase) {
       inserted.length
     }
   }
+
+  def upsertFollowers(followee: Long, followers: Seq[Long]): IO[Unit] = {
+    if (followers.isEmpty) {
+      return IO.pure()
+    }
+
+    IO {
+      import ctx.quill._
+
+      val clean = quote {
+        query[T.TwitterFriendship]
+          .filter(_.twitterUserId2 == lift(followee))
+          .update(_.following12 -> false)
+      }
+
+      val upsert = quote {
+        liftQuery(followers).foreach(follower => {
+          query[T.TwitterFriendship]
+            .insert(
+              _.following12    -> true,
+              _.twitterUserId1 -> lift(follower),
+              _.twitterUserId2 -> lift(followee),
+            )
+            .onConflictUpdate(_.following12)((t, e) => t.following12 -> e.following12)
+        })
+      }
+
+      transaction {
+        run(clean)
+        run(upsert)
+      }
+    }
+
+  }
 }

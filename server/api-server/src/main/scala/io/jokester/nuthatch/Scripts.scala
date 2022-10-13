@@ -40,6 +40,10 @@ class Scripts(serviceBundle: AppRoot) extends LazyLogging {
           cred.accessToken,
         );
         followers <- twitterClientService.fetchFollowers();
+        _ <- serviceBundle.twitter.storage.upsertFollowers(
+          userId,
+          followers.getOrElse(Seq.empty).map(_.getId),
+        );
         _ <- IO {
           followers match {
             case Ior.Left(a)  => logger.error("fetchFollower failed", a)
