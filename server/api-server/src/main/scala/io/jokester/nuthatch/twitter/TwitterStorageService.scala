@@ -49,18 +49,55 @@ class TwitterStorageService(ctx: AppContextBase) {
       val clean = quote {
         query[T.TwitterFriendship]
           .filter(_.twitterUserId2 == lift(followee))
-          .update(_.following12 -> false)
+          .update(_.following -> false)
       }
 
       val upsert = quote {
         liftQuery(followers).foreach(follower => {
           query[T.TwitterFriendship]
             .insert(
-              _.following12    -> true,
-              _.twitterUserId1 -> lift(follower),
+              _.following      -> true,
+              _.twitterUserId1 -> follower,
               _.twitterUserId2 -> lift(followee),
             )
-            .onConflictUpdate(_.following12)((t, e) => t.following12 -> e.following12)
+            .onConflictUpdate(_.twitterUserId1, _.twitterUserId2)((t, e) =>
+              t.following -> e.following,
+            )
+        })
+      }
+
+      transaction {
+        run(clean)
+        run(upsert)
+      }
+    }
+  }
+
+  def upsertFollowees(follower: Long, followees: Seq[Long]): IO[Unit] = {
+    if (followees.isEmpty) {
+      return IO.pure()
+    }
+
+    IO {
+      import ctx.quill._
+
+      val clean = quote {
+        query[T.TwitterFriendship]
+          .filter(_.twitterUserId1 == lift(follower))
+          .update(_.following -> false)
+      }
+
+      val upsert = quote {
+        liftQuery(followees).foreach(followee => {
+          query[T.TwitterFriendship]
+            .insert(
+              _.following      -> true,
+              _.twitterUserId1 -> lift(follower),
+              _.twitterUserId2 -> followee,
+            )
+            .onConflictUpdate(_.twitterUserId1, _.twitterUserId2)((t, e) =>
+              t.following -> e.following,
+            )
         })
       }
 

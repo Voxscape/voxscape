@@ -40,10 +40,6 @@ class Scripts(serviceBundle: AppRoot) extends LazyLogging {
           cred.accessToken,
         );
         followers <- twitterClientService.fetchFollowers();
-        _ <- serviceBundle.twitter.storage.upsertFollowers(
-          userId,
-          followers.getOrElse(Seq.empty).map(_.getId),
-        );
         _ <- IO {
           followers match {
             case Ior.Left(a)  => logger.error("fetchFollower failed", a)
@@ -52,6 +48,10 @@ class Scripts(serviceBundle: AppRoot) extends LazyLogging {
               logger.info("fetchFollowers partially succeeded: {} followers / {}", b.length, a)
           }
         };
+        _ <- serviceBundle.twitter.storage.upsertFollowers(
+          cred.providerUserId.toLong,
+          followers.getOrElse(Seq.empty).map(_.getId),
+        );
         _       <- serviceBundle.twitter.storage.upsertUsers(followers.getOrElse(Seq.empty));
         friends <- twitterClientService.fetchFriends();
         _ <- IO {
@@ -62,7 +62,11 @@ class Scripts(serviceBundle: AppRoot) extends LazyLogging {
               logger.info("fetchFriends partially succeeded: {} friends / {}", b.length, a)
           }
         };
-        _ <- serviceBundle.twitter.storage.upsertUsers(friends.getOrElse(Seq.empty))
+        _ <- serviceBundle.twitter.storage.upsertUsers(friends.getOrElse(Seq.empty));
+        _ <- serviceBundle.twitter.storage.upsertFollowees(
+          cred.providerUserId.toLong,
+          friends.getOrElse(Seq.empty).map(_.getId),
+        )
       ) yield ExitCode.Success
 
     }
