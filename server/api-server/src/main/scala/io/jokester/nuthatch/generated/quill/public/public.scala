@@ -8,7 +8,7 @@ case class UserOauth1(id: Int, userId: Int, provider: String, accessToken: Strin
 
 case class UserPassword(id: Int, userId: Int, passwordHash: String, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
 
-case class TwitterFriendship(id: Long, twitterUserId1: Long, twitterUserId2: Long, following12: Boolean, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
+case class TwitterFriendship(id: Long, twitterUserId1: Long, twitterUserId2: Long, following: Boolean, createdAt: java.time.OffsetDateTime, updatedAt: java.time.OffsetDateTime)
 
 trait PublicExtensions[+Idiom <: io.getquill.idiom.Idiom, +Naming <: io.getquill.NamingStrategy] {
   this:io.getquill.context.Context[Idiom, Naming] =>
@@ -83,9 +83,9 @@ trait PublicExtensions[+Idiom <: io.getquill.idiom.Idiom, +Naming <: io.getquill
             querySchema[TwitterFriendship](
               "public.twitter_friendship",
               _.id -> "id",
-              _.twitterUserId1 -> "twitter_user_id_1",
-              _.twitterUserId2 -> "twitter_user_id_2",
-              _.following12 -> "following_1_2",
+              _.twitterUserId1 -> "twitter_user_id1",
+              _.twitterUserId2 -> "twitter_user_id2",
+              _.following -> "following",
               _.createdAt -> "created_at",
               _.updatedAt -> "updated_at"
             )
