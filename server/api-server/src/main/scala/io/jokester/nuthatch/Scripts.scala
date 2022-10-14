@@ -35,11 +35,9 @@ class Scripts(serviceBundle: AppRoot) extends LazyLogging {
           case _       => IO.raiseError(OpenAPIConvention.NotFound("token not found"))
         };
         twitterClientService = TwitterClientService(
-          serviceBundle.apiContext,
-          cred.providerUserId.toLong,
-          cred.accessToken,
+          serviceBundle.apiContext.providers.twitter.buildAppAuthedClient(),
         );
-        followers <- twitterClientService.fetchFollowers();
+        followers <- twitterClientService.fetchFollowers(cred.providerUserId.toLong);
         _ <- IO {
           followers match {
             case Ior.Left(a)  => logger.error("fetchFollower failed", a)
@@ -53,7 +51,7 @@ class Scripts(serviceBundle: AppRoot) extends LazyLogging {
           followers.getOrElse(Seq.empty).map(_.getId),
         );
         _       <- serviceBundle.twitter.storage.upsertUsers(followers.getOrElse(Seq.empty));
-        friends <- twitterClientService.fetchFriends();
+        friends <- twitterClientService.fetchFriends(cred.providerUserId.toLong);
         _ <- IO {
           friends match {
             case Ior.Left(a)  => logger.error("fetchFriends failed", a)

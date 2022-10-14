@@ -12,29 +12,30 @@ object Dependencies {
     // config
     "com.typesafe"     % "config" % "1.4.2",
     "com.google.guava" % "guava"  % "31.1-jre",
-//    "org.apache.commons" % "commons-lang3" % "3.12.0",
+    //    "org.apache.commons" % "commons-lang3" % "3.12.0",
     "com.google.code.gson" % "gson" % "2.9.1",
-//    "org.yaml"                     % "snakeyaml" % "1.30",
+    //    "org.yaml"                     % "snakeyaml" % "1.30",
   )
 
   lazy val twitterSdkDeps: Seq[ModuleID] = Seq(
     /** twitterd
+      *
       * @see
       *   {https://github.com/redouane59/twittered} newer (API v1+v2) but incomplete (API v2 itself
       *   is incomplete too)
       */
-//    "io.github.redouane59.twitter" % "twittered" % "2.17" exclude ("org.yaml", "snakeyaml"),
+    //    "io.github.redouane59.twitter" % "twittered" % "2.17" exclude ("org.yaml", "snakeyaml"),
 
     /** @see {https://twitter4j.org/en/index.html} a more complete, 1.1-only API client */
-    "org.twitter4j" % "twitter4j-core"   % "4.0.7",
-    "org.twitter4j" % "twitter4j-stream" % "4.0.7",
+    "org.twitter4j" % "twitter4j-core" % "4.1.0",
+    //    "org.twitter4j" % "twitter4j-stream" % "4.0.7",
   )
 
   lazy val http4sDeps: Seq[ModuleID] = Seq(
     "org.http4s" %% "http4s-ember-server",
     "org.http4s" %% "http4s-ember-client",
-//    "org.http4s" %% "http4s-circe",
-//    "org.http4s" %% "http4s-dsl",
+    //    "org.http4s" %% "http4s-circe",
+    //    "org.http4s" %% "http4s-dsl",
   ).map(_ % Versions.http4s)
 
   lazy val catsDeps: Seq[ModuleID] = Seq(
@@ -90,8 +91,8 @@ object Dependencies {
   ).map(_ % Test)
 
   lazy val incompatibleDependencies: Seq[DependencyBuilders.OrganizationArtifactName] = Seq(
-//    "com.typesafe.scala-logging" % "scala-logging_2.13",
-//    "org.yaml"                     % "snakeyaml",
+    //    "com.typesafe.scala-logging" % "scala-logging_2.13",
+    //    "org.yaml"                     % "snakeyaml",
   )
 }
 
@@ -116,5 +117,4 @@ private object Versions {
   // testing
   val scalaTest               = "3.2.13"
   val scalaTestPlusScalaCheck = "3.2.2.0"
-
 }

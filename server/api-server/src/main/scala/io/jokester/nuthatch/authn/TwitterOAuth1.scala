@@ -4,10 +4,10 @@ import cats.effect.IO
 import com.github.scribejava.core.model.OAuth1AccessToken
 import com.google.gson.Gson
 import io.jokester.nuthatch.consts._
-import twitter4j.auth.AccessToken
-import twitter4j.{Twitter, User => TwitterUser}
+import twitter4j.v1.{User => TwitterUser}
 
-private[authn] trait TwitterOAuth1 { self: BaseAuth =>
+private[authn] trait TwitterOAuth1 {
+  self: BaseAuth =>
 
   private lazy val twitterOAuth1: TwitterOAuth1Flow =
     new TwitterOAuth1Flow(appCtx)
@@ -27,10 +27,16 @@ private[authn] trait TwitterOAuth1 { self: BaseAuth =>
   ): IO[AuthenticationApi.CurrentUser] = {
     for (
       token <- twitterOAuth1.exchangeToken(cred.oauthToken, cred.oauthVerifier);
-      _     <- IO { logger.debug("got token: {}", new Gson().toJson(token)) };
-      twitterUser <- appCtx.providers.twitter
-        .twitterClient(token.getToken, token.getTokenSecret)
-        .use(c => IO(c.verifyCredentials()));
+      _ <- IO {
+        logger.debug("got token: {}", new Gson().toJson(token))
+      };
+      twitterUser <- IO {
+        appCtx.providers.twitter
+          .buildOAuth1AuthClient(token.getToken, token.getTokenSecret)
+          .v1
+          .users()
+          .verifyCredentials()
+      };
       _ <- IO {
         logger.debug("got user: {} / {}", gson.toJson(twitterUser), twitterUser.isVerified)
       };

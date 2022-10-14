@@ -3,7 +3,8 @@ package io.jokester.nuthatch.twitter
 import cats.data.Ior
 import cats.effect.IO
 import com.typesafe.scalalogging.LazyLogging
-import twitter4j.{CursorSupport, TwitterException}
+import twitter4j.TwitterException
+import twitter4j.v1.CursorSupport
 
 trait TwitterFetcher[A] extends LazyLogging {
 

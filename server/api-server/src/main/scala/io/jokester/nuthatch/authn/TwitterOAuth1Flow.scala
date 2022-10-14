@@ -14,7 +14,7 @@ import redis.clients.jedis.Jedis
 class TwitterOAuth1Flow(ctx: AppContextBase) extends LazyLogging {
   private def redis: Resource[IO, Jedis] = ctx.redis
 
-  def c: Config = ctx.providers.twitter.oauth1Config
+  def c: Config = ctx.providers.twitter.config.getConfig("oauth1")
 
   def issueTwitterOAuthUrl(
       query: Query = Query.empty,
