@@ -1,6 +1,10 @@
 import type { BabylonDeps } from '@voxscape/vox.ts/src/babylon/babylon-deps';
 
-import { BabylonContext, useBabylonContext } from '@voxscape/vox.ts/src/demo/babylon/init-babylon';
+import {
+  BabylonContext,
+  createArcRotateCamera,
+  useBabylonContext,
+} from '@voxscape/vox.ts/src/demo/babylon/init-babylon';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import React, { useImperativeHandle, useRef } from 'react';
 import { PropOf } from '@jokester/ts-commonutil/lib/react/util/prop-of';
@@ -8,7 +12,7 @@ import { PropOf } from '@jokester/ts-commonutil/lib/react/util/prop-of';
 export class BabylonGltfRendererHandle {
   private inspectorEnabled = false;
   private inspectorLoaded = import('@babylonjs/inspector');
-  constructor(public readonly ctx: BabylonContext) {}
+  constructor(private readonly ctx: BabylonContext, private readonly canvas: HTMLCanvasElement) {}
 
   async toggleInspector(enabled?: boolean) {
     this.inspectorEnabled = enabled ?? !this.inspectorEnabled;
@@ -22,6 +26,11 @@ export class BabylonGltfRendererHandle {
 
   async loadModel(file: File) {
     console.debug(__filename, 'loadModel', file);
+    const { SceneLoader } = await import('@babylonjs/core/Loading/sceneLoader');
+    const loaded = await SceneLoader.LoadAsync('/', file, this.ctx.engine.instance, () => console.debug('progress'));
+    const camera = createArcRotateCamera(loaded, this.canvas);
+    camera.attachControl(this.canvas);
+    this.ctx.engine.start(loaded);
   }
 }
 
@@ -32,8 +41,9 @@ interface Prop {
 const _BabylonGltfRenderer = (props: Prop, ref: any) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const babylonCtx = useBabylonContext(canvasRef);
-  useImperativeHandle(ref, () => babylonCtx && new BabylonGltfRendererHandle(babylonCtx), [babylonCtx]);
-
+  useImperativeHandle(ref, () => babylonCtx && new BabylonGltfRendererHandle(babylonCtx, canvasRef.current!), [
+    babylonCtx,
+  ]);
   return <canvas {...props.canvasProps} ref={canvasRef} />;
 };
 

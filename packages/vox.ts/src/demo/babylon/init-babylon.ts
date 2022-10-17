@@ -1,5 +1,6 @@
 import type { Scene } from '@babylonjs/core/scene';
 import type { Engine } from '@babylonjs/core/Engines';
+import { Vector3 } from '@babylonjs/core';
 import { RefObject, useEffect, useState } from 'react';
 import type { babylonAllDeps } from './deps/babylon-deps';
 import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
@@ -11,7 +12,7 @@ import { Deferred } from '@jokester/ts-commonutil/lib/concurrency/deferred';
 export interface BabylonContext {
   engine: {
     instance: Engine;
-    start(): void;
+    start(scene?: Scene): void;
     stop(): void;
   };
   scene: Scene;
@@ -40,6 +41,7 @@ export function useBabylonContext(canvasRef: RefObject<HTMLCanvasElement>): null
     import('./deps/babylon-deps').then(async (imported) => {
       if (!effective) return;
       const ctx = initBabylon(maybeCanvas, imported.babylonAllDeps);
+      ctx.engine.start();
       setCtx(ctx);
 
       effectReleased.then(() => ctx.disposeAll());
@@ -82,6 +84,18 @@ export function useBabylonDepsPreload(): void {
   }, []);
 }
 
+export function createArcRotateCamera(scene: Scene, canvas: HTMLCanvasElement): ArcRotateCamera {
+  const camera = new ArcRotateCamera(
+    'arc-rotate',
+    /* alpha: rotation around "latitude axis" */ -Math.PI / 2,
+    /* beta: rotation around "longitude axis" */ Math.PI / 2,
+    1,
+    Vector3.Zero(),
+    scene,
+  );
+  return camera;
+}
+
 /**
  * @internal
  */
@@ -92,14 +106,7 @@ function initBabylon(canvas: HTMLCanvasElement, deps: typeof babylonAllDeps): Ba
   const scene = new Scene(engine);
 
   scene.clearColor = new Color4(0.1, 0.1, 0.1, 1);
-  const camera = new ArcRotateCamera(
-    'camera',
-    /* alpha: rotation around "latitude axis" */ -Math.PI / 2,
-    /* beta: rotation around "longitude axis" */ Math.PI / 2,
-    1,
-    Vector3.Zero(),
-    scene,
-  );
+  const camera = createArcRotateCamera(scene, canvas);
   camera.attachControl(canvas, false);
 
   const light = new HemisphericLight('light1', new Vector3(0, 1, 0), scene);
@@ -110,8 +117,9 @@ function initBabylon(canvas: HTMLCanvasElement, deps: typeof babylonAllDeps): Ba
     engine: {
       instance: engine,
 
-      start() {
-        engine.runRenderLoop(() => scene.render());
+      start(theScene = scene) {
+        engine.stopRenderLoop();
+        engine.runRenderLoop(() => theScene.render());
       },
       stop() {
         engine.stopRenderLoop();
