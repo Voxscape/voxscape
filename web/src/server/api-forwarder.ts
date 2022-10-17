@@ -17,7 +17,7 @@ export function rebuildUri(
   return upstreamUri;
 }
 
-export async function forwardApi(req: NextApiRequest, res: NextApiResponse, realUri: string) {
+export async function forwardApi(req: NextApiRequest, res: NextApiResponse, realUri: string): Promise<void> {
   const upstreamRes = await fetch(realUri, {
     headers: req.headers as HeadersInit,
     method: req.method,
