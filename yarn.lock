@@ -2786,49 +2786,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuthatch/web@workspace:web":
-  version: 0.0.0-use.local
-  resolution: "@nuthatch/web@workspace:web"
-  dependencies:
-    "@chakra-ui/react": ^2.3.5
-    "@emotion/react": ^11.10.4
-    "@emotion/styled": ^11.10.4
-    "@jokester/ts-commonutil": ^0.3.8
-    "@next/bundle-analyzer": ^12
-    "@next/eslint-plugin-next": ^12.2.5
-    "@types/debug": ^4.1.7
-    "@types/lodash-es": ^4.17.6
-    "@types/node": 16
-    "@types/react": ^18.0.15
-    "@types/react-dom": ^18.0.6
-    "@voxscape/vox.ts": "*"
-    autoprefixer: ^10
-    classnames: ^2.3.1
-    clsx: ^1.2.1
-    date-fns: ^2.29.1
-    debug: ^4.3.4
-    eslint: <8
-    eslint-plugin-react: ^7.30.1
-    eslint-plugin-react-hooks: ^4.6.0
-    fp-ts: ^2
-    framer-motion: ^7.5.3
-    immer: ^9.0.15
-    lodash-es: ^4.17.21
-    next: ^12
-    next-transpile-modules: ^9.0.0
-    postcss: ^8.4.14
-    react: 18.2.0
-    react-dom: 18.2.0
-    react-use: ^17.4.0
-    rxjs: ^7.5.5
-    sass: ^1.53.0
-    tailwindcss: ^3.1.4
-    tslib: ^2
-    typescript: ^4.8
-    use-constant: ^1.1.0
-  languageName: unknown
-  linkType: soft
-
 "@nuxtjs/opencollective@npm:0.3.2":
   version: 0.3.2
   resolution: "@nuxtjs/opencollective@npm:0.3.2"
@@ -3388,7 +3345,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.0.15, @types/react@npm:^18.0.17":
+"@types/react@npm:*, @types/react@npm:^18.0.17":
   version: 18.0.21
   resolution: "@types/react@npm:18.0.21"
   dependencies:
@@ -3597,6 +3554,58 @@ __metadata:
     vox.js: ^1.1.0
   peerDependencies:
     tslib: ^2.1.0
+  languageName: unknown
+  linkType: soft
+
+"@voxscape/web@workspace:web":
+  version: 0.0.0-use.local
+  resolution: "@voxscape/web@workspace:web"
+  dependencies:
+    "@babylonjs/core": ^5.21.0
+    "@babylonjs/gui": ^5.21.0
+    "@babylonjs/gui-editor": ^5.21.0
+    "@babylonjs/inspector": ^5.2.1
+    "@babylonjs/loaders": ^5.21.0
+    "@babylonjs/materials": ^5.21.0
+    "@babylonjs/post-processes": ^5.21.0
+    "@babylonjs/procedural-textures": ^5.21.0
+    "@babylonjs/serializers": ^5.21.0
+    "@chakra-ui/react": ^2.3.5
+    "@emotion/react": ^11.10.4
+    "@emotion/styled": ^11.10.4
+    "@jokester/ts-commonutil": ^0.3.8
+    "@next/bundle-analyzer": ^12
+    "@next/eslint-plugin-next": ^12.2.5
+    "@types/debug": ^4.1.7
+    "@types/lodash-es": ^4.17.6
+    "@types/node": 16
+    "@types/react": ^18.0.17
+    "@types/react-dom": ^18.0.6
+    "@voxscape/vox.ts": "*"
+    autoprefixer: ^10
+    classnames: ^2.3.1
+    clsx: ^1.2.1
+    date-fns: ^2.29.1
+    debug: ^4.3.4
+    eslint: <8
+    eslint-plugin-react: ^7.30.1
+    eslint-plugin-react-hooks: ^4.6.0
+    fp-ts: ^2
+    framer-motion: ^7.5.3
+    immer: ^9.0.15
+    lodash-es: ^4.17.21
+    next: ^12
+    next-transpile-modules: ^9.0.0
+    postcss: ^8.4.14
+    react: 18.2.0
+    react-dom: 18.2.0
+    react-use: ^17.4.0
+    rxjs: ^7.5.5
+    sass: ^1.53.0
+    tailwindcss: ^3.1.4
+    tslib: ^2
+    typescript: ^4.8
+    use-constant: ^1.1.0
   languageName: unknown
   linkType: soft
 
