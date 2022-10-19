@@ -2,7 +2,6 @@ package io.jokester.nuthatch.twitter
 
 import cats.data.Ior
 import cats.effect.IO
-import cats.effect.kernel.Resource
 import com.typesafe.scalalogging.LazyLogging
 import twitter4j.Twitter
 import twitter4j.v1.{User => TwitterUser, IDs, PagableResponseList}

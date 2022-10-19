@@ -6,8 +6,7 @@ import com.typesafe.config.Config
 import com.typesafe.scalalogging.LazyLogging
 import org.http4s.Query
 import redis.clients.jedis.Jedis
-import twitter4j.{OAuth2Token, Twitter}
-import twitter4j.v1.TwitterV1
+import twitter4j.{OAuth2Authorization, OAuth2Token, Twitter}
 
 import scala.util.{Failure, Try}
 
@@ -84,13 +83,23 @@ private[base] trait Providers {
   protected trait TwitterProvider {
     def config: Config = rootConfig.getConfig("twitter")
 
+    def fetchAppOAuth2Token: IO[OAuth2Token] = {
+      val auth = OAuth2Authorization.getInstance(
+        config.getConfig("oauth1").getString("consumer_key"),
+        config.getConfig("oauth1").getString("consumer_secret"),
+      )
+      IO(auth.getOAuth2Token)
+    }
+
     def buildAppAuthedClient(): Twitter = {
       Twitter
         .newBuilder()
         .applicationOnlyAuthEnabled(true)
-        .oAuth2Token(
-          new OAuth2Token("Bearer", config.getConfig("oauth2").getString("bearer_token")),
+        .oAuthConsumer(
+          config.getConfig("oauth1").getString("consumer_key"),
+          config.getConfig("oauth1").getString("consumer_secret"),
         )
+        .oAuth2Token("bearer", config.getConfig("oauth2").getString("bearer_token"))
         .build()
     }
 

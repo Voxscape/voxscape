@@ -26,9 +26,14 @@ object Dependencies {
       */
     //    "io.github.redouane59.twitter" % "twittered" % "2.17" exclude ("org.yaml", "snakeyaml"),
 
-    /** @see {https://twitter4j.org/en/index.html} a more complete, 1.1-only API client */
+    /** @see {https://twitter4j.org/en/index.html} a fine but API v1-only client */
     "org.twitter4j" % "twitter4j-core" % "4.1.0",
-    //    "org.twitter4j" % "twitter4j-stream" % "4.0.7",
+
+    /** @see
+      *   {https://github.com/twitterdev/twitter-api-java-sdk} twitter's API v2-only client. enables
+      *   app-only auth
+      */
+//    "com.twitter" % "twitter-api-java-sdk" % "2.0.3",
   )
 
   lazy val http4sDeps: Seq[ModuleID] = Seq(

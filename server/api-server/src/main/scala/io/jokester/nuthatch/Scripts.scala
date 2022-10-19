@@ -13,6 +13,11 @@ class Scripts(serviceBundle: AppRoot) extends LazyLogging {
     command match {
       case List("fetchTwitterFollower", uidString) =>
         FetchTwitterFollower(uidString.toInt).run
+      case List("generateTwitterBearerToken") =>
+        serviceBundle.apiContext.providers.twitter.fetchAppOAuth2Token.map(got => {
+          logger.info("got app token: {}", got)
+          ExitCode.Success
+        })
       case _ =>
         IO {
           logger.error("unknown command: {}", command)
