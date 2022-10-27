@@ -1,5 +1,3 @@
-import type { BabylonDeps } from '@voxscape/vox.ts/src/babylon/babylon-deps';
-
 import {
   BabylonContext,
   createArcRotateCamera,
@@ -7,30 +5,37 @@ import {
 } from '@voxscape/vox.ts/src/demo/babylon/init-babylon';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import React, { useImperativeHandle, useRef } from 'react';
-import { PropOf } from '@jokester/ts-commonutil/lib/react/util/prop-of';
+import type { PropOf } from '@jokester/ts-commonutil/lib/react/util/prop-of';
+import type { Scene } from '@babylonjs/core';
 
 export class BabylonGltfRendererHandle {
   private inspectorEnabled = false;
   private inspectorLoaded = import('@babylonjs/inspector');
+  private scene: null | Scene = null;
   constructor(private readonly ctx: BabylonContext, private readonly canvas: HTMLCanvasElement) {}
 
-  async toggleInspector(enabled?: boolean) {
+  async toggleInspector(enabled?: boolean): Promise<void> {
     this.inspectorEnabled = enabled ?? !this.inspectorEnabled;
     await this.inspectorLoaded;
     if (this.inspectorEnabled) {
-      this.ctx.scene.debugLayer.show();
+      this.scene?._debugLayer?.show();
     } else {
-      this.ctx.scene.debugLayer.hide();
+      this.scene?.debugLayer.hide();
     }
   }
 
-  async loadModel(file: File) {
+  async loadModel(file: File): Promise<void> {
     console.debug(__filename, 'loadModel', file);
     const { SceneLoader } = await import('@babylonjs/core/Loading/sceneLoader');
-    const loaded = await SceneLoader.LoadAsync('/', file, this.ctx.engine.instance, () => console.debug('progress'));
-    const camera = createArcRotateCamera(loaded, this.canvas);
+    const scene = await SceneLoader.LoadAsync('/blender', file, this.ctx.engine.instance, (ev) =>
+      console.debug('progress', ev),
+    );
+    console.debug(__filename, 'loaded', scene);
+    this.ctx.engine.start((this.scene = scene));
+    const camera = scene.cameras[0];
+    // const camera = createArcRotateCamera(scene, this.canvas);
     camera.attachControl(this.canvas);
-    this.ctx.engine.start(loaded);
+    scene.setActiveCameraById(camera.id);
   }
 }
 
