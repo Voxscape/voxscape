@@ -101,7 +101,7 @@ function initBabylon(canvas: HTMLCanvasElement, deps: typeof babylonAllDeps): Ba
   const defaultScene = new Scene(engine);
 
   defaultScene.clearColor = new Color4(0.1, 0.1, 0.1, 1);
-  const camera = createArcRotateCamera(defaultScene, canvas);
+  const camera = createArcRotateCamera(defaultScene);
   camera.attachControl(canvas, false);
 
   const light = new HemisphericLight('light1', new Vector3(0, 1, 0), defaultScene);
