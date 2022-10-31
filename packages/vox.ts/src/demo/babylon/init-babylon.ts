@@ -79,7 +79,7 @@ export function useBabylonDepsPreload(): void {
   }, []);
 }
 
-export function createArcRotateCamera(scene: Scene, canvas: HTMLCanvasElement): ArcRotateCamera {
+export function createArcRotateCamera(scene: Scene): ArcRotateCamera {
   const camera = new ArcRotateCamera(
     'arc-rotate',
     /* alpha: rotation around "latitude axis" */ -Math.PI / 2,

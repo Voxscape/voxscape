@@ -42,12 +42,19 @@ export class SceneManager {
     }
     try {
       this.state = SceneManagerState.busy;
-      const core = await import('@babylonjs/core/Loading/sceneLoader');
-      // await import('@babylonjs/materials');
-      // await import('@babylonjs/loaders');
+      const { SceneLoader } = await import('@babylonjs/core/Loading/sceneLoader');
       await import('@babylonjs/loaders/glTF/2.0');
-      const created = await builder(core.SceneLoader, this.ctx.engine.instance);
-      this.scenes.push({ name, scene: created });
+      const loaded = await builder(SceneLoader, this.ctx.engine.instance);
+
+      if (0) {
+        // TODO: inspect camera
+        const arcCam = createArcRotateCamera(loaded);
+        // loaded.cameras[0].dispose();
+        console.debug('cameras cleared', loaded.cameras);
+        loaded.setActiveCameraById(arcCam.id);
+      }
+      loaded.setActiveCameraById(loaded.cameras[0].id);
+      this.scenes.push({ name, scene: loaded });
       return this.scenes.length - 1;
     } finally {
       this.state = SceneManagerState.created;
@@ -56,10 +63,14 @@ export class SceneManager {
 
   async switchScene(sceneIndex: number) {
     if (this.state === SceneManagerState.created && sceneIndex !== this.currentScene) {
-      const newScene = this.scenes[sceneIndex].scene;
-
+      const previousScene = this.scenes[this.currentScene];
+      previousScene.scene.cameras.forEach((c) => c.detachControl());
       this.toggleInspector(false);
-      this.scenes[this.currentScene].scene.cameras.forEach((c) => c.detachControl());
+
+      const newScene = this.scenes[sceneIndex].scene;
+      newScene.cameras[0].attachControl(this.canvas);
+
+      this.currentScene = sceneIndex;
 
       this.ctx.engine.start(newScene);
     }
