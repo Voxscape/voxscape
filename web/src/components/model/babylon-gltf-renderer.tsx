@@ -4,6 +4,7 @@ import {
   useBabylonContext,
 } from '@voxscape/vox.ts/src/demo/babylon/init-babylon';
 import React, { useImperativeHandle, useRef } from 'react';
+import type { Engine, Scene } from '@babylonjs/core';
 
 export class BabylonGltfRendererHandle {
   private inspectorEnabled = false;
@@ -22,12 +23,35 @@ export class BabylonGltfRendererHandle {
 
   async loadModel(file: File) {
     console.debug(__filename, 'loadModel', file);
-    const { SceneLoader } = await import('@babylonjs/core/Loading/sceneLoader');
-    const loaded = await SceneLoader.LoadAsync('/', file, this.ctx.engine.instance, () => console.debug('progress'));
+    const loaded = await workingLoadModel(file, this.ctx.engine.instance);
     const camera = createArcRotateCamera(loaded, this.canvas);
     camera.attachControl(this.canvas);
     this.ctx.engine.start(loaded);
   }
+}
+
+export async function workingLoadModel2(file: File | string, engine: Engine): Promise<Scene> {
+  const core = await import('@babylonjs/core');
+  // await import('@babylonjs/inspector');
+  await import('@babylonjs/materials');
+  await import('@babylonjs/loaders');
+  await import('@babylonjs/loaders/glTF');
+
+  const loaded = await core.SceneLoader.LoadAsync('/blender/', 'shirt-split3.gltf', engine, (ev) =>
+    console.debug('progress', ev),
+  );
+  return loaded;
+}
+
+export async function workingLoadModel(file: File, engine: Engine): Promise<Scene> {
+  const core = await import('@babylonjs/core');
+  // await import('@babylonjs/inspector');
+  await import('@babylonjs/materials');
+  await import('@babylonjs/loaders');
+  await import('@babylonjs/loaders/glTF');
+  const { SceneLoader } = await import('@babylonjs/core/Loading/sceneLoader');
+  const loaded = await SceneLoader.LoadAsync('/', file, engine, () => console.debug('progress'));
+  return loaded;
 }
 
 interface Prop {

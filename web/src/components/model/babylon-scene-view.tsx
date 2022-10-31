@@ -22,7 +22,7 @@ export class SceneManager {
   private currentScene = 0;
   private state = SceneManagerState.created;
 
-  constructor(private readonly ctx: BabylonContext, private readonly canvas: HTMLCanvasElement) {
+  constructor(readonly ctx: BabylonContext, readonly canvas: HTMLCanvasElement) {
     this.scenes.push({ name: 'empty', scene: ctx.scene });
   }
 
@@ -36,14 +36,14 @@ export class SceneManager {
     }
   }
 
-  async addScene(name: string, builder: SceneBuilder): Promise<number> {
+  async addScene(name: string, f: File): Promise<number> {
     if (this.state !== SceneManagerState.created) {
       throw new Error(`busy`);
     }
     try {
-      const { SceneLoader } = await import('@babylonjs/core/Loading/sceneLoader');
       this.state = SceneManagerState.busy;
-      const created = await builder(SceneLoader, this.ctx.engine.instance);
+      const { SceneLoader } = await import('@babylonjs/core/Loading/sceneLoader');
+      const created = await xxxxx(SceneLoader, this.ctx.engine.instance);
       this.scenes.push({ name, scene: created });
       return this.scenes.length - 1;
     } finally {
