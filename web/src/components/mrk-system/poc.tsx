@@ -2,8 +2,6 @@ import { Button, chakra } from '@chakra-ui/react';
 import { BabylonSceneView, SceneManager } from '../model/babylon-scene-view';
 import React, { useRef } from 'react';
 import { createShirtPreviewScene } from './scene-builders';
-import { workingLoadModel, workingLoadModel2 } from '../model/babylon-gltf-renderer';
-import { tryLoad } from '../babylon-loader-example/example';
 
 export const MrkPoc: React.FC<{}> = (props) => {
   const textureFileRef = useRef<HTMLInputElement>(null!);
@@ -13,8 +11,9 @@ export const MrkPoc: React.FC<{}> = (props) => {
     const modelFile = textureFileRef.current.files?.[0] ?? undefined;
     const { current: sceneManager } = sceneManagerRef;
     // await import('@babylonjs/inspector');
-    const scene = await tryLoad(sceneManager.canvas);
-    // await sceneManager.switchScene(index);
+    // const scene = await tryLoad(sceneManager.canvas);
+    const index = await sceneManager.addScene('wtf', createShirtPreviewScene(modelFile!));
+    await sceneManager.switchScene(index);
   };
 
   return (

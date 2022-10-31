@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 
 export async function tryLoad(canvas: HTMLCanvasElement): Promise<void> {
-  const core = await import('@babylonjs/core');
-  // await import('@babylonjs/inspector');
+  await import('@babylonjs/core');
   await import('@babylonjs/materials');
-  await import('@babylonjs/loaders');
-  await import('@babylonjs/loaders/glTF');
+  // await import('@babylonjs/loaders');
+  // await import('@babylonjs/loaders/glTF/2.0');
 
   const engine = new core.Engine(canvas);
   const loaded = await core.SceneLoader.LoadAsync('/blender/', 'shirt-split3.gltf', engine, (ev) =>

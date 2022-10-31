@@ -36,14 +36,17 @@ export class SceneManager {
     }
   }
 
-  async addScene(name: string, f: File): Promise<number> {
+  async addScene(name: string, builder: SceneBuilder): Promise<number> {
     if (this.state !== SceneManagerState.created) {
       throw new Error(`busy`);
     }
     try {
       this.state = SceneManagerState.busy;
-      const { SceneLoader } = await import('@babylonjs/core/Loading/sceneLoader');
-      const created = await xxxxx(SceneLoader, this.ctx.engine.instance);
+      const core = await import('@babylonjs/core/Loading/sceneLoader');
+      // await import('@babylonjs/materials');
+      // await import('@babylonjs/loaders');
+      await import('@babylonjs/loaders/glTF/2.0');
+      const created = await builder(core.SceneLoader, this.ctx.engine.instance);
       this.scenes.push({ name, scene: created });
       return this.scenes.length - 1;
     } finally {
