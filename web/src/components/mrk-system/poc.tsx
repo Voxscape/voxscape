@@ -22,7 +22,10 @@ export const MrkPoc: React.FC<{}> = (props) => {
     await wait(2e3);
     if (!mounted.current) return;
     const { current: sceneManager } = sceneManagerRef;
-    const index = await sceneManager.addScene('wtf', createShirtPreviewScene(null!));
+    const index = await sceneManager.addScene(
+      'wtf',
+      createShirtPreviewScene('/demo-models/CustomUVChecker_byValle_1K.png'),
+    );
 
     await sceneManager.switchScene(index);
   }, []);
