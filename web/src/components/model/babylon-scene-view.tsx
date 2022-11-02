@@ -5,7 +5,7 @@ import {
 } from '@voxscape/vox.ts/src/demo/babylon/init-babylon';
 import React, { useImperativeHandle, useRef, useSyncExternalStore } from 'react';
 import type { Scene } from '@babylonjs/core';
-import { Engine, SceneLoader } from '@babylonjs/core';
+import { Color3, Color4, Engine, SceneLoader } from '@babylonjs/core';
 
 enum SceneManagerState {
   created = 0,
@@ -45,15 +45,6 @@ export class SceneManager {
       const { SceneLoader } = await import('@babylonjs/core/Loading/sceneLoader');
       await import('@babylonjs/loaders/glTF/2.0');
       const loaded = await builder(SceneLoader, this.ctx.engine.instance);
-
-      if (0) {
-        // TODO: inspect camera
-        const arcCam = createArcRotateCamera(loaded);
-        // loaded.cameras[0].dispose();
-        console.debug('cameras cleared', loaded.cameras);
-        loaded.setActiveCameraById(arcCam.id);
-      }
-      loaded.setActiveCameraById(loaded.cameras[0].id);
       this.scenes.push({ name, scene: loaded });
       return this.scenes.length - 1;
     } finally {
@@ -68,7 +59,7 @@ export class SceneManager {
       this.toggleInspector(false);
 
       const newScene = this.scenes[sceneIndex].scene;
-      newScene.cameras[0].attachControl(this.canvas);
+      newScene.activeCamera!.attachControl(this.canvas);
 
       this.currentScene = sceneIndex;
 
