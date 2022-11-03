@@ -5,9 +5,11 @@ import { DefaultMeta } from '../src/components/meta/default-meta';
 import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
 import { chakraTheme } from '../src/config/chakra-theme';
+import { ModalHolder } from '../src/components/modal/modal-context';
 
 const CustomApp: AppType = (props) => {
   const { Component, pageProps } = props;
+
   return (
     <ChakraProvider theme={chakraTheme}>
       <Head>
@@ -18,11 +20,13 @@ const CustomApp: AppType = (props) => {
         />
       </Head>
       <DefaultMeta />
-      <Component {...pageProps} />
+      <ModalHolder>
+        <Component {...pageProps} />
+      </ModalHolder>
     </ChakraProvider>
   );
 };
 
-CustomApp.getInitialProps = App.getInitialProps;
+// CustomApp.getInitialProps = App.getInitialProps;
 
 export default CustomApp;
