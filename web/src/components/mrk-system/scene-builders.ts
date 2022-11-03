@@ -8,6 +8,10 @@ export const builtinTexture = {
   uvChecker1transparent: '/demo-models/CustomUVChecker_byValle_1K_transparent.png',
 } as const;
 
+const builtinModel = {
+  acnhTanuki: 'acnh-tanuki.glb',
+} as const;
+
 export const createShirtPreviewScene = (textureSrc?: string | File): SceneBuilder => {
   return async (sceneLoader, engine) => {
     const scene = await sceneLoader.LoadAsync('/blender/', 'shirt-split5.gltf', engine, (ev) =>
@@ -28,7 +32,7 @@ export const createShirtPreviewScene = (textureSrc?: string | File): SceneBuilde
 
 export const createAcnhPreviewScene = (texture: string | Blob): SceneBuilder => {
   return async (sceneLoader, engine) => {
-    const scene = await sceneLoader.LoadAsync('/blender/', 'acnh-scene.gltf', engine);
+    const scene = await sceneLoader.LoadAsync('/demo-models/', builtinModel.acnhTanuki, engine);
 
     console.debug(__filename, 'loaded', scene);
     resetColor(scene);
@@ -105,10 +109,6 @@ export function resetLight(scene: Scene): void {
   }
 }
 
-function resetAmbientColor(scene: Scene): void {
-  scene.meshes.forEach((mesh) => {});
-}
-
 export function activeArcCamera(scene: Scene): ArcRotateCamera {
   const camera0 = scene.cameras[0];
   camera0.dispose();
@@ -119,22 +119,19 @@ export function activeArcCamera(scene: Scene): ArcRotateCamera {
 }
 
 function resetAcnhSceneCamera(scene: Scene, arcCam: ArcRotateCamera) {
-  const meshCenter = scene.meshes
-    .map((m) => m.position)
-    .reduce((p1, p2) => p1.add(p2), Vector3.Zero())
-    .scale(1 / scene.meshes.length);
+  const meshCenter =
+    0 &&
+    scene.meshes
+      .map((m) => m.position)
+      .reduce((p1, p2) => p1.add(p2), Vector3.Zero())
+      .scale(1 / scene.meshes.length);
 
-  const mesh0 = scene.meshes[2];
-
-  arcCam.target = meshCenter;
-  arcCam.position = mesh0.position
-    .subtract(meshCenter)
-    .scale(-2)
-    .add(meshCenter)
-    .addInPlace(Vector3.FromArray([0, 0, 6]));
+  arcCam.target = new Vector3(0, 0.5, 0);
+  arcCam.alpha = 3.5;
+  arcCam.beta = 1.5;
   arcCam.lowerRadiusLimit = 2;
   arcCam.radius = 2;
-  arcCam.upperRadiusLimit = 4;
+  arcCam.upperRadiusLimit = 3;
 }
 
 /**
