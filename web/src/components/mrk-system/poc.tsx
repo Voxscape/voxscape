@@ -1,7 +1,7 @@
 import { Button, chakra } from '@chakra-ui/react';
 import { BabylonSceneView, SceneManager } from '../model/babylon-scene-view';
 import React, { useRef } from 'react';
-import { createShirtPreviewScene } from './scene-builders';
+import { builtinTexture, createAcnhPreviewScene, createShirtPreviewScene } from './scene-builders';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 
@@ -19,13 +19,13 @@ export const MrkPoc: React.FC<{}> = (props) => {
   };
 
   useAsyncEffect(async (mounted, effectReleased) => {
-    await wait(2e3);
-    if (!mounted.current) return;
+    while (true) {
+      if (!mounted.current) return;
+      if (sceneManagerRef.current) break;
+      await wait(0.1e3);
+    }
     const { current: sceneManager } = sceneManagerRef;
-    const index = await sceneManager.addScene(
-      'wtf',
-      createShirtPreviewScene('/demo-models/CustomUVChecker_byValle_1K.png'),
-    );
+    const index = await sceneManager.addScene('wtf', createAcnhPreviewScene(builtinTexture.uvChecker1transparent));
 
     await sceneManager.switchScene(index);
   }, []);
