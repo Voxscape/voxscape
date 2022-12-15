@@ -1,7 +1,7 @@
 import { Button, chakra } from '@chakra-ui/react';
 import { BabylonSceneView, SceneManager } from '../model/babylon-scene-view';
 import React, { useRef } from 'react';
-import { builtinTexture, createAcnhPreviewScene, createShirtPreviewScene } from './scene-builders';
+import { builtinTexture, createMaskTapeScene} from './scene-builders';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 import { useModalApi } from '../modal/modal-context';
@@ -33,24 +33,9 @@ export const MrkPoc: React.FC<{}> = (props) => {
     const { current: sceneManager } = sceneManagerRef;
     // await import('@babylonjs/inspector');
     // const scene = await tryLoad(sceneManager.canvas);
-    const index = await sceneManager.addScene('preview', createAcnhPreviewScene(modelFile));
+    const index = await sceneManager.addScene('preview', createMaskTapeScene(modelFile));
     await sceneManager.switchScene(index);
   };
-
-  useAsyncEffect(async (mounted, effectReleased) => {
-    while (true) {
-      if (!mounted.current) return;
-      if (sceneManagerRef.current) break;
-      await wait(0.1e3);
-    }
-    if (1) {
-      return;
-    }
-    const { current: sceneManager } = sceneManagerRef;
-    const index = await sceneManager.addScene('wtf', createAcnhPreviewScene(builtinTexture.uvChecker1transparent));
-
-    await sceneManager.switchScene(index);
-  }, []);
 
   return (
     <chakra.div p={2}>

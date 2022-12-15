@@ -30,6 +30,19 @@ export const createShirtPreviewScene = (textureSrc?: string | File): SceneBuilde
   };
 };
 
+export const createMaskTapeScene = (texture: string | Blob): SceneBuilder => {
+  return async (sceneLoader, engine) => {
+    const scene = await sceneLoader.LoadAsync('/', 'masking-mangled-clipped.gltf', engine);
+
+    console.debug(__filename, 'loaded', scene);
+
+    const camera0 = scene.cameras[0];
+    scene.setActiveCameraById(camera0.id);
+
+    return scene;
+  };
+};
+
 export const createAcnhPreviewScene = (texture: string | Blob): SceneBuilder => {
   return async (sceneLoader, engine) => {
     const scene = await sceneLoader.LoadAsync('/demo-models/', builtinModel.acnhTanuki, engine);
