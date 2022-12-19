@@ -1,7 +1,7 @@
 import { Button, chakra } from '@chakra-ui/react';
 import { BabylonSceneView, SceneManager } from '../model/babylon-scene-view';
-import React, { useRef } from 'react';
-import { builtinTexture, createMaskTapeScene} from './scene-builders';
+import React, { useEffect, useRef } from 'react';
+import { builtinTexture, createMaskTapeScene, loadBadgeModel, loadCupModel } from './scene-builders';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 import { useModalApi } from '../modal/modal-context';
@@ -36,6 +36,16 @@ export const MrkPoc: React.FC<{}> = (props) => {
     const index = await sceneManager.addScene('preview', createMaskTapeScene(modelFile));
     await sceneManager.switchScene(index);
   };
+
+  useAsyncEffect(async (running) => {
+    await wait(0.1e3);
+    const sceneManager = sceneManagerRef.current;
+    if (!(running.current && sceneManager)) return;
+    console.debug('sceneManager', sceneManagerRef);
+
+    const sceneIndex = await sceneManager.addScene('mask-tape', loadCupModel);
+    await sceneManager.switchScene(sceneIndex);
+  }, []);
 
   return (
     <chakra.div p={2}>

@@ -1,7 +1,19 @@
 import type { SceneBuilder } from '../model/babylon-scene-view';
 import type { Scene } from '@babylonjs/core';
 import { createArcRotateCamera } from '@voxscape/vox.ts/src/demo/babylon/init-babylon';
-import { ArcRotateCamera, Color3, Color4, DynamicTexture, StandardMaterial, Texture, Vector3 } from '@babylonjs/core';
+import {
+  ArcRotateCamera,
+  Camera,
+  Color3,
+  Color4,
+  DynamicTexture,
+  FreeCamera,
+  PointLight,
+  StandardMaterial,
+  Texture,
+  Vector3,
+} from '@babylonjs/core';
+import { HemisphericLight } from '@babylonjs/core/Lights';
 
 export const builtinTexture = {
   uvChecker1: '/demo-models/CustomUVChecker_byValle_1K.png',
@@ -32,7 +44,7 @@ export const createShirtPreviewScene = (textureSrc?: string | File): SceneBuilde
 
 export const createMaskTapeScene = (texture: string | Blob): SceneBuilder => {
   return async (sceneLoader, engine) => {
-    const scene = await sceneLoader.LoadAsync('/', 'masking-mangled-clipped.gltf', engine);
+    const scene = await sceneLoader.LoadAsync('/demo-models/', 'masking-clipped-rev2.gltf', engine);
 
     console.debug(__filename, 'loaded', scene);
 
@@ -113,7 +125,7 @@ async function replaceShirtClipTexture(scene: Scene, textureSrc: string | File) 
 
 export function resetColor(scene: Scene): void {
   scene.clearColor = Color3.Black().toColor4(0.9);
-  scene.ambientColor = Color3.White();
+  scene.ambientColor = Color3.White().scale(0.5);
 }
 
 export function resetLight(scene: Scene): void {
@@ -128,6 +140,18 @@ export function activeArcCamera(scene: Scene): ArcRotateCamera {
   const arcCam = createArcRotateCamera(scene);
   scene.setActiveCameraById(arcCam.id);
   console.debug('cameras cleared', scene.cameras);
+  return arcCam;
+}
+
+export function recreateCamera(scene: Scene, original: FreeCamera): ArcRotateCamera {
+  const arcCam = new ArcRotateCamera(
+    'arc-rotate',
+    /* alpha: rotation around "latitude axis" */ -Math.PI / 2,
+    /* beta: rotation around "longitude axis" */ Math.PI / 2,
+    original.position.length(),
+    original.target,
+    scene,
+  );
   return arcCam;
 }
 
@@ -240,3 +264,62 @@ function activeDefaultCamera(scene: Scene): void {
   const camera = scene.cameras[0];
   scene.setActiveCameraById(camera.id);
 }
+
+export const loadBadgeModel: SceneBuilder = async (loader, engine) => {
+  const scene = await loader.LoadAsync('/20221216-validate-3d-models/cgdata/', 'batch_fix_20221219_rev2.gltf', engine);
+  console.debug('scene', scene);
+  resetColor(scene);
+  const topCamera = scene.cameras.find((c) => c.name === 'Camera.001')!;
+  const bottomCamera = scene.cameras.find((c) => c.name === 'Camera.002');
+
+  {
+    const topHalf = scene.meshes.find((m) => m.name === 'batch_primitive0')!;
+    const mat = new StandardMaterial('mat-top', scene);
+    mat.ambientColor = Color3.Red();
+    topHalf.material = mat;
+  }
+  // const recreated = recreateCamera(scene, topCamera as FreeCamera);
+  scene.setActiveCameraById(topCamera.id);
+  return scene;
+};
+
+export function createTopLight(scene: Scene) {
+  {
+    const light = new HemisphericLight('light1', new Vector3(0, -1, 1), scene);
+    light.diffuse = Color3.White();
+    light.specular = Color3.White();
+  }
+  {
+    const light2 = new PointLight('light2', new Vector3(0, 10, 0), scene);
+    light2.diffuse = Color3.White();
+    light2.specular = Color3.White();
+  }
+}
+
+export const loadCupModel: SceneBuilder = async (loader, engine) => {
+  const scene = await loader.LoadAsync('/20221216-validate-3d-models/cgdata/', 'cup_fix_bare.gltf', engine);
+
+  console.debug('scene', scene);
+  resetColor(scene);
+
+  {
+    const arc = createArcRotateCamera(scene, 0.1);
+    scene.setActiveCameraById(arc.id);
+  }
+
+  {
+    createTopLight(scene);
+  }
+
+  {
+    const cupMesh = scene.meshes.find((m) => m.name === 'cup')!;
+    cupMesh.scaling = Vector3.One().scale(1.5);
+    const mat = new StandardMaterial('mat-top', scene);
+    mat.diffuseColor = Color3.Red();
+    mat.specularColor = Color3.Red();
+    mat.ambientColor = Color3.Red();
+    cupMesh.material = mat;
+  }
+
+  return scene;
+};
