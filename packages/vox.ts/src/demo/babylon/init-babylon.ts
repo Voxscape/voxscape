@@ -6,6 +6,7 @@ import type { babylonAllDeps } from './deps/babylon-deps';
 import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
 import { Deferred } from '@jokester/ts-commonutil/lib/concurrency/deferred';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
+import { HemisphericLight } from '@babylonjs/core/Lights';
 
 /**
  * a object to control camera/scene/stuff
@@ -79,15 +80,17 @@ export function useBabylonDepsPreload(): void {
   }, []);
 }
 
-export function createArcRotateCamera(scene: Scene): ArcRotateCamera {
+export function createArcRotateCamera(scene: Scene, radius = 1): ArcRotateCamera {
   const camera = new ArcRotateCamera(
     'arc-rotate',
     /* alpha: rotation around "latitude axis" */ -Math.PI / 2,
     /* beta: rotation around "longitude axis" */ Math.PI / 2,
-    1,
+    radius,
     Vector3.Zero(),
     scene,
   );
+  camera.lowerRadiusLimit = (radius * 2) / 3;
+  camera.upperRadiusLimit = (radius * 4) / 3;
   return camera;
 }
 
@@ -97,7 +100,13 @@ export function createArcRotateCamera(scene: Scene): ArcRotateCamera {
 function initBabylon(canvas: HTMLCanvasElement, deps: typeof babylonAllDeps): BabylonContext {
   const { Engine, Scene, ArcRotateCamera, HemisphericLight, Vector3, Color3, Color4 } = deps;
 
-  const engine = new Engine(canvas, true);
+  const engine = new Engine(canvas, true, {
+    useHighPrecisionMatrix: true,
+    premultipliedAlpha: false,
+    preserveDrawingBuffer: true,
+    antialias: true,
+    forceSRGBBufferSupportState: false,
+  });
   const defaultScene = new Scene(engine);
 
   defaultScene.clearColor = new Color4(0.1, 0.1, 0.1, 1);

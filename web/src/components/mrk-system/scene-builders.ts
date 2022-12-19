@@ -6,6 +6,7 @@ import {
   Camera,
   Color3,
   Color4,
+  CubeTexture,
   DynamicTexture,
   FreeCamera,
   PointLight,
@@ -125,7 +126,7 @@ async function replaceShirtClipTexture(scene: Scene, textureSrc: string | File) 
 
 export function resetColor(scene: Scene): void {
   scene.clearColor = Color3.Black().toColor4(0.9);
-  scene.ambientColor = Color3.White().scale(0.5);
+  scene.ambientColor = Color3.Yellow();
 }
 
 export function resetLight(scene: Scene): void {
@@ -302,24 +303,57 @@ export const loadCupModel: SceneBuilder = async (loader, engine) => {
   console.debug('scene', scene);
   resetColor(scene);
 
+  await createSkybox(scene);
   {
-    const arc = createArcRotateCamera(scene, 0.1);
-    scene.setActiveCameraById(arc.id);
+    await prepareCamera(scene);
+    // scene.setActiveCameraById(arc.id);
   }
 
   {
     createTopLight(scene);
   }
 
-  {
+  if (1) {
     const cupMesh = scene.meshes.find((m) => m.name === 'cup')!;
-    cupMesh.scaling = Vector3.One().scale(1.5);
+    // cupMesh.scaling = Vector3.One().scale(1.5);
     const mat = new StandardMaterial('mat-top', scene);
     mat.diffuseColor = Color3.Red();
-    mat.specularColor = Color3.Red();
-    mat.ambientColor = Color3.Red();
+    // mat.specularColor = Color3.Red();
+    // mat.ambientColor = Color3.Red();
     cupMesh.material = mat;
   }
 
   return scene;
 };
+
+async function createSkybox(scene: Scene) {
+  const texture = CubeTexture.CreateFromPrefilteredData('https://assets.babylonjs.com/environments/studio.env', scene);
+  scene.createDefaultSkybox(texture);
+}
+
+async function prepareCamera(scene: Scene) {
+  scene.createDefaultCamera(true);
+
+  const camera = scene.activeCamera! as ArcRotateCamera;
+
+  if (1) {
+    // glTF assets use a +Z forward convention while the default camera faces +Z. Rotate the camera to look at the front of the asset.
+    camera.alpha += Math.PI;
+  }
+
+  if (scene.meshes.length) {
+    camera.lowerRadiusLimit = null;
+  }
+
+  if (1) {
+    camera.useAutoRotationBehavior = true;
+  }
+
+  camera.radius = 1;
+
+  camera.pinchPrecision = 200 / camera.radius;
+  camera.upperRadiusLimit = 5 * camera.radius;
+
+  camera.wheelDeltaPercentage = 1e-2;
+  camera.pinchDeltaPercentage = 1e-2;
+}
