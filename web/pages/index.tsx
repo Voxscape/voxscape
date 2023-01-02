@@ -5,10 +5,8 @@ const IndexPage: NextPage = (props) => {
   return (
     <Layout>
       HHH
-      <Link href="/dev/mrk-system-demo">
-        <a className="underscore" href="/dev/mrk-system-demo">
-          sign up
-        </a>
+      <Link href="/dev/mrk-system-demo" className="underscore" href="/dev/mrk-system-demo">
+        sign up
       </Link>
     </Layout>
   );

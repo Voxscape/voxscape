@@ -25,7 +25,6 @@
     "scripts",
     "coverage",
     "build",
-    "legacy",
     "__test__",
     "bin",
     "jest.config.js"
