@@ -2,6 +2,7 @@ import React from 'react';
 import Document, { Html, Main, NextScript, Head } from 'next/document';
 
 const defaultStyleSheets = [
+  // eslint-disable-next-line @next/next/no-page-custom-font
   <link
     key="font-roboto"
     rel="stylesheet"
