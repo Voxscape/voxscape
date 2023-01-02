@@ -19,15 +19,6 @@
     "lint:fix": "eslint '@(src|pages)/**/*.@(ts|js|tsx|jsx)' --fix"
   },
   "dependencies": {
-    "@babylonjs/core": "^5.21.0",
-    "@babylonjs/gui": "^5.21.0",
-    "@babylonjs/gui-editor": "^5.21.0",
-    "@babylonjs/inspector": "^5.2.1",
-    "@babylonjs/loaders": "^5.21.0",
-    "@babylonjs/materials": "^5.21.0",
-    "@babylonjs/post-processes": "^5.21.0",
-    "@babylonjs/procedural-textures": "^5.21.0",
-    "@babylonjs/serializers": "^5.21.0",
     "@chakra-ui/react": "^2.3.5",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
@@ -52,6 +43,15 @@
     "use-constant": "^1.1.0"
   },
   "devDependencies": {
+    "@babylonjs/core": "^5.21.0",
+    "@babylonjs/gui": "^5.21.0",
+    "@babylonjs/gui-editor": "^5.21.0",
+    "@babylonjs/inspector": "^5.2.1",
+    "@babylonjs/loaders": "^5.21.0",
+    "@babylonjs/materials": "^5.21.0",
+    "@babylonjs/post-processes": "^5.21.0",
+    "@babylonjs/procedural-textures": "^5.21.0",
+    "@babylonjs/serializers": "^5.21.0",
     "@next/bundle-analyzer": "^12",
     "@next/eslint-plugin-next": "^12.2.5",
     "@types/debug": "^4.1.7",
