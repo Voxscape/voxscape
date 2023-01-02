@@ -35,10 +35,12 @@
     "lodash-es": "^4.17.21",
     "next": "^12",
     "next-auth": "^4.18.7",
+    "pg": "^8.8.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-use": "^17.4.0",
     "rxjs": "^7.5.5",
+    "sequelize": "^6.28.0",
     "tslib": "^2",
     "use-constant": "^1.1.0"
   },
