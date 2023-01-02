@@ -4,13 +4,12 @@ async function wtf(mesh: Mesh): Promise<void> {
   const vertexData = new VertexData();
   vertexData.uvs = [];
 
-  const mesh = new Mesh('empty');
+  const mesh3 = new Mesh('empty');
   vertexData.applyToMesh(mesh);
-  VertexData.ComputeNormals();
   mesh.material = null;
 }
 
-async function wtf(params: unknown): Promise<void> {
+async function wtf2(params: unknown): Promise<void> {
   const m = new DynamicTexture('xxxxxx', {});
 
   m.getContext().drawImage('img', 1, 1, 0, 0, 0, 0, 0, 0);
