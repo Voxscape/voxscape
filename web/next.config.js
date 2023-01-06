@@ -43,11 +43,12 @@ const nextConf = {
     return config;
   },
 
+  transpilePackages: ['lodash-es', '@jokester/ts-commonutil'],
+
   images: {},
 
   productionBrowserSourceMaps: true,
   reactStrictMode: true,
-  future: {},
   async rewrites() {
     return {
       beforeFiles: [
@@ -69,8 +70,6 @@ module.exports = (phase, { defaultConfig }) => {
   if (phase === PHASE_PRODUCTION_BUILD) {
     merged = require('@next/bundle-analyzer')({ enabled: true, openAnalyzer: false })(merged);
   }
-
-  merged = require('next-transpile-modules')(['lodash-es', '@jokester/ts-commonutil'])(merged);
 
   return merged;
 };

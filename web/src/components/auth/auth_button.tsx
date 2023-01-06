@@ -15,6 +15,16 @@ export const TwitterOAuth1Button: React.FC = () => {
     router.push(intent.externalUrl);
   };
 
+  return (
+    <button type="button" onClick={onClick}>
+      Login With Twitter <FaIcon icon="twitter" />
+    </button>
+  );
+};
+
+export function useOAuthCallback(): void {
+  const apiClient = useApiClient();
+  const router = useRouter();
   useEffect(() => {
     const query = router.query as { provider: string; oauth_token: string; oauth_verifier: string };
 
@@ -35,10 +45,4 @@ export const TwitterOAuth1Button: React.FC = () => {
     }
     return () => {};
   }, [router]);
-
-  return (
-    <button type="button" onClick={onClick}>
-      Login With Twitter <FaIcon icon="twitter" />
-    </button>
-  );
-};
+}

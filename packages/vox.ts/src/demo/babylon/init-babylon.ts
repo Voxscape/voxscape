@@ -1,9 +1,12 @@
 import type { Scene } from '@babylonjs/core/scene';
 import type { Engine } from '@babylonjs/core/Engines';
+import { Vector3 } from '@babylonjs/core';
 import { RefObject, useEffect, useState } from 'react';
 import type { babylonAllDeps } from './deps/babylon-deps';
 import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
 import { Deferred } from '@jokester/ts-commonutil/lib/concurrency/deferred';
+import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
+import { HemisphericLight } from '@babylonjs/core/Lights';
 
 /**
  * a object to control camera/scene/stuff
@@ -11,7 +14,7 @@ import { Deferred } from '@jokester/ts-commonutil/lib/concurrency/deferred';
 export interface BabylonContext {
   engine: {
     instance: Engine;
-    start(): void;
+    start(scene?: Scene): void;
     stop(): void;
   };
   scene: Scene;
@@ -27,33 +30,28 @@ export interface BabylonContext {
 export function useBabylonContext(canvasRef: RefObject<HTMLCanvasElement>): null | BabylonContext {
   const [ctx, setCtx] = useState<null | BabylonContext>(null);
 
-  useEffect(() => {
+  useAsyncEffect(async (mounted, effectReleased) => {
     const maybeCanvas = canvasRef.current;
     if (!maybeCanvas) {
       setCtx(null);
       return;
     }
 
-    let effective = true;
-    const effectReleased = new Deferred();
+    const { babylonAllDeps } = await import('./deps/babylon-deps');
+    if (!mounted.current) return;
+    const ctx = initBabylon(maybeCanvas, babylonAllDeps);
+    ctx.engine.start();
+    setCtx(ctx);
 
-    import('./deps/babylon-deps').then(async (imported) => {
-      if (!effective) return;
-      const ctx = initBabylon(maybeCanvas, imported.babylonAllDeps);
-      setCtx(ctx);
-
-      effectReleased.then(() => ctx.disposeAll());
-    });
-
-    return () => {
-      effective = false;
-      effectReleased.fulfill(0);
-    };
+    effectReleased.then(() => ctx.disposeAll());
   }, []);
 
   return ctx;
 }
 
+/**
+ * @deprecated this only handles default scene
+ */
 export function useBabylonInspector(ctx: null | BabylonContext, enabled: boolean): void {
   useEffect(() => {
     let effective = true;
@@ -82,27 +80,40 @@ export function useBabylonDepsPreload(): void {
   }, []);
 }
 
+export function createArcRotateCamera(scene: Scene, radius = 1): ArcRotateCamera {
+  const camera = new ArcRotateCamera(
+    'arc-rotate',
+    /* alpha: rotation around "latitude axis" */ -Math.PI / 2,
+    /* beta: rotation around "longitude axis" */ Math.PI / 2,
+    radius,
+    Vector3.Zero(),
+    scene,
+  );
+  camera.lowerRadiusLimit = (radius * 2) / 3;
+  camera.upperRadiusLimit = (radius * 4) / 3;
+  return camera;
+}
+
 /**
  * @internal
  */
 function initBabylon(canvas: HTMLCanvasElement, deps: typeof babylonAllDeps): BabylonContext {
   const { Engine, Scene, ArcRotateCamera, HemisphericLight, Vector3, Color3, Color4 } = deps;
 
-  const engine = new Engine(canvas, true);
-  const scene = new Scene(engine);
+  const engine = new Engine(canvas, true, {
+    useHighPrecisionMatrix: true,
+    premultipliedAlpha: false,
+    preserveDrawingBuffer: true,
+    antialias: true,
+    forceSRGBBufferSupportState: false,
+  });
+  const defaultScene = new Scene(engine);
 
-  scene.clearColor = new Color4(0.1, 0.1, 0.1, 1);
-  const camera = new ArcRotateCamera(
-    'camera',
-    /* alpha: rotation around "latitude axis" */ -Math.PI / 2,
-    /* beta: rotation around "longitude axis" */ Math.PI / 2,
-    1,
-    Vector3.Zero(),
-    scene,
-  );
+  defaultScene.clearColor = new Color4(0.1, 0.1, 0.1, 1);
+  const camera = createArcRotateCamera(defaultScene);
   camera.attachControl(canvas, false);
 
-  const light = new HemisphericLight('light1', new Vector3(0, 1, 0), scene);
+  const light = new HemisphericLight('light1', new Vector3(0, 1, 0), defaultScene);
   light.specular = Color3.Black();
   light.groundColor = new Color3(1, 1, 1);
 
@@ -110,14 +121,15 @@ function initBabylon(canvas: HTMLCanvasElement, deps: typeof babylonAllDeps): Ba
     engine: {
       instance: engine,
 
-      start() {
-        engine.runRenderLoop(() => scene.render());
+      start(theScene = defaultScene) {
+        engine.stopRenderLoop();
+        engine.runRenderLoop(() => theScene.render());
       },
       stop() {
         engine.stopRenderLoop();
       },
     },
-    scene,
+    scene: defaultScene,
     camera: {
       instance: camera,
       setRadius(lower: number, upper = lower) {
@@ -131,7 +143,7 @@ function initBabylon(canvas: HTMLCanvasElement, deps: typeof babylonAllDeps): Ba
       camera.detachControl();
       camera.dispose();
 
-      scene.dispose();
+      defaultScene.dispose();
       engine.dispose();
     },
     deps,
