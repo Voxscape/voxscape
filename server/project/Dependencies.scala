@@ -4,35 +4,43 @@ import sbt._
 object Dependencies {
   lazy val basicDeps: Seq[ModuleID] = Seq(
     // logging
-    "com.typesafe.scala-logging" %% "scala-logging"  % "3.9.5",
-    "org.slf4j"                   % "jcl-over-slf4j" % "1.7.36",
-    "org.slf4j"                   % "slf4j-api"      % "1.7.36",
-    "ch.qos.logback"  % "logback-classic" % "1.3.0-alpha10", // this provides SLF4J backend
-    "commons-logging" % "commons-logging" % "1.2",
+    "com.typesafe.scala-logging" %% "scala-logging"   % "3.9.5",
+    "org.slf4j"                   % "jcl-over-slf4j"  % "2.0.1",
+    "org.slf4j"                   % "slf4j-api"       % "2.0.1",
+    "ch.qos.logback"              % "logback-classic" % "1.4.1", // this provides SLF4J backend
+    "commons-logging"             % "commons-logging" % "1.2",
     // config
     "com.typesafe"     % "config" % "1.4.2",
     "com.google.guava" % "guava"  % "31.1-jre",
-//    "org.apache.commons" % "commons-lang3" % "3.12.0",
+    //    "org.apache.commons" % "commons-lang3" % "3.12.0",
     "com.google.code.gson" % "gson" % "2.9.1",
-//    "org.yaml"                     % "snakeyaml" % "1.30",
+    //    "org.yaml"                     % "snakeyaml" % "1.30",
   )
 
   lazy val twitterSdkDeps: Seq[ModuleID] = Seq(
-    /** https://github.com/redouane59/twittered newer (API v1+v2) but incomplete
+    /** twitterd
+      *
+      * @see
+      *   {https://github.com/redouane59/twittered} newer (API v1+v2) but incomplete (API v2 itself
+      *   is incomplete too)
       */
-    "io.github.redouane59.twitter" % "twittered" % "2.17" exclude ("org.yaml", "snakeyaml"),
+    //    "io.github.redouane59.twitter" % "twittered" % "2.17" exclude ("org.yaml", "snakeyaml"),
 
-    /** https://twitter4j.org/en/index.html works but less up-to-date ?
+    /** @see {https://twitter4j.org/en/index.html} a fine but API v1-only client */
+    "org.twitter4j" % "twitter4j-core" % "4.1.0",
+
+    /** @see
+      *   {https://github.com/twitterdev/twitter-api-java-sdk} twitter's API v2-only client. enables
+      *   app-only auth
       */
-    "org.twitter4j" % "twitter4j-core"   % "4.0.7",
-    "org.twitter4j" % "twitter4j-stream" % "4.0.7",
+//    "com.twitter" % "twitter-api-java-sdk" % "2.0.3",
   )
 
   lazy val http4sDeps: Seq[ModuleID] = Seq(
     "org.http4s" %% "http4s-ember-server",
     "org.http4s" %% "http4s-ember-client",
-//    "org.http4s" %% "http4s-circe",
-//    "org.http4s" %% "http4s-dsl",
+    //    "org.http4s" %% "http4s-circe",
+    //    "org.http4s" %% "http4s-dsl",
   ).map(_ % Versions.http4s)
 
   lazy val catsDeps: Seq[ModuleID] = Seq(
@@ -48,9 +56,9 @@ object Dependencies {
   ).map(_ % Versions.circe)
 
   lazy val authDeps: Seq[ModuleID] = Seq(
-    "org.springframework.security" % "spring-security-crypto" % "5.7.2",
+    "org.springframework.security" % "spring-security-crypto" % "5.7.3",
     "com.github.scribejava"        % "scribejava-apis"        % "8.3.1",
-    "com.github.jwt-scala"        %% "jwt-circe"              % "9.0.6",
+    "com.github.jwt-scala"        %% "jwt-circe"              % "9.1.1",
   )
 
   lazy val redisDeps: Seq[ModuleID] = Seq(
@@ -88,8 +96,8 @@ object Dependencies {
   ).map(_ % Test)
 
   lazy val incompatibleDependencies: Seq[DependencyBuilders.OrganizationArtifactName] = Seq(
-//    "com.typesafe.scala-logging" % "scala-logging_2.13",
-//    "org.yaml"                     % "snakeyaml",
+    //    "com.typesafe.scala-logging" % "scala-logging_2.13",
+    //    "org.yaml"                     % "snakeyaml",
   )
 }
 
@@ -106,13 +114,12 @@ private object Versions {
   val http4s    = "0.23.14"
 
   // rdbms
-  val postgresql  = "42.4.2"
-  val quill       = "4.3.0"
+  val postgresql  = "42.5.0"
+  val quill       = "4.5.0"
   val scalikeJDBC = "3.5.0"
   val flyway      = "8.0.2"
 
   // testing
   val scalaTest               = "3.2.13"
   val scalaTestPlusScalaCheck = "3.2.2.0"
-
 }
