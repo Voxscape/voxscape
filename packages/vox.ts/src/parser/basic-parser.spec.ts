@@ -1,4 +1,4 @@
-import { uint32ToColor } from './basic-parser';
+import { uint32ToColor } from './chunk-reader';
 
 describe('basic-parser.ts', () => {
   describe(uint32ToColor, () => {
