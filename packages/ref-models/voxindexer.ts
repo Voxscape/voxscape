@@ -9,14 +9,34 @@ async function main(start: string) {
   }
 
   const finder = nodeFind.find(nodeFind.and(nodeFind.name('*.vox'), nodeFind.type('f')), { start });
+
+  const index: {
+    path: string;
+    size: number;
+    numModels: number;
+    numWarnings: number;
+  }[] = [];
   for await (const child of finder) {
-    const steps = child.steps && path.join(...child.steps);
+    const filename = child.steps && path.join(...child.steps);
 
-    const buffer = await fsp.readFile(steps);
+    const buffer = await fsp.readFile(filename);
 
-    const parsed = basicParser(buffer.buffer, false, true);
-    console.debug('steps', steps, buffer.byteLength);
+    try {
+      const parsed = basicParser(buffer.buffer, false, true);
+      index.push({
+        path: filename,
+        size: buffer.byteLength,
+        numModels: parsed.models.length,
+        numWarnings: parsed.warnings.length,
+      });
+    } catch (e) {
+      console.error(`error parsing ${filename}`, e);
+    }
+
+    console.debug('steps', filename, buffer.byteLength);
   }
+
+  await fsp.writeFile('index.json', JSON.stringify(index, null, 2));
 }
 
 setTimeout(() => main(process.argv[2]));
