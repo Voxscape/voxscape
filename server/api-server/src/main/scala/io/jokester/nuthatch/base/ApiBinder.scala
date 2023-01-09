@@ -8,7 +8,9 @@ import io.jokester.nuthatch.AppRoot
 import io.jokester.nuthatch.authn.AuthenticationApi
 import io.jokester.nuthatch.consts._
 import org.http4s.HttpRoutes
+import sttp.capabilities.fs2.Fs2Streams
 import sttp.tapir.Endpoint
+import sttp.tapir.server.ServerEndpoint
 import sttp.tapir.server.http4s.Http4sServerInterpreter
 
 object ApiBinder extends LazyLogging {
@@ -27,7 +29,7 @@ object ApiBinder extends LazyLogging {
     val authn = root.authn
 
     interpreter.toRoutes(
-      List(
+      List[ServerEndpoint[Fs2Streams[IO], IO]](
         // OAuth1
         AuthenticationApi.OAuth1.startAuth.serverLogic {
           case OAuth1Provider.twitter =>
