@@ -99,6 +99,10 @@ object Dependencies {
     //    "com.typesafe.scala-logging" % "scala-logging_2.13",
     //    "org.yaml"                     % "snakeyaml",
   )
+
+  lazy val gcpDeps: Seq[ModuleID] = Seq(
+    "com.google.cloud" % "google-cloud-storage" % "2.16.0"
+  )
 }
 
 private object Versions {
