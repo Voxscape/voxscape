@@ -31,3 +31,13 @@ const modelView = z.object({
   cameraPosition: xyz,
   cameraTarget: xyz,
 });
+
+export namespace DevOnly {
+  export const demoModel = z.object({
+    path: z.string(),
+  });
+
+  export const demoModelList = z.object({
+    demoModels: z.array(demoModel),
+  });
+}

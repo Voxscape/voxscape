@@ -34,6 +34,7 @@ export enum VoxelMaterialType {
 }
 
 /**
+ * a "MATT" chunk
  * see https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt
  * (TODO: how are they referenced / used ?)
  */
@@ -46,15 +47,13 @@ export interface VoxelMaterial {
 }
 
 /**
- * content of a non-extended .vox file
- * as per https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt
+ * as per https://github.com/ephtracy/voxel-model
  */
 export interface ParsedVoxFile {
   readonly models: readonly VoxelModel[];
   readonly palette?: VoxelPalette; // falsy when rgba chunk is missing
   readonly materials: readonly VoxelMaterial[];
 
+  readonly enableExtension: boolean;
   readonly warnings: readonly string[];
 }
-
-export interface ParsedVoxFileWithExtension extends ParsedVoxFile {}

@@ -5,7 +5,7 @@ import { readMatt, readRgba, readXyzi, uint32ToColor } from './chunk-reader';
 /**
  * parser for "basic" vox format
  */
-export function basicParser(bytes: ArrayBuffer, flipYZ = false): VoxTypes.ParsedVoxFile {
+export function basicParser(bytes: ArrayBuffer, flipYZ = false, enableExtension = false): VoxTypes.ParsedVoxFile {
   const l = new RiffLense(bytes);
 
   if (l.asciiAt(0, 4) !== 'VOX ') throw new Error(`expected 'VOX ' at offset=0`);
@@ -37,11 +37,13 @@ export function basicParser(bytes: ArrayBuffer, flipYZ = false): VoxTypes.Parsed
       materials.push(readMatt(l, chunk));
     } else {
       switch (chunk.id) {
+        case enableExtension && 'MATL': {
+          break;
+        }
         case 'nTRN':
         case 'nGRP':
         case 'nSHP':
         case 'LAYR':
-        case 'MATL':
         case 'rOBJ':
         case 'STRING':
         case 'DICT':
@@ -66,13 +68,6 @@ export function basicParser(bytes: ArrayBuffer, flipYZ = false): VoxTypes.Parsed
     palette,
     materials,
     warnings,
+    enableExtension,
   };
-}
-
-/**
- * .vox parser with extension support
- * see https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox-extension.txt
- */
-export function extensionParser(bytes: ArrayBuffer, flipYZ: boolean): VoxTypes.ParsedVoxFileWithExtension {
-  throw 'TODO';
 }
