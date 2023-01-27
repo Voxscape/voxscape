@@ -74,6 +74,18 @@ export function uint32ToColor(uint32: number): VoxTypes.VoxelColor {
   };
 }
 
+export function readDict(l: RiffLense, dict: Chunk): Map<string, string> {
+  const map = new Map<string, string>();
+  let p = dict.contentStart;
+  while (p < dict.end) {
+    const key = (dict.p += key.length + 1);
+    const value = l.stringAt(p);
+    p += value.length + 1;
+    map.set(key, value);
+  }
+  return map;
+}
+
 export function readString(l: RiffLense, str: Chunk): string {
   throw 'todo';
 }
