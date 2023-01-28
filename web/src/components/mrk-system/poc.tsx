@@ -1,7 +1,7 @@
 import { Button, chakra } from '@chakra-ui/react';
 import { BabylonSceneView, SceneManager } from '../model/babylon-scene-view';
 import React, { useEffect, useRef } from 'react';
-import { builtinTexture, createMaskTapeScene, loadBadgeModel, loadCupModel } from './scene-builders';
+import { createMaskTapeScene, loadCupModel } from './scene-builders';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 import { useModalApi } from '../modal/modal-context';
