@@ -45,6 +45,7 @@ lazy val apiServer = (project in file("api-server"))
       catsDeps,
       twitterSdkDeps,
       testDeps,
+      gcpDeps,
     ).flatten,
     excludeDependencies ++= incompatibleDependencies,
   )

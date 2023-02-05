@@ -1,11 +1,7 @@
-import {
-  BabylonContext,
-  createArcRotateCamera,
-  useBabylonContext,
-} from '@voxscape/vox.ts/src/demo/babylon/init-babylon';
-import React, { useImperativeHandle, useRef, useSyncExternalStore } from 'react';
+import { BabylonContext, useBabylonContext } from '@voxscape/vox.ts/src/demo/babylon/init-babylon';
+import React, { useImperativeHandle, useRef } from 'react';
 import type { Scene } from '@babylonjs/core';
-import { Color3, Color4, Engine, SceneLoader } from '@babylonjs/core';
+import { Engine, SceneLoader } from '@babylonjs/core';
 
 enum SceneManagerState {
   created = 0,
@@ -43,6 +39,7 @@ export class SceneManager {
     try {
       this.state = SceneManagerState.busy;
       const { SceneLoader } = await import('@babylonjs/core/Loading/sceneLoader');
+      // await import('@babylonjs/materials')
       await import('@babylonjs/loaders/glTF/2.0');
       const loaded = await builder(SceneLoader, this.ctx.engine.instance);
       this.scenes.push({ name, scene: loaded });
@@ -55,15 +52,16 @@ export class SceneManager {
   async switchScene(sceneIndex: number) {
     if (this.state === SceneManagerState.created && sceneIndex !== this.currentScene) {
       const previousScene = this.scenes[this.currentScene];
+      this.ctx.engine.stop();
       previousScene.scene.cameras.forEach((c) => c.detachControl());
-      this.toggleInspector(false);
+      await this.toggleInspector(false);
 
       const newScene = this.scenes[sceneIndex].scene;
-      newScene.activeCamera!.attachControl(this.canvas);
-
       this.currentScene = sceneIndex;
-
-      this.ctx.engine.start(newScene);
+      if (newScene.activeCamera) {
+        newScene.activeCamera?.attachControl(this.canvas);
+        this.ctx.engine.start(newScene);
+      }
     }
   }
 }

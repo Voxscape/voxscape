@@ -56,6 +56,38 @@ export const createMaskTapeScene = (texture: string | Blob): SceneBuilder => {
   };
 };
 
+export const createGltfScene = (gltf: File): SceneBuilder => {
+  return async (sceneLoader, engine) => {
+    // const urlStr = URL.createObjectURL(gltf);
+    // const url = new URL(urlStr);
+    // console.debug(__filename, urlStr, url);
+    try {
+      const scene = await sceneLoader.LoadAsync(
+        '',
+        // '/20230106-new-models/',
+        gltf,
+        engine,
+        (progress) => {
+          console.debug('progress', progress);
+        },
+      );
+
+      console.debug(__filename, 'loaded', scene);
+
+      return scene;
+    } finally {
+      // URL.revokeObjectURL(urlStr);
+    }
+  };
+};
+
+function activeFirstCamera(loadedScene: Scene): void {
+  const firstCamera = loadedScene.cameras[0];
+  if (firstCamera) {
+    loadedScene.setActiveCameraById(firstCamera.id);
+  }
+}
+
 export const createAcnhPreviewScene = (texture: string | Blob): SceneBuilder => {
   return async (sceneLoader, engine) => {
     const scene = await sceneLoader.LoadAsync('/demo-models/', builtinModel.acnhTanuki, engine);
