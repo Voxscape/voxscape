@@ -3941,7 +3941,7 @@ __metadata:
     jest: ^29
     lodash-es: ^4.17.21
     next: ^13
-    next-auth: ^4.18.7
+    next-auth: ^4.19.2
     pg: ^8.8.0
     postcss: ^8.4.20
     prisma: ^4.9.0
@@ -8872,9 +8872,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-auth@npm:^4.18.7":
-  version: 4.18.7
-  resolution: "next-auth@npm:4.18.7"
+"next-auth@npm:^4.19.2":
+  version: 4.19.2
+  resolution: "next-auth@npm:4.19.2"
   dependencies:
     "@babel/runtime": ^7.16.3
     "@panva/hkdf": ^1.0.1
@@ -8893,7 +8893,7 @@ __metadata:
   peerDependenciesMeta:
     nodemailer:
       optional: true
-  checksum: 221fc1c4f51a842c1107bc178a09be3ac97c33dd9cd4bd28f049158d79e49880147834a7f693cfce31e02023ecac1f7613bb71808218f4b3d4b32591ed7af44e
+  checksum: 7067147c80e4ba9ba328f27c548239895b746a04c0c4faa4f1e0c16cf82eb941ef7ed904a7d3bdf423f07791b471b55f5a2959f66b78495af4f02195d1a59c4e
   languageName: node
   linkType: hard
 
