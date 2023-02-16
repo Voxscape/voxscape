@@ -10,6 +10,8 @@ const authOptions: AuthOptions = {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       clientId: process.env.GOOGLE_OAUTH_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET!,
+      // FIXME: fetch openid from WSL localhost fails even with longer timeout
+      httpOptions: { timeout: 10e3 },
     }),
   ],
   debug: process.env.NODE_ENV === 'development',
