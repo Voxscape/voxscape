@@ -1,9 +1,9 @@
 import { t } from '../common/_base';
 import { z } from 'zod';
 import { ClientBad } from '../errors';
-import { createServerLogger } from '../../logger';
+import { createDebugLogger } from '../../../shared/logger';
 
-const logger = createServerLogger(__filename);
+const logger = createDebugLogger(__filename);
 interface User {
   id: number;
   name: string;

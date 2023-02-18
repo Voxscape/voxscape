@@ -3,8 +3,8 @@ import { appRouter } from '../../../server/api';
 import { ZodError } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { createTrpcReqContext } from '../../../server/api/common/auth';
-import { createServerLogger } from '../../../server/logger';
-const logger = createServerLogger(__filename);
+import { createDebugLogger } from '../../../shared/logger';
+const logger = createDebugLogger(__filename);
 // export API handler
 // @see https://trpc.io/docs/api-handler
 export default trpcNext.createNextApiHandler({
