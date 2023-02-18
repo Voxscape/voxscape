@@ -71,6 +71,9 @@ model VoxelModel {
   modelViews  VoxelModelView[]
   // defaultViewId Int
   // defaultView   VoxelModelView @relation(fields: [defaultViewId], references: [id])
+  updatedAt   DateTime         @updatedAt
+  createdAt   DateTime         @default(now())
+  @@index([ownerUserId])
 }
 
 model VoxelModelView {
@@ -81,5 +84,7 @@ model VoxelModelView {
   ownerUser       User       @relation(fields: [ownerUserId], references: [id])
   previewImageUrl String
   isDefault       Boolean    @default(false)
-  // TODO: perspectives, etc
+  perspective     Json
+  @@index([modelId])
+  @@index([ownerUserId])
 }

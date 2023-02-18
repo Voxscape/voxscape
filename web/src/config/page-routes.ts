@@ -5,11 +5,24 @@ import { ParsedUrlQuery } from 'querystring';
  */
 export const TypedRoutes = {
   index: '/',
-  about: '/about',
-  posts: {
-    index: '/posts',
-    show: ({ postId }: { postId: number | string }) => `/posts/${postId}?timestamp=${Date.now()}`,
+  models: {
+    index: `/models`,
+    show: (modelId: number, viewId?: number) => {
+      if (viewId) {
+        return `/models/${modelId}?view=${viewId}`;
+      }
+      return `/models/${modelId}`;
+    },
   },
+  users: {
+    index: `/users`,
+    show: (userId: number) => `/users/${userId}`,
+  },
+  auth: '/auth',
+  settings: {
+    index: '/settings',
+  },
+  about: '/about',
 } as const;
 
 /**

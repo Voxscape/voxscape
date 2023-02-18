@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { createDebugLogger } from '../../../shared/logger';
+import { requireUserLogin } from '../common/auth';
+import { t } from '../common/_base';
 
 enum ModelSchema {
   vox = 'vox',
@@ -41,3 +44,6 @@ export namespace DevOnly {
     demoModels: z.array(demoModel),
   });
 }
+
+const logger = createDebugLogger(__filename);
+const privateProcedure = t.procedure.use(requireUserLogin);
