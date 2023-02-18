@@ -9,7 +9,7 @@ import { ModalHolder } from '../src/components/modal/modal-context';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { isDevBuild } from '../src/config/build-config';
 import type { Session } from 'next-auth';
-import { queryClient, trpc, trpcClient } from '../src/api/trpc';
+import { queryClient, trpcReact, trpcClient } from '../src/api/trpc';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 interface PageProps {
@@ -31,7 +31,7 @@ const CustomApp: AppType<PageProps> = (props) => {
   return (
     <SessionProvider session={pageProps.session}>
       {isDevBuild && <SessionDemo />}
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <trpcReact.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           <ChakraProvider theme={chakraTheme}>
             <Head>
@@ -47,7 +47,7 @@ const CustomApp: AppType<PageProps> = (props) => {
             </ModalHolder>
           </ChakraProvider>
         </QueryClientProvider>
-      </trpc.Provider>
+      </trpcReact.Provider>
     </SessionProvider>
   );
 };
