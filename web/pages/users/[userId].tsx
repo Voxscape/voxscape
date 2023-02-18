@@ -7,7 +7,7 @@ import { TRPCClientError } from '@trpc/client';
 const UserDetailPage: NextPage = (props) => {
   const router = useRouter();
   const { userId } = router.query;
-  const userQuery = trpcReact.userById.useQuery({ userId: userId as any });
+  const userQuery = trpcReact.userById.useQuery({ userId: userId || ('-1' as any) });
 
   console.debug('userQuery', userQuery.isLoading, userQuery.status, userQuery.data, userQuery.error);
 

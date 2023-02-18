@@ -1,8 +1,9 @@
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
 import { ClientBad } from './errors';
+import { TrpcReqContext } from './auth';
 
-const t = initTRPC.create();
+const t = initTRPC.context<TrpcReqContext>().create();
 
 const publicProcedure = t.procedure;
 
@@ -27,14 +28,12 @@ const GetUserRequest = z.object({
 });
 
 export const appRouter = t.router({
-  userById: t.procedure
-    .input((val) => GetUserRequest.parse(val))
-    .query(({ input, ctx }) => {
-      console.debug('input', input);
-      const found = userList.find((user) => user.id === input.userId);
-      if (!found) {
-        throw new ClientBad('not found', 'NOT_FOUND');
-      }
-      return found;
-    }),
+  userById: t.procedure.input(GetUserRequest).query(({ input, ctx }) => {
+    console.debug('input', input, ctx.session);
+    const found = userList.find((user) => user.id === input.userId);
+    if (!found) {
+      throw new ClientBad('not found', 'NOT_FOUND');
+    }
+    return found;
+  }),
 });
