@@ -1,6 +1,6 @@
 import { getServerSession, Session } from 'next-auth';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { nextAuthOptions } from '../next_auth';
+import { nextAuthOptions } from '../../next_auth';
 
 export interface TrpcReqContext {
   session?: Session & {

@@ -28,10 +28,6 @@ export const trpcReactClient = trpcReact.createClient({
   links,
 });
 
-const trpcClient = createTRPCProxyClient<AppRouter>({
+export const trpcClient = createTRPCProxyClient<AppRouter>({
   links,
 });
-
-function f() {
-  trpcReact.userById.useQuery;
-}

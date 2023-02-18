@@ -2,7 +2,7 @@ import * as trpcNext from '@trpc/server/adapters/next';
 import { appRouter } from '../../../server/api';
 import { ZodError } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { createTrpcReqContext } from '../../../server/api/auth';
+import { createTrpcReqContext } from '../../../server/api/common/auth';
 import { createServerLogger } from '../../../server/logger';
 const logger = createServerLogger(__filename);
 // export API handler
