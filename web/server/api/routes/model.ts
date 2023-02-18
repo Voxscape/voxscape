@@ -1,19 +1,20 @@
 import { z } from 'zod';
 import { createDebugLogger } from '../../../shared/logger';
+import { prisma } from '../../prisma';
 import { requireUserLogin } from '../common/auth';
 import { t } from '../common/_base';
 
-enum ModelSchema {
+enum ModelContentType {
   vox = 'vox',
 }
 
-const modelFile = z.object({
+const VoxelModel = z.object({
   id: z.number().optional(),
-  schema: z.enum([ModelSchema.vox]),
+  contentType: z.enum([ModelContentType.vox]),
   url: z.string(),
 });
 
-export const uploadAssetRequest = z.object({
+export const uploadModelAssetRequest = z.object({
   filename: z.string(),
   contentType: z.string(),
 });
@@ -30,9 +31,13 @@ const xyz = z.object({
 });
 
 const modelView = z.object({
-  modelId: z.onumber(),
+  id: z.number(),
   cameraPosition: xyz,
   cameraTarget: xyz,
+});
+
+const modelList = z.object({
+  models: z.array(modelView),
 });
 
 export namespace DevOnly {
@@ -47,3 +52,18 @@ export namespace DevOnly {
 
 const logger = createDebugLogger(__filename);
 const privateProcedure = t.procedure.use(requireUserLogin);
+
+const searchModelQuery = z.object({
+  name: z.ostring(),
+});
+
+export const modelsRoute = t.router({
+  search: t.procedure.input(searchModelQuery).query(async ({ input }) => {
+    const models = await prisma.voxelModel.findMany({ where: {} });
+    // TODO: try superjson transform
+    return [];
+  }),
+  requestUpload: privateProcedure.input(uploadAssetResponse).mutation(({ input, ctx }) => {
+    return {};
+  }),
+});
