@@ -1,26 +1,34 @@
-import React, { useEffect } from 'react';
-import App, { AppType } from 'next/app';
+import React, { FC, useEffect } from 'react';
+import type { AppType } from 'next/app';
 import '../src/app.scss';
 import { DefaultMeta } from '../src/components/meta/default-meta';
 import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
 import { chakraTheme } from '../src/config/chakra-theme';
 import { ModalHolder } from '../src/components/modal/modal-context';
-import { SessionProvider } from 'next-auth/react';
+import { SessionProvider, useSession } from 'next-auth/react';
 import { isDevBuild } from '../src/config/build-config';
+import type { Session } from 'next-auth';
 
-const CustomApp: AppType = (props) => {
-  const { Component, pageProps } = props;
-  const session = (pageProps as any).session;
+interface PageProps {
+  // optional: provided by per-page getServerSideProps()
+  session?: Session;
+}
 
+const SessionDemo: FC = () => {
+  const session = useSession();
   useEffect(() => {
-    if (isDevBuild) {
-      console.debug('session as seen by app', session);
-    }
+    console.debug('session as seen by app', session);
   }, [session]);
+  return null;
+};
+
+const CustomApp: AppType<PageProps> = (props) => {
+  const { Component, pageProps } = props;
 
   return (
-    <SessionProvider session={session}>
+    <SessionProvider session={pageProps.session}>
+      {isDevBuild && <SessionDemo />}
       <ChakraProvider theme={chakraTheme}>
         <Head>
           <meta
@@ -37,7 +45,5 @@ const CustomApp: AppType = (props) => {
     </SessionProvider>
   );
 };
-
-// CustomApp.getInitialProps = App.getInitialProps;
 
 export default CustomApp;

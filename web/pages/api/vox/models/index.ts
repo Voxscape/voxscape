@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next';
-import { buildHandler } from '../../../../src/server/next_api_builder';
+import { buildHandler } from '../../../../server/next_api_builder';
 
 /**
  * GET /api/vox/models

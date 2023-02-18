@@ -3,7 +3,7 @@ import { signIn, useSession } from 'next-auth/react';
 import React, { useCallback } from 'react';
 import { Button } from '@chakra-ui/react';
 import { getServerSession } from 'next-auth';
-import { nextAuthOptions } from '../../src/server/next_auth';
+import { nextAuthOptions } from '../../server/next_auth';
 
 const Page: NextPage = () => {
   const signInGoogle = useCallback(() => signIn('google', {}), []);
@@ -24,6 +24,6 @@ const Page: NextPage = () => {
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSession(ctx.req, ctx.res, nextAuthOptions);
   console.debug('server session', session);
-  return { props: {} };
+  return { props: { session } };
 };
 export default Page;

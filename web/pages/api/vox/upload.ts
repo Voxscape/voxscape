@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next';
-import { uploadAssetRequest, uploadAssetResponse } from '../../../src/server/api/schemas';
+import { uploadAssetRequest, uploadAssetResponse } from '../../../server/api/schemas';
 import { z } from 'zod';
 
 /**

@@ -32,6 +32,7 @@
   "include": [
     "pages",
     "src",
+    "server",
     "scripts"
   ]
 }
