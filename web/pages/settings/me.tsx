@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { trpcClient, trpcReactClient } from '../../src/api/trpc';
+import { trpcClient, trpcReactClient } from '../../src/config/trpc';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { createDebugLogger } from '../../shared/logger';
 

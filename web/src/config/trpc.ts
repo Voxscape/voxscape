@@ -1,7 +1,7 @@
 import { createTRPCProxyClient, httpBatchLink, httpLink } from '@trpc/client';
 import type { AppRouter } from '../../server/api';
 import { createTRPCReact } from '@trpc/react-query';
-import { inBrowser } from '../config/build-config';
+import { inBrowser } from './build-config';
 import { QueryClient } from '@tanstack/react-query';
 function getBaseUrl() {
   if (inBrowser) {

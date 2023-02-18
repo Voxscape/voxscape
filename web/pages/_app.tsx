@@ -9,7 +9,7 @@ import { ModalHolder } from '../src/components/modal/modal-context';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { isDevBuild } from '../src/config/build-config';
 import type { Session } from 'next-auth';
-import { queryClient, trpcReact, trpcReactClient } from '../src/api/trpc';
+import { queryClient, trpcReact, trpcReactClient } from '../src/config/trpc';
 import { QueryClientProvider } from '@tanstack/react-query';
 
 interface PageProps {
