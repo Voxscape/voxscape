@@ -24,11 +24,11 @@ const links = [
   }),
 ];
 export const queryClient = new QueryClient();
-export const trpcClient = trpcReact.createClient({
+export const trpcReactClient = trpcReact.createClient({
   links,
 });
 
-const plainClient = createTRPCProxyClient<AppRouter>({
+const trpcClient = createTRPCProxyClient<AppRouter>({
   links,
 });
 
