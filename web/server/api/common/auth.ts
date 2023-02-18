@@ -1,6 +1,8 @@
 import { getServerSession, Session } from 'next-auth';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { nextAuthOptions } from '../../next_auth';
+import { t } from './_base';
+import { ClientBad } from '../errors';
 
 export interface TrpcReqContext {
   session?: Session & {
@@ -18,3 +20,10 @@ export async function createTrpcReqContext(req: NextApiRequest, res: NextApiResp
     session: (await getServerSession(req, res, nextAuthOptions)) || undefined,
   };
 }
+
+export const requireUserLogin = t.middleware(({ ctx, next }) => {
+  if (!ctx.session) {
+    throw new ClientBad(`not logged in`, `UNAUTHORIZED`);
+  }
+  return next({ ctx });
+});

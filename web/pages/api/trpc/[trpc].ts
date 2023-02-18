@@ -4,6 +4,7 @@ import { ZodError } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { createTrpcReqContext } from '../../../server/api/common/auth';
 import { createDebugLogger } from '../../../shared/logger';
+import { ClientBad } from '../../../server/api/errors';
 const logger = createDebugLogger(__filename);
 // export API handler
 // @see https://trpc.io/docs/api-handler
@@ -27,10 +28,13 @@ export default trpcNext.createNextApiHandler({
   },
 
   onError({ error, type, path, input, ctx, req }) {
-    logger('error', error, type, path, ctx);
     if (error.cause instanceof ZodError) {
       // we could rewrite error code / message here
       throw new TRPCError({ message: `zod error`, code: 'BAD_REQUEST' });
+    } else if (error instanceof ClientBad) {
+      logger('client bad', path, input, ctx);
+    } else {
+      logger('error', error, type, path, ctx);
     }
   },
 

@@ -7,8 +7,10 @@ const logger = createDebugLogger(__filename);
 
 const ProfilePage: FC = () => {
   useAsyncEffect(async () => {
-    const f = await trpcClient.user.getOwnProfile.query();
-    logger('f', f);
+    const f = await trpcClient.user.getOwnProfile.query().then(
+      (u) => logger('user', u),
+      (e) => logger('error', e),
+    );
   }, []);
   return <div>TODO</div>;
 };

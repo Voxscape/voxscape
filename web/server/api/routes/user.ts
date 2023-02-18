@@ -2,6 +2,7 @@ import { t } from '../common/_base';
 import { z } from 'zod';
 import { ClientBad } from '../errors';
 import { createDebugLogger } from '../../../shared/logger';
+import { requireUserLogin } from '../common/auth';
 
 const logger = createDebugLogger(__filename);
 interface User {
@@ -15,6 +16,8 @@ const userList: User[] = [
     name: 'KATT',
   },
 ];
+
+const privateProcedure = t.procedure.use(requireUserLogin);
 
 export const userRouter = t.router({
   getById: t.procedure
@@ -32,7 +35,7 @@ export const userRouter = t.router({
       }
       return found;
     }),
-  getOwnProfile: t.procedure.query(({ ctx }) => {
-    return ctx.session?.user;
+  getOwnProfile: privateProcedure.query(({ ctx }) => {
+    return ctx.session!.user;
   }),
 });
