@@ -23,7 +23,6 @@ const Page: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSession(ctx.req, ctx.res, nextAuthOptions);
-  console.debug('server session', session);
   return { props: { session } };
 };
 export default Page;

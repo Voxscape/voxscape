@@ -4,7 +4,7 @@
   "author": "Wang Guan <momocraft@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "DEBUG='voxscape:*' next dev",
     "build": "next build",
     "export": "next export",
     "analyze": "BUNDLE_ANALYZE=both next build",

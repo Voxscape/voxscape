@@ -3,7 +3,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { nextAuthOptions } from '../next_auth';
 
 export interface TrpcReqContext {
-  session?: Session;
+  session?: Session & {
+    user: {
+      id: string;
+    };
+  };
 }
 
 /**
