@@ -9,7 +9,23 @@ const logger = createDebugLogger(__filename);
 // @see https://trpc.io/docs/api-handler
 export default trpcNext.createNextApiHandler({
   router: appRouter,
-  createContext: async (ctx) => createTrpcReqContext(ctx.req, ctx.res),
+
+  createContext: (ctx) => createTrpcReqContext(ctx.req, ctx.res),
+
+  responseMeta({ ctx, errors, paths, type }) {
+    const dangerousToCache =
+      ctx?.session || errors.length || paths?.some((path) => path.includes('user') || type !== 'query');
+
+    if (dangerousToCache) {
+      return {
+        headers: {
+          'cache-control': 'no-cache',
+        },
+      };
+    }
+    return {};
+  },
+
   onError({ error, type, path, input, ctx, req }) {
     logger('error', error, type, path, ctx);
     if (error.cause instanceof ZodError) {
@@ -17,6 +33,7 @@ export default trpcNext.createNextApiHandler({
       throw new TRPCError({ message: `zod error`, code: 'BAD_REQUEST' });
     }
   },
+
   batching: {
     enabled: true,
   },
