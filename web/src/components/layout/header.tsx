@@ -28,9 +28,6 @@ export const LayoutHeaderButtons: React.FC = () => {
     <>
       <ButtonGroup>
         <Button backgroundColor="cyan.100" size="sm">
-          Sign Up
-        </Button>
-        <Button backgroundColor="cyan.50" size="sm">
           Login
         </Button>
       </ButtonGroup>
