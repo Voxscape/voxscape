@@ -7,6 +7,7 @@ import { nextAuthOptions } from '../../server/next_auth';
 
 const Page: NextPage = () => {
   const signInGoogle = useCallback(() => signIn('google', {}), []);
+  const signInDiscord = useCallback(() => signIn('discord', {}), []);
 
   const session = useSession();
 
@@ -16,6 +17,9 @@ const Page: NextPage = () => {
     <div>
       <Button type="button" onClick={signInGoogle}>
         Sign in with Google
+      </Button>
+      <Button type="button" onClick={signInDiscord}>
+        Sign in with Discord
       </Button>
     </div>
   );
