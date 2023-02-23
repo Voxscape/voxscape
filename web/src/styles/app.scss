@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: pink;
+}
+
+#sceneExplorer,
+#actionTabs {
+  max-height: 100vh;
+  overflow-y: scroll;
+}
+
+@font-face {
+  font-display: block;
+  font-family: 'Public Pixel';
+  src: url('PublicPixel-z84yD.woff2') format('woff2'), url('PublicPixel-z84yD.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}

@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import type { AppType } from 'next/app';
-import '../src/app.scss';
+import '../src/styles/app.scss';
 import { DefaultMeta } from '../src/components/meta/default-meta';
 import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
