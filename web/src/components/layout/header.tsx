@@ -1,5 +1,9 @@
 import { Button, ButtonGroup, chakra } from '@chakra-ui/react';
 import React from 'react';
+import { useSession } from 'next-auth/react';
+import logoPng from './logo.png';
+import Image from 'next/image';
+import styles from './header.module.scss';
 
 export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
   return (
@@ -10,12 +14,12 @@ export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
         justifyContent="space-between"
         marginX="auto"
         maxW="2xl"
-        paddingX={[2, null, 3]}
-        paddingY={[2, null, 4]}
+        paddingX={[2, null, 2]}
+        paddingY={[2, null, 2]}
         borderBottom="2px solid"
-        borderColor="cyan.50"
+        borderColor="primary.50"
       >
-        <div>Voxscape</div>
+        <Image src={logoPng} alt="Voxscape" className={styles.logoImg} />
         <chakra.span flex="1 0" />
         {props.children}
       </chakra.div>
@@ -23,14 +27,17 @@ export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
   );
 };
 
+export const DefaultHeader: React.FC = () => {
+  const session = useSession();
+
+  return <LayoutHeader></LayoutHeader>;
+};
+
 export const LayoutHeaderButtons: React.FC = () => {
   return (
     <>
       <ButtonGroup>
-        <Button backgroundColor="cyan.100" size="sm">
-          Sign Up
-        </Button>
-        <Button backgroundColor="cyan.50" size="sm">
+        <Button backgroundColor="primary.500" size="sm" className={styles.button}>
           Login
         </Button>
       </ButtonGroup>

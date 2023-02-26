@@ -2851,13 +2851,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next-auth/sequelize-adapter@npm:^1.0.7":
-  version: 1.0.7
-  resolution: "@next-auth/sequelize-adapter@npm:1.0.7"
+"@next-auth/prisma-adapter@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "@next-auth/prisma-adapter@npm:1.0.5"
   peerDependencies:
+    "@prisma/client": ">=2.26.0 || >=3"
     next-auth: ^4
-    sequelize: ^6.6.5
-  checksum: 2ba585c0b595bd8229ce66624ff2cd2a4b2363e65e2cbb53a9bbc390ae9a36cc2f7f5aa60ed5cf09bc2ec5a121f4add1926c8d602e4d4d80343b508ed5fc249f
+  checksum: 5d03d623e60e719ea3ae91d7aecd57019eebc063a0711cbdb2917bf9675c29b6fcbdbc1724b584c346be995ad7bb6fbca533d08e4d43769023ba084e0aaae147
   languageName: node
   linkType: hard
 
@@ -3309,6 +3309,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prisma/client@npm:^4.9.0":
+  version: 4.9.0
+  resolution: "@prisma/client@npm:4.9.0"
+  dependencies:
+    "@prisma/engines-version": 4.9.0-42.ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5
+  peerDependencies:
+    prisma: "*"
+  peerDependenciesMeta:
+    prisma:
+      optional: true
+  checksum: 54c4fc3fde67d21567ead0e22e66d3258c2045f274b465781b89e4f258f1a6431c4c83e3371e71661f2c7ccdf4cf24169002e40e378c7384f99aefe8dfb81be1
+  languageName: node
+  linkType: hard
+
+"@prisma/engines-version@npm:4.9.0-42.ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5":
+  version: 4.9.0-42.ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5
+  resolution: "@prisma/engines-version@npm:4.9.0-42.ceb5c99003b99c9ee2c1d2e618e359c14aef2ea5"
+  checksum: b7b1a41acd8c761ea8111e0d9562623d0735c58546594626de1bd4b35e09122f210e0c4727aa0775b53e5222d8ed1c0fa822e0a8c4ba72271e854532f52a2416
+  languageName: node
+  linkType: hard
+
+"@prisma/engines@npm:4.9.0":
+  version: 4.9.0
+  resolution: "@prisma/engines@npm:4.9.0"
+  checksum: b73306b3e34ebb544f797342cb594f4a73602c6e63961e31e9158f02afdfc209f2cc1d59ae87cbb0165b3dff58eaa145c601ac2a1cfc460e8e439cea8425a3ed
+  languageName: node
+  linkType: hard
+
 "@sinclair/typebox@npm:^0.24.1":
   version: 0.24.44
   resolution: "@sinclair/typebox@npm:0.24.44"
@@ -3343,10 +3371,65 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:4.24.6":
+  version: 4.24.6
+  resolution: "@tanstack/query-core@npm:4.24.6"
+  checksum: 495dff04f27d72174051f97676fce0fbe322bca966edb7f174f0005a3363ac0300c31eb06255dafa7ee519a430840542379f5ec9f6846903b6bb878e46c33656
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^4.24.6":
+  version: 4.24.6
+  resolution: "@tanstack/react-query@npm:4.24.6"
+  dependencies:
+    "@tanstack/query-core": 4.24.6
+    use-sync-external-store: ^1.2.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-native: "*"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: 250bc2cba8dd7da61680a8e360fac87ee057d079ee3be950c76dbc063f941119817634857c1cb0d9b12042dd5d4fbe847c02af5dfb89ae8daa0f9339f87ad605
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
   checksum: ad87447820dd3f24825d2d947ebc03072b20a42bfc96cbafec16bff8bbda6c1a81fcb0be56d5b21968560c5359a0af4038a68ba150c3e1694fe4c109a063bed8
+  languageName: node
+  linkType: hard
+
+"@trpc/client@npm:^10.11.1":
+  version: 10.11.1
+  resolution: "@trpc/client@npm:10.11.1"
+  peerDependencies:
+    "@trpc/server": 10.11.1
+  checksum: 82f33e3b101426bae188e9ebdd9ddaa5f4cb2b5c59aa47bcc67603f24ecc9497003bef0ae5fdde9f33673d0dbecb3a5aaf6976508125736971eff381aa30f1c9
+  languageName: node
+  linkType: hard
+
+"@trpc/react-query@npm:^10.11.1":
+  version: 10.11.1
+  resolution: "@trpc/react-query@npm:10.11.1"
+  peerDependencies:
+    "@tanstack/react-query": ^4.3.8
+    "@trpc/client": 10.11.1
+    "@trpc/server": 10.11.1
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 2442c96640494b74bcd60f30a1c4d212cf305762de8ef653db3eac2078663469b0ddf3e5c560b9174f85b2d5f2d375423b47a8be146b568e0b8ebcf7bcebe8ee
+  languageName: node
+  linkType: hard
+
+"@trpc/server@npm:^10.11.1":
+  version: 10.11.1
+  resolution: "@trpc/server@npm:10.11.1"
+  checksum: 337ed1e6b4a5550eb0659c891d21688e26ceb124d9cb9046bdc4590b37187a2558e121e911e736120a9a7356ed6ae1c7f738770a8a8620107cc291f9be90ba63
   languageName: node
   linkType: hard
 
@@ -3642,13 +3725,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/validator@npm:^13.7.1":
-  version: 13.7.10
-  resolution: "@types/validator@npm:13.7.10"
-  checksum: 7b142c08019f484d62c9f3074231f640c24311558f157dd253a60810dd0cb29e41ec64ca210a192b54f6de51f4fe016bfeb2c30f90fa49c9337ed54a9d8e02aa
-  languageName: node
-  linkType: hard
-
 "@types/webxr@npm:*":
   version: 0.5.0
   resolution: "@types/webxr@npm:0.5.0"
@@ -3859,9 +3935,14 @@ __metadata:
     "@jokester/ts-commonutil": ^0.3.8
     "@mui/icons-material": ^5.11.0
     "@mui/material": ^5.11.3
-    "@next-auth/sequelize-adapter": ^1.0.7
+    "@next-auth/prisma-adapter": ^1.0.5
     "@next/bundle-analyzer": ^13
     "@next/eslint-plugin-next": ^13.1.1
+    "@prisma/client": ^4.9.0
+    "@tanstack/react-query": ^4.24.6
+    "@trpc/client": ^10.11.1
+    "@trpc/react-query": ^10.11.1
+    "@trpc/server": ^10.11.1
     "@types/debug": ^4.1.7
     "@types/jest": ^29
     "@types/lodash-es": ^4.17.6
@@ -3883,17 +3964,18 @@ __metadata:
     jest: ^29
     lodash-es: ^4.17.21
     next: ^13
-    next-auth: ^4.18.7
+    next-auth: ^4.19.2
     pg: ^8.8.0
     postcss: ^8.4.20
+    prisma: ^4.9.0
     react: ^18.2.0
     react-dom: ^18.2.0
     react-use: ^17.4.0
     rxjs: ^7.8.0
     sass: ^1.57.1
-    sequelize: ^6.28.0
     tailwindcss: ^3.2.4
     ts-jest: ^29
+    ts-node: ^10.9.1
     tslib: ^2
     typescript: ^4.9
     use-constant: ^1.1.1
@@ -5515,13 +5597,6 @@ __metadata:
     no-case: ^3.0.4
     tslib: ^2.0.3
   checksum: a65e3519414856df0228b9f645332f974f2bf5433370f544a681122eab59e66038fc3349b4be1cdc47152779dac71a5864f1ccda2f745e767c46e9c6543b1169
-  languageName: node
-  linkType: hard
-
-"dottie@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "dottie@npm:2.0.2"
-  checksum: 046a5818033725a5a12b60270473cd9a19b0e88bd007a0c9a66be36983e53626de949aee9d0290fbfe0275aa31837491adbbbb8bf74ef09f78d21598793d6268
   languageName: node
   linkType: hard
 
@@ -7180,13 +7255,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inflection@npm:^1.13.2":
-  version: 1.13.4
-  resolution: "inflection@npm:1.13.4"
-  checksum: 6744feede9998ad8abd2b1db4af79f494a166e656a0aa949d90c8f4a945c1d07038a3756bf7af78c8f6fce368ba213a7ebf35da3edeffd39f1da0ff465eed6eb
-  languageName: node
-  linkType: hard
-
 "inflight@npm:^1.0.4":
   version: 1.0.6
   resolution: "inflight@npm:1.0.6"
@@ -8721,22 +8789,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment-timezone@npm:^0.5.34":
-  version: 0.5.40
-  resolution: "moment-timezone@npm:0.5.40"
-  dependencies:
-    moment: ">= 2.9.0"
-  checksum: 6f6be5412b37fd937bb143efe74bf65b2c3f115fd967a6dc13b717a126ed6dd198bff6db6e179d69a089e20ac03ce7622c6b5598dd585005195554487a91b528
-  languageName: node
-  linkType: hard
-
-"moment@npm:>= 2.9.0, moment@npm:^2.29.1":
-  version: 2.29.4
-  resolution: "moment@npm:2.29.4"
-  checksum: 0ec3f9c2bcba38dc2451b1daed5daded747f17610b92427bebe1d08d48d8b7bdd8d9197500b072d14e326dd0ccf3e326b9e3d07c5895d3d49e39b6803b76e80e
-  languageName: node
-  linkType: hard
-
 "mrmime@npm:^1.0.0":
   version: 1.0.1
   resolution: "mrmime@npm:1.0.1"
@@ -8843,9 +8895,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-auth@npm:^4.18.7":
-  version: 4.18.7
-  resolution: "next-auth@npm:4.18.7"
+"next-auth@npm:^4.19.2":
+  version: 4.19.2
+  resolution: "next-auth@npm:4.19.2"
   dependencies:
     "@babel/runtime": ^7.16.3
     "@panva/hkdf": ^1.0.1
@@ -8864,7 +8916,7 @@ __metadata:
   peerDependenciesMeta:
     nodemailer:
       optional: true
-  checksum: 221fc1c4f51a842c1107bc178a09be3ac97c33dd9cd4bd28f049158d79e49880147834a7f693cfce31e02023ecac1f7613bb71808218f4b3d4b32591ed7af44e
+  checksum: 7067147c80e4ba9ba328f27c548239895b746a04c0c4faa4f1e0c16cf82eb941ef7ed904a7d3bdf423f07791b471b55f5a2959f66b78495af4f02195d1a59c4e
   languageName: node
   linkType: hard
 
@@ -9824,6 +9876,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prisma@npm:^4.9.0":
+  version: 4.9.0
+  resolution: "prisma@npm:4.9.0"
+  dependencies:
+    "@prisma/engines": 4.9.0
+  bin:
+    prisma: build/index.js
+    prisma2: build/index.js
+  checksum: 82f680008a61824a40f3daae9e0e5766f33d28c6641d04e0ee0918c2cb42110579187f3fce2d08ec8baa1124b3115229e9d83d7f64987bf46f6403f56b07e711
+  languageName: node
+  linkType: hard
+
 "progress@npm:^2.0.0":
   version: 2.0.3
   resolution: "progress@npm:2.0.3"
@@ -10388,13 +10452,6 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"retry-as-promised@npm:^7.0.3":
-  version: 7.0.3
-  resolution: "retry-as-promised@npm:7.0.3"
-  checksum: 0dd0ed5f255be26266a2b862d5aad52800513cc06a21003684023fd5f604b1edc6486a488672b90d37b258a58efedaa9393f479f7a047958b1e73f6c6799fca3
-  languageName: node
-  linkType: hard
-
 "retry@npm:^0.12.0":
   version: 0.12.0
   resolution: "retry@npm:0.12.0"
@@ -10598,56 +10655,6 @@ resolve@^2.0.0-next.3:
     tslib: ^2.0.3
     upper-case-first: ^2.0.2
   checksum: 3cfe6c0143e649132365695706702d7f729f484fa7b25f43435876efe7af2478243eefb052bacbcce10babf9319fd6b5b6bc59b94c80a1c819bcbb40651465d5
-  languageName: node
-  linkType: hard
-
-"sequelize-pool@npm:^7.1.0":
-  version: 7.1.0
-  resolution: "sequelize-pool@npm:7.1.0"
-  checksum: b11d06d02de9e8fc428ba3020b86f05fe7adad764e57f23c5901f924e31867901a5e7a090180337dc3b90de3934b64f34ae552fde37b0f3d37b09c0c8ecbddc7
-  languageName: node
-  linkType: hard
-
-"sequelize@npm:^6.28.0":
-  version: 6.28.0
-  resolution: "sequelize@npm:6.28.0"
-  dependencies:
-    "@types/debug": ^4.1.7
-    "@types/validator": ^13.7.1
-    debug: ^4.3.3
-    dottie: ^2.0.2
-    inflection: ^1.13.2
-    lodash: ^4.17.21
-    moment: ^2.29.1
-    moment-timezone: ^0.5.34
-    pg-connection-string: ^2.5.0
-    retry-as-promised: ^7.0.3
-    semver: ^7.3.5
-    sequelize-pool: ^7.1.0
-    toposort-class: ^1.0.1
-    uuid: ^8.3.2
-    validator: ^13.7.0
-    wkx: ^0.5.0
-  peerDependenciesMeta:
-    ibm_db:
-      optional: true
-    mariadb:
-      optional: true
-    mysql2:
-      optional: true
-    oracledb:
-      optional: true
-    pg:
-      optional: true
-    pg-hstore:
-      optional: true
-    snowflake-sdk:
-      optional: true
-    sqlite3:
-      optional: true
-    tedious:
-      optional: true
-  checksum: 7e10ba4ebabab1ed54d6769fa73cac86dd3df88415ee32dd82f01ade6e1ebd9f6672288b601bd12507eae9eb2480ba905f74c93b1e380eb335430bf43ed757e9
   languageName: node
   linkType: hard
 
@@ -11416,13 +11423,6 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"toposort-class@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "toposort-class@npm:1.0.1"
-  checksum: c5e3229d4899b23350b09ed26cfb7a28aadd0889550625f1bcadc0da266cdf2790fb0ccc3e92be93ba6ad64f57bc2fd1ab94446cb4ae83054dab263753157f5f
-  languageName: node
-  linkType: hard
-
 "totalist@npm:^1.0.0":
   version: 1.1.0
   resolution: "totalist@npm:1.1.0"
@@ -11829,6 +11829,15 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"use-sync-external-store@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "use-sync-external-store@npm:1.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 5c639e0f8da3521d605f59ce5be9e094ca772bd44a4ce7322b055a6f58eeed8dda3c94cabd90c7a41fb6fa852210092008afe48f7038792fd47501f33299116a
+  languageName: node
+  linkType: hard
+
 "util-deprecate@npm:^1.0.1, util-deprecate@npm:^1.0.2":
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
@@ -11884,13 +11893,6 @@ resolve@^2.0.0-next.3:
     spdx-correct: ^3.0.0
     spdx-expression-parse: ^3.0.0
   checksum: 35703ac889d419cf2aceef63daeadbe4e77227c39ab6287eeb6c1b36a746b364f50ba22e88591f5d017bc54685d8137bc2d328d0a896e4d3fd22093c0f32a9ad
-  languageName: node
-  linkType: hard
-
-"validator@npm:^13.7.0":
-  version: 13.7.0
-  resolution: "validator@npm:13.7.0"
-  checksum: 2b83283de1222ca549a7ef57f46e8d49c6669213348db78b7045bce36a3b5843ff1e9f709ebf74574e06223461ee1f264f8cc9a26a0060a79a27de079d8286ef
   languageName: node
   linkType: hard
 
@@ -12089,15 +12091,6 @@ resolve@^2.0.0-next.3:
   dependencies:
     string-width: ^4.0.0
   checksum: 03db6c9d0af9329c37d74378ff1d91972b12553c7d72a6f4e8525fe61563fa7adb0b9d6e8d546b7e059688712ea874edd5ded475999abdeedf708de9849310e0
-  languageName: node
-  linkType: hard
-
-"wkx@npm:^0.5.0":
-  version: 0.5.0
-  resolution: "wkx@npm:0.5.0"
-  dependencies:
-    "@types/node": "*"
-  checksum: 47b27387de81fbd077528c1c11be996bf5a6dbeb94858ea0e2fa6619c2af626aa2f127f6fee1b4b57057a7cbef8a810b39a67815f2eb54ed33b1790e29db86ee
   languageName: node
   linkType: hard
 

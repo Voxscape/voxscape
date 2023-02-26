@@ -1,7 +1,6 @@
 /* eslint @typescript-eslint/no-var-requires: 0 */
 const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require('next/constants');
 
-const NUTHATCH_API_ORIGIN = process.env.NUTHATCH_API_ORIGIN || 'http://127.0.0.1:8080';
 /**
  * when in problem, try to sync with {@link https://github.com/vercel/next.js/tree/canary/packages/create-next-app/templates/typescript}
  * @type {import('next').NextConfig}
@@ -11,11 +10,10 @@ const nextConf = {
 
   /**
    * runtime server-only configuration
+   * @type {import('./server/runtime-config').ServerRuntimeConfig}
    */
   serverRuntimeConfig: {
-    // becomes process.env.SOME_CONSTANT : boolean
-    serverStartedAt: new Date().toISOString(),
-    apiServerOrigin: NUTHATCH_API_ORIGIN,
+    serverStartAt: new Date().toISOString(),
   },
   /**
    * build-time configuration
@@ -49,16 +47,17 @@ const nextConf = {
 
   productionBrowserSourceMaps: true,
   reactStrictMode: true,
-  async rewrites() {
-    return {
-      beforeFiles: [
-        {
-          source: '/api/nuthatch_v1/:path*',
-          destination: `${NUTHATCH_API_ORIGIN}/api/nuthatch_v1/:path*`,
-        },
-      ],
-    };
-  },
+};
+
+const UNUSED_rewrites = async () => {
+  return {
+    beforeFiles: [
+      {
+        source: '/api/nuthatch_v1/:path*',
+        destination: `https://TODO/api/nuthatch_v1/:path*`,
+      },
+    ],
+  };
 };
 
 module.exports = (phase, { defaultConfig }) => {

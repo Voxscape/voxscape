@@ -3,7 +3,7 @@
   "compilerOptions": {
     "isolatedModules": true,
     "jsx": "preserve",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "noEmit": true,
     "target": "esnext",
@@ -31,6 +31,9 @@
   ],
   "include": [
     "pages",
-    "src"
+    "src",
+    "shared",
+    "server",
+    "scripts"
   ]
 }
