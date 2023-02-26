@@ -1,5 +1,4 @@
-import { Scene, SceneLoader } from '@babylonjs/core';
-import { Node, AbstractMesh, AnimationGroup, Mesh } from '@babylonjs/core';
+import { Scene, SceneLoader, Node, AbstractMesh, AnimationGroup, Mesh } from '@babylonjs/core';
 
 async function loadJson(url: string): Promise<unknown> {
   return fetch(url).then((response) => response.json());
