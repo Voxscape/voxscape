@@ -14,8 +14,8 @@
     "test:coverage": "jest --coverage",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --watch --noEmit",
-    "lint": "    eslint '@(src|pages)/**/*.@(ts|js|tsx|jsx)'",
-    "lint:fix": "eslint '@(src|pages)/**/*.@(ts|js|tsx|jsx)' --fix"
+    "lint": "next lint -d .",
+    "lint:fix": "next lint --fix -d ."
   },
   "dependencies": {
     "@chakra-ui/react": "^2.4.6",

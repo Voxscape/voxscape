@@ -111,10 +111,10 @@ export function UserAgreement(): ReactElement {
       </p>
       <h2>6. Disclaimer of Warranties</h2>
       <p>
-        Our website is provided "as is" without any warranties of any kind, express or implied. We do not warrant that
-        our website will be error-free or uninterrupted, or that any defects will be corrected. We disclaim all
-        warranties, including but not limited to warranties of merchantability, fitness for a particular purpose, and
-        non-infringement.
+        Our website is provided &ldquo; as is &rdquo; without any warranties of any kind, express or implied. We do not
+        warrant that our website will be error-free or uninterrupted, or that any defects will be corrected. We disclaim
+        all warranties, including but not limited to warranties of merchantability, fitness for a particular purpose,
+        and non-infringement.
       </p>
       <h2>7. Limitation of Liability</h2>
       <p>
@@ -125,8 +125,8 @@ export function UserAgreement(): ReactElement {
       </p>
       <h2>8. Indemnification</h2>
       <p>
-        You agree to indemnify, defend, and hold us harmless from any claims, damages, and expenses (including
-        attorneys' fees) arising from your use of our website or your violation of these terms and conditions.
+        You agree to indemnify, defend, and hold us harmless from any claims, damages, and expenses (including attorneys
+        &apos; fees) arising from your use of our website or your violation of these terms and conditions.
       </p>
       <h2>9. Governing Law</h2>
       <p>
