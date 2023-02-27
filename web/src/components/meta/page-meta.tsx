@@ -1,11 +1,19 @@
 import React from 'react';
 import Head from 'next/head';
 
-export const PageMeta: React.FC<{ title?: string }> = (props) => {
-  // TODO: add ogps and stuff
+interface PageMetaProps {
+  title?: string;
+  fullTitle?: string;
+  ogp?: OgpProps;
+}
+
+export interface OgpProps {}
+
+export const PageMeta: React.FC<PageMetaProps> = (props) => {
+  const title = props.fullTitle ?? (props.title && `${props.title} | Voxscape`) ?? 'Voxscape';
   return (
     <Head>
-      <title key="head-title">{props.title ?? 'untitled'}</title>
+      <title key="head-title">{title}</title>
     </Head>
   );
 };
