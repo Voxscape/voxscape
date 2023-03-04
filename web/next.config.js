@@ -43,6 +43,10 @@ const nextConf = {
 
   transpilePackages: ['lodash-es', '@jokester/ts-commonutil'],
 
+  compiler: {
+    emotion: true,
+  },
+
   images: {},
 
   productionBrowserSourceMaps: true,

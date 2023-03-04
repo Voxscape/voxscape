@@ -2,6 +2,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "isolatedModules": true,
+    "jsxImportSource": "@emotion/react",
     "jsx": "preserve",
     "module": "commonjs",
     "moduleResolution": "node",

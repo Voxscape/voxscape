@@ -3716,12 +3716,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/three@npm:^0.147.1":
-  version: 0.147.1
-  resolution: "@types/three@npm:0.147.1"
+"@types/three@npm:^0.149.0":
+  version: 0.149.0
+  resolution: "@types/three@npm:0.149.0"
   dependencies:
     "@types/webxr": "*"
-  checksum: 7ba64eb1cc0922a5edbad21bff71fd7a87a4a67e643edeacc7790097071b2b6b97b34e47137d305e48607d4895cf94eef5d8be366489788dd85fcd4795008cd1
+  checksum: 5def82bd5d4fb0eb6046e747eecced06d68fbf1747ab8f3e7657872e42e58ce7a92218d7c5e4ca26204257927638ad14da5d1cce7310aca15eb8a9bd484ea191
   languageName: node
   linkType: hard
 
@@ -3898,7 +3898,7 @@ __metadata:
     "@types/node": 18
     "@types/react": ^18.0.26
     "@types/react-dom": ^18.0.10
-    "@types/three": ^0.147.1
+    "@types/three": ^0.149.0
     clsx: ^1.2.1
     debug: ^4.3.4
     jest: ^29
@@ -3906,12 +3906,14 @@ __metadata:
     node-find: ^0.7.2
     react: 18.2.0
     react-dom: 18.2.0
-    three: ^0.148.0
+    three: ^0.150.1
     ts-jest: ^29
     ts-node: ^10.9.1
     typescript: ^4.9
     vox.js: ^1.1.0
   peerDependencies:
+    "@babylonjs/core": "*"
+    three: "*"
     tslib: ^2.1.0
   languageName: unknown
   linkType: soft
@@ -3949,6 +3951,7 @@ __metadata:
     "@types/node": ^18
     "@types/react": ^18.0.26
     "@types/react-dom": ^18.0.10
+    "@types/three": ^0.149.0
     "@voxscape/vox.ts": "workspace:*"
     autoprefixer: ^10
     clsx: ^1.2.1
@@ -3974,6 +3977,7 @@ __metadata:
     rxjs: ^7.8.0
     sass: ^1.57.1
     tailwindcss: ^3.2.4
+    three: ^0.150.1
     ts-jest: ^29
     ts-node: ^10.9.1
     tslib: ^2
@@ -11356,10 +11360,10 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"three@npm:^0.148.0":
-  version: 0.148.0
-  resolution: "three@npm:0.148.0"
-  checksum: 3f6359585c006c6f78b2fc1adeb90559d9b7cd6daf5cf916e81494ff228f4a9beffe37136bd8d5b0afbf377ac070b70624245bec2e9ee557035e2c485ce05197
+"three@npm:^0.150.1":
+  version: 0.150.1
+  resolution: "three@npm:0.150.1"
+  checksum: b12a92a681a30e62640d90bdf074d039c05d8294ad40f437e7e1807ce0e698ad6728878a1e72dad22bf05d7a359843ecea8739d05f2f13143bc3a4ecdfdbdd7b
   languageName: node
   linkType: hard
 
