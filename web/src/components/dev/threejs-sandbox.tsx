@@ -4,12 +4,17 @@ import {
   BufferGeometry,
   Line,
   LineBasicMaterial,
+  LoadingManager,
+  Object3D,
   Mesh,
   MeshBasicMaterial,
   PerspectiveCamera,
   Scene,
   Vector3,
   WebGLRenderer,
+  PointLight,
+  DirectionalLight,
+  MeshPhongMaterial,
 } from 'three';
 
 import { css } from '@emotion/react';
@@ -17,6 +22,9 @@ import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async
 import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { useFps } from '@jokester/ts-commonutil/lib/react/hook/use-fps';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { createDebugLogger } from '../../../shared/logger';
+const logger = createDebugLogger(__filename);
 
 function init(canvas: HTMLCanvasElement) {
   const scene = new Scene();
@@ -33,9 +41,38 @@ function init(canvas: HTMLCanvasElement) {
 function createCube(scene: Scene): Mesh {
   // geometry: local or "intrinsic" coordinates
   const geometry = new BoxGeometry(5, 5, 5);
-  const material = new MeshBasicMaterial({ color: 0x00ff00 });
+  const material = new MeshPhongMaterial({ color: 0x00ff00 });
   // mesh 'transform-al' or 'world' coordinates
   return new Mesh(geometry, material);
+}
+
+const loadingManager = new LoadingManager(
+  () => {
+    logger('load');
+  },
+  (url, itemsLoaded, itemsTotal) => {
+    logger('progress', url, itemsLoaded, itemsTotal);
+  },
+  (url) => {
+    logger('error loading', url);
+  },
+);
+
+function createLight() {
+  const color = 0xffffff;
+  const intensity = 1;
+  const light = new DirectionalLight(color, intensity);
+  light.position.set(-1, 2, 4);
+  return light;
+}
+
+async function loadGltf(url: string) {
+  const loader = new GLTFLoader(loadingManager);
+  const gltf = await loader.loadAsync(url);
+
+  logger('loaded', gltf);
+
+  return gltf;
 }
 
 function createPoints(scene: Scene): Line {
@@ -70,6 +107,28 @@ export function ThreejsSandbox(): React.ReactElement {
     scene.add(line);
 
     camera.position.z = 10;
+
+    const gltf = await loadGltf('/demo-models/batch_0302.blend.glb');
+
+    {
+      scene.add(createLight());
+    }
+
+    {
+      const l = gltf.scene.getObjectByName('light-point1');
+      logger('found object', l, l instanceof Object3D, l instanceof PointLight);
+      if (l) {
+        scene.add(l);
+      }
+    }
+
+    {
+      const f = gltf.scene.getObjectByName('メッシュ016');
+      logger('found object', f, f instanceof Object3D, f instanceof Mesh);
+      if (f) {
+        scene.add(f);
+      }
+    }
 
     const renderFrame = () => {
       if (!mounted.current) {
