@@ -42,7 +42,6 @@
     "web",
     "hasura",
     "scripts",
-    "packages/vox.ts",
-    "packages/ref-models"
+    "packages/vox.ts"
   ]
 }

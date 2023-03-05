@@ -3857,17 +3857,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@voxscape/ref-models@workspace:packages/ref-models":
-  version: 0.0.0-use.local
-  resolution: "@voxscape/ref-models@workspace:packages/ref-models"
-  dependencies:
-    "@types/node": 18
-    "@voxscape/vox.ts": "workspace:*"
-    node-find: ^0.7.2
-    ts-node: ^10.9.1
-  languageName: unknown
-  linkType: soft
-
 "@voxscape/scripts@workspace:scripts":
   version: 0.0.0-use.local
   resolution: "@voxscape/scripts@workspace:scripts"
