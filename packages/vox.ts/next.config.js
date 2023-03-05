@@ -1,11 +1,14 @@
 /* eslint @typescript-eslint/no-var-requires: 0 */
 const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require('next/constants');
+
 /**
  * when in problem, try to sync with {@link https://github.com/vercel/next.js/tree/canary/packages/create-next-app/templates/typescript}
  * @type {import('next').NextConfig}
  */
 const nextConf = {
   poweredByHeader: false,
+
+  transpilePackages: ['lodash-es', '@jokester/ts-commonutil'],
 
   reactStrictMode: true,
 };
