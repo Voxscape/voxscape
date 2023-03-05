@@ -1,28 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { Button } from '@blueprintjs/core';
+import { VoxFileDigest } from '../parser/digester';
 
-interface IndexedFile {
-  path: string;
-  modelCount: number;
-  modelMeta: {
-    x: number;
-    y: number;
-    z: number;
-    numVoxel: number;
-  }[];
-}
-
-async function fetchIndex(): Promise<IndexedFile[]> {
+async function fetchIndex(): Promise<VoxFileDigest[]> {
   const res = await fetch('/ref-models-2/index.txt');
   const resText = await res.text();
-  const jsonLines = resText.split('\n').filter((line) => line.startsWith('JSON\t'));
+  const jsonLines = resText.split('\n').filter((line) => line.startsWith('{'));
   console.debug('jsonLines', jsonLines);
-  return jsonLines.map((line) => JSON.parse(line.slice(5)));
+  return jsonLines.map((line) => JSON.parse(line));
 }
 
 export const DemoModelPicker: React.FC<{ onPick?(): void }> = (props) => {
-  const [files, setFiles] = useState<IndexedFile[]>([]);
+  const [files, setFiles] = useState<VoxFileDigest[]>([]);
 
   useEffect(() => {
     fetchIndex().then(setFiles);
@@ -50,15 +39,15 @@ export const DemoModelPicker: React.FC<{ onPick?(): void }> = (props) => {
   );
 };
 
-const ModelPickerCell: React.FC<{ file: IndexedFile }> = ({ file }) => {
+const ModelPickerCell: React.FC<{ file: VoxFileDigest }> = ({ file }) => {
   const onOpenViewer = (modelIndex: number) => {
     window.open(`/demo/babylon-viewer?file=${encodeURIComponent(file.path)}&modelId=${modelIndex}`, '_blank');
   };
   return (
     <div>
-      {file.modelMeta.map((m, modelIndex) => (
+      {file.models.map((m, modelIndex) => (
         <div key={modelIndex}>
-          model#{modelIndex}: {m.x}x{m.y}x{m.z} / {m.numVoxel} voxels
+          model#{modelIndex}: {m.size.x}x{m.size.y}x{m.size.z} / {m.numVoxels} voxels
           <br />
           <Button type="button" onClick={() => onOpenViewer(modelIndex)}>
             preview
