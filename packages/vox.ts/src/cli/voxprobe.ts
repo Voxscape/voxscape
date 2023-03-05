@@ -1,5 +1,6 @@
 import fsp from 'node:fs/promises';
 import { basicParser } from '../parser/basic-parser';
+import { digestFile } from '../parser/digester';
 
 async function main(...args: string[]): Promise<void> {
   if (!args.length) {
@@ -8,18 +9,11 @@ async function main(...args: string[]): Promise<void> {
   }
 
   for (const arg of args) {
-    console.debug('DEBUG reading', arg);
     const bytes = await fsp.readFile(arg);
     try {
       const parsed = basicParser(bytes.buffer);
-      const f = {
-        path: arg,
-        models: parsed.models.map((m) => ({
-          size: m.size,
-          numVoxels: m.voxels.length,
-        })),
-      };
-      console.log(JSON.stringify(f));
+      const d = digestFile(arg, parsed);
+      console.log(JSON.stringify(d));
     } catch (e: any) {
       console.error(arg, e);
     }
