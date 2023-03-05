@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '@blueprintjs/core';
-import { VoxFileDigest } from '../parser/digester';
+import { VoxFileDigest } from '../../parser/digester';
+import style from './demo-model-list.module.scss';
+import clsx from 'clsx';
 
 async function fetchIndex(): Promise<VoxFileDigest[]> {
   const res = await fetch('/ref-models-2/index.txt');
@@ -10,7 +12,7 @@ async function fetchIndex(): Promise<VoxFileDigest[]> {
   return jsonLines.map((line) => JSON.parse(line));
 }
 
-export const DemoModelPicker: React.FC<{ onPick?(): void }> = (props) => {
+export const DemoModelList: React.FC<{ onPick?(): void }> = (props) => {
   const [files, setFiles] = useState<VoxFileDigest[]>([]);
 
   useEffect(() => {
@@ -18,7 +20,7 @@ export const DemoModelPicker: React.FC<{ onPick?(): void }> = (props) => {
   }, []);
 
   return (
-    <table className="text-lg">
+    <table className={clsx('text-lg', style.listTable)}>
       <thead>
         <tr>
           <th>path</th>
