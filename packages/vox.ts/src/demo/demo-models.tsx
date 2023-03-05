@@ -41,7 +41,7 @@ export const DemoModelPicker: React.FC<{ onPick?(): void }> = (props) => {
 
 const ModelPickerCell: React.FC<{ file: VoxFileDigest }> = ({ file }) => {
   const onOpenViewer = (modelIndex: number) => {
-    window.open(`/demo/babylon-viewer?file=${encodeURIComponent(file.path)}&modelId=${modelIndex}`, '_blank');
+    window.open(`/demo/babylon-viewer?file=${encodeURIComponent(file.path)}&modelIndex=${modelIndex}`, '_blank');
   };
   return (
     <div>

@@ -1,5 +1,7 @@
 import * as VoxTypes from '../types/vox-types';
 import { Chunk, RiffLense } from '../util/riff-lense';
+import { VoxelPalette } from '../types/vox-types';
+import { defaultPaletteBytes } from './default-palette';
 
 export function readXyzi(l: RiffLense, size: Chunk, xyzi: Chunk, flipYZ: boolean): VoxTypes.VoxelModel {
   const x = l.int32At(size.contentStart);
@@ -37,7 +39,7 @@ export function readXyzi(l: RiffLense, size: Chunk, xyzi: Chunk, flipYZ: boolean
 }
 
 export function readRgba(l: RiffLense, rgba: Chunk): VoxTypes.VoxelPalette {
-  const palette: VoxTypes.VoxelColor[] = new Array(256);
+  const palette = new Array(256);
   for (let colorIndex = 0; colorIndex < 256; ++colorIndex) {
     const color = uint32ToColor(l.uint32At(rgba.contentStart - 4 + 4 * colorIndex, false) || 0);
     palette[colorIndex] = color;
@@ -82,4 +84,8 @@ export function readDict(l: RiffLense, dict: Chunk): Map<string, string> {
 
 export function readString(l: RiffLense, str: Chunk): string {
   throw 'todo';
+}
+
+export function getDefaultPalette(): VoxelPalette {
+  return defaultPaletteBytes.map((byte, index) => uint32ToColor(byte));
 }

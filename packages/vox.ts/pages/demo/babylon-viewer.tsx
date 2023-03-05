@@ -3,7 +3,7 @@ import { BabylonDemo } from '../../src/demo/babylon/babylon-demo';
 
 const BabylonViewerPage: React.FC = () => {
   const router = useRouter();
-  const query = router.query as { file: string; modelId: string };
+  const query = router.query as { file: string; modelIndex: string };
 
   return (
     <div>

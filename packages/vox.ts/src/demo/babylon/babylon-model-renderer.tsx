@@ -13,7 +13,7 @@ export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: Pars
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const babylonCtx = useBabylonContext(canvasRef);
   const modelFile = props.modelFile;
-  const model = modelFile?.models[props.modelIndex ?? 0];
+  const modelIndex = props.modelIndex;
 
   useAsyncEffect(
     async (mounted, effectReleased) => {
@@ -25,8 +25,8 @@ export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: Pars
       createRefAxes(100, babylonCtx.scene, babylonCtx.deps);
       babylonCtx.engine.start();
 
-      if (modelFile && model) {
-        renderModel(babylonCtx, model, modelFile, () => !mounted.current);
+      if (modelFile && typeof modelIndex === 'number') {
+        renderModel(babylonCtx, modelIndex, modelFile, () => !mounted.current);
       } else {
         babylonCtx.camera.setRadius(50);
         renderPlayground(babylonCtx);
@@ -36,7 +36,7 @@ export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: Pars
         babylonCtx.engine.stop();
       });
     },
-    [babylonCtx, modelFile, model],
+    [babylonCtx, modelFile, modelIndex],
   );
 
   const [enableInspector, setEnableInspector] = useState(false);

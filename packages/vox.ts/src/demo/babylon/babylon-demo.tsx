@@ -8,7 +8,7 @@ import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async
 
 interface ModelPath {
   file: string;
-  modelId: string;
+  modelIndex: string;
 }
 
 export const BabylonDemo: React.FC<{ path?: ModelPath }> = (props) => {
@@ -33,7 +33,7 @@ export const BabylonDemo: React.FC<{ path?: ModelPath }> = (props) => {
         <h1 className="mb-2 text-xl">model viewer</h1>
         <BabylonModelRenderer
           modelFile={model}
-          modelIndex={Number(props.path?.modelId)}
+          modelIndex={Number(props.path?.modelIndex ?? '0')}
           onReset={() => setModel(null)}
         />
       </div>
