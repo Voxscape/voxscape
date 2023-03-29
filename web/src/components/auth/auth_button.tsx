@@ -1,7 +1,6 @@
 import type React from 'react';
 import { FaIcon } from '@jokester/ts-commonutil/lib/react/component/font-awesome';
-import { inServer } from '../../config/build-config';
-import { useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { ModalHandle, useModalApi } from '../modal/modal-context';
 import styles from './auth.module.scss';
 import clsx from 'clsx';
@@ -20,10 +19,10 @@ function AuthProviderPicker(props: { handle: ModalHandle<string> }) {
   return (
     <div className="flex flex-col space-y-4">
       <Button className={styles.authButton} onClick={() => fulfill('google')}>
-        Google Auth
+        Log in with Google
       </Button>
       <Button className={styles.authButton} onClick={() => fulfill('discord')}>
-        Discord Auth
+        Log in with Discord
       </Button>
     </div>
   );
@@ -40,7 +39,9 @@ export const AuthButton: React.FC = () => {
       body: <AuthProviderPicker handle={handle} />,
     }));
 
-    console.debug('provider', provider);
+    if (provider.value) {
+      signIn(provider.value, {});
+    }
   };
 
   if (session.data?.user) {

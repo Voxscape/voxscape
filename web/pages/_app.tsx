@@ -11,6 +11,8 @@ import { isDevBuild } from '../src/config/build-config';
 import type { Session } from 'next-auth';
 import { queryClient, trpcReact, trpcReactClient } from '../src/config/trpc';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { createDebugLogger } from '../shared/logger';
+const debug = createDebugLogger(__filename);
 
 interface PageProps {
   // optional: provided by per-page getServerSideProps()
@@ -20,7 +22,7 @@ interface PageProps {
 const SessionDemo: FC = () => {
   const session = useSession();
   useEffect(() => {
-    console.debug('session as seen by app', session);
+    debug('session as seen by app', session);
   }, [session]);
   return null;
 };
