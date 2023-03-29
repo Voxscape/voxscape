@@ -15,7 +15,8 @@
     "lint:fix": "eslint '@(src|pages)/**/*.@(ts|js|tsx|jsx)' --fix"
   },
   "dependencies": {
-    "@jokester/ts-commonutil": "^0.3.8"
+    "@jokester/ts-commonutil": "^0.4.0",
+    "voxel-triangulation": "^1.3.6"
   },
   "files": [],
   "peerDependencies": {
