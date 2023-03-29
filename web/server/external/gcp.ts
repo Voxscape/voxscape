@@ -16,6 +16,8 @@ function getStorage(): Storage {
   return storage;
 }
 
+console.debug('getStorage', process.env.GOOGLE_SERVICE_ACCOUNT_CRED);
+
 export function getBucket(name = process.env.GOOGLE_STORAGE_BUCKET!): Bucket {
   return getStorage().bucket(name);
 }

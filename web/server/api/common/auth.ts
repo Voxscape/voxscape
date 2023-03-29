@@ -12,6 +12,10 @@ export interface TrpcReqContext {
   };
 }
 
+interface AssertedReqContext {
+  session: NonNullable<TrpcReqContext['session']>;
+}
+
 /**
  * expose next-auth session to trpc
  */
@@ -25,5 +29,5 @@ export const requireUserLogin = t.middleware(({ ctx, next }) => {
   if (!ctx.session) {
     throw new ClientBad(`not logged in`, `UNAUTHORIZED`);
   }
-  return next({ ctx });
+  return next({ ctx: ctx as AssertedReqContext });
 });

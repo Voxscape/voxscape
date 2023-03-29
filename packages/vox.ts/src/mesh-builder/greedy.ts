@@ -33,17 +33,17 @@ export function* extractSurfacesGreedy(
     facets,
   };
 
-  const indexXyz = createVoxelIndexFull(model.voxels, ['x', 'y', 'z']);
-  indexXyz.forEach((grid, x) => {
-    grid.forEach((row, y) => {
+  const indexXyz = createVoxelIndexFull(model.voxels);
+  indexXyz.forEach((layer, x) => {
+    layer.forEach((row, y) => {
       /**
        * looking along z+ direction
        */
-      for (let start = 0; start < row.voxels.length; ) {
-        const count = findVoxelSegment(row.voxels, 'z', start);
+      for (let z = 0; z < row.voxels.length; ) {
+        const count = findVoxelSegment(row.voxels, z);
 
-        const firstVoxel = row.voxels[start];
-        const lastVoxel = row.voxels[start + count - 1];
+        const firstVoxel = row.voxels[z];
+        const lastVoxel = row.voxels[z + count - 1];
 
         facets.push({
           // FIXME
@@ -53,15 +53,13 @@ export function* extractSurfacesGreedy(
           color: palette[firstVoxel.colorIndex],
         });
 
-        start += count;
+        z += count;
       }
     });
   });
 
   yield batch;
 }
-
-type AxisSpec = 'x' | 'y' | 'z';
 
 interface IndexedRow {
   voxels: VoxTypes.Voxel[];
@@ -75,7 +73,7 @@ interface IndexedRow {
  * @param start
  * @return count of voxels, minimum of 1
  */
-export function findVoxelSegment(voxels: readonly VoxTypes.Voxel[], axis: AxisSpec, start: number): number {
+export function findVoxelSegment(voxels: readonly VoxTypes.Voxel[], start: number): number {
   let count = 1;
   while (
     start + count < voxels.length &&
@@ -88,23 +86,19 @@ export function findVoxelSegment(voxels: readonly VoxTypes.Voxel[], axis: AxisSp
   return count;
 }
 
-function createVoxelIndexFull(
-  voxels: readonly VoxTypes.Voxel[],
-  axis: readonly [AxisSpec, AxisSpec, AxisSpec],
-): ReadonlyMap<number, ReadonlyMap<number, IndexedRow>> {
-  const [axis0, axis1, axis2] = axis;
+function createVoxelIndexFull(voxels: readonly VoxTypes.Voxel[]): ReadonlyMap<number, ReadonlyMap<number, IndexedRow>> {
   const built = new DefaultMap<number, DefaultMap<number, IndexedRow>>(
     (axis0) => new DefaultMap((axis1) => ({ voxels: [], set: new Set<number>() })),
   );
 
   voxels.forEach((v) => {
-    const row = built.getOrCreate(v[axis0]).getOrCreate(v[axis1]);
+    const row = built.getOrCreate(v.x).getOrCreate(v.y);
     row.voxels.push(v);
-    row.set.add(v[axis2]);
+    row.set.add(v.z);
   });
   built.forEach((grid) => {
     grid.forEach((row) => {
-      row.voxels.sort((v1, v2) => v1[axis2] - v2[axis2]);
+      row.voxels.sort((v1, v2) => v1.z - v2.z);
     });
   });
   return built;

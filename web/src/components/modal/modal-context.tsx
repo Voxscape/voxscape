@@ -1,4 +1,4 @@
-import React, { createRef, Fragment, useContext, useState } from 'react';
+import React, { createRef, Fragment, ReactChild, ReactElement, useContext, useState } from 'react';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -29,6 +29,9 @@ type ModalResult<T> =
       error: unknown;
     };
 
+/**
+ * @private
+ */
 const CANCEL_SENTRY = Symbol('modal-context-cancel-sentry');
 
 interface ModalInput<T> {
@@ -48,7 +51,12 @@ class ModalApi {
     this._current?.deferred.reject(CANCEL_SENTRY);
   }
 
-  alert(title: string, body: string | React.ReactElement, buttonText = 'OK'): Promise<ModalResult<void>> {
+  alert(
+    title: string,
+    body: string | React.ReactElement,
+    buttonText = 'OK',
+    options?: { closeOnOverlayClick?: boolean },
+  ): Promise<ModalResult<void>> {
     const okButtonRef = createRef<HTMLButtonElement>();
     return this.showElement<void>((input) => {
       const onOk = () => input.deferred.fulfill(undefined);
@@ -57,6 +65,7 @@ class ModalApi {
         <AlertDialog
           motionPreset="slideInBottom"
           leastDestructiveRef={okButtonRef}
+          closeOnOverlayClick={options?.closeOnOverlayClick ?? false}
           onClose={onDismiss}
           isOpen
           isCentered
@@ -111,6 +120,45 @@ class ModalApi {
                 {options?.confirmButtonText ?? 'OK'}
               </Button>
             </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      );
+    });
+  }
+
+  showCustom<T>(
+    builder: (input: ModalInput<T>) => {
+      title?: null | ReactChild;
+      body?: null | ReactChild;
+      footer?: null | ReactChild;
+    },
+    options?: {
+      noCloseButton?: boolean;
+      closeOnOverlayClick?: boolean;
+    },
+  ): Promise<ModalResult<T>> {
+    return this.showElement((input) => {
+      const built = builder(input);
+      const cancelButtonRef = createRef<HTMLButtonElement>();
+      const onDismiss = () => input.deferred.reject(CANCEL_SENTRY);
+
+      return (
+        <AlertDialog
+          motionPreset="slideInBottom"
+          leastDestructiveRef={cancelButtonRef}
+          onClose={onDismiss}
+          closeOnOverlayClick={options?.closeOnOverlayClick}
+          isOpen
+          isCentered
+          blockScrollOnMount
+        >
+          <AlertDialogOverlay />
+
+          <AlertDialogContent>
+            <AlertDialogHeader>{built.title || null}</AlertDialogHeader>
+            {!options?.noCloseButton && <AlertDialogCloseButton />}
+            <AlertDialogBody>{built.body || null}</AlertDialogBody>
+            <AlertDialogFooter>{built.footer || null}</AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
       );

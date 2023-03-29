@@ -3,6 +3,7 @@ import { createDebugLogger } from '../../../shared/logger';
 import { prisma } from '../../prisma';
 import { requireUserLogin } from '../common/auth';
 import { t } from '../common/_base';
+import { getBucket } from '../../external/gcp';
 
 enum ModelContentType {
   vox = 'vox',
@@ -57,13 +58,22 @@ const searchModelQuery = z.object({
   name: z.ostring(),
 });
 
-export const modelsRoute = t.router({
+export const modelsRouter = t.router({
   search: t.procedure.input(searchModelQuery).query(async ({ input }) => {
     const models = await prisma.voxelModel.findMany({ where: {} });
-    // TODO: try superjson transform
     return [];
   }),
-  requestUpload: privateProcedure.input(uploadAssetResponse).mutation(({ input, ctx }) => {
-    return {};
+  requestUpload: privateProcedure.input(uploadModelAssetRequest).mutation(async ({ input, ctx }) => {
+    const pathInBucket = `u-${ctx.session.user.id}/models/${Date.now()}-${input.filename}`;
+    const uploadUrl = await getBucket()
+      .file(pathInBucket)
+      .getSignedUrl({
+        action: 'write',
+        expires: Date.now() + 3 * 3600e3, // 3hr
+        contentType: input.contentType,
+      });
+    return {
+      uploadUrl: uploadUrl[0],
+    };
   }),
 });
