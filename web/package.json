@@ -21,6 +21,7 @@
     "@chakra-ui/react": "^2.4.6",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@google-cloud/storage": "^6.9.4",
     "@jokester/ts-commonutil": "^0.4.0",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.3",
