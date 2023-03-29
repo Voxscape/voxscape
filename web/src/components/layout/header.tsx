@@ -5,6 +5,7 @@ import logoPng from './logo.png';
 import Image from 'next/image';
 import styles from './header.module.scss';
 import Link from 'next/link';
+import { AuthButton } from '../auth/auth_button';
 
 export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
   return (
@@ -20,8 +21,8 @@ export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
         borderColor="primary.50"
         className="max-w-screen-sm md:max-w-screen-md"
       >
-        <Link href="/" title="Voxscape">
-          <Image src={logoPng} alt="Voxscape" className={styles.logoImg} />
+        <Link href="/" title="Voxscape" className={styles.logoText}>
+          Voxscape
         </Link>
         <chakra.span flex="1 0" />
         {props.children}
@@ -40,9 +41,7 @@ export const LayoutHeaderButtons: React.FC = () => {
   return (
     <>
       <ButtonGroup>
-        <Button backgroundColor="primary.500" size="sm" className={styles.button}>
-          Login
-        </Button>
+        <AuthButton />
       </ButtonGroup>
     </>
   );
