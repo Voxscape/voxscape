@@ -51,6 +51,8 @@ model User {
   // ours
   models        VoxelModel[]
   modelViews    VoxelModelView[]
+  updatedAt   DateTime         @updatedAt
+  createdAt   DateTime         @default(now())
 }
 
 // next-auth
@@ -87,4 +89,6 @@ model VoxelModelView {
   perspective     Json
   @@index([modelId])
   @@index([ownerUserId])
+  updatedAt   DateTime         @updatedAt
+  createdAt   DateTime         @default(now())
 }
