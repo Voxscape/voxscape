@@ -21,7 +21,6 @@ export const uploadModelAssetRequest = z.object({
 });
 
 export const uploadAssetResponse = z.object({
-  uploadUrl: z.string().url(),
   url: z.string().url(),
 });
 
@@ -73,7 +72,7 @@ export const modelsRouter = t.router({
         contentType: input.contentType,
       });
     return {
-      uploadUrl: uploadUrl[0],
-    };
+      url: uploadUrl[0],
+    } as z.infer<typeof uploadAssetResponse>;
   }),
 });
