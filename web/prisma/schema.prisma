@@ -70,6 +70,7 @@ model VoxelModel {
   ownerUser   User             @relation(fields: [ownerUserId], references: [id])
   contentType String
   assetUrl    String
+  isPrivate Boolean @default(false)
   modelViews  VoxelModelView[]
   // defaultViewId Int
   // defaultView   VoxelModelView @relation(fields: [defaultViewId], references: [id])
