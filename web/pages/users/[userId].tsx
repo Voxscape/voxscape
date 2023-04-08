@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { TRPCClientError } from '@trpc/client';
 import { Layout } from '../../src/components/layout/layout';
+import { PageMeta } from '../../src/components/meta/page-meta';
 
 function UserDetailContent(props: { userId: string }) {
   const userQuery = trpcReact.user.getById.useQuery({ userId: props.userId });
@@ -14,11 +15,16 @@ function UserDetailContent(props: { userId: string }) {
     if (userQuery.error instanceof TRPCClientError) {
       console.error('userQuery.error.message', userQuery.error.message);
       console.debug('userQuery.error', userQuery.error);
+    } else {
+      console.debug('userQuery.data', userQuery.data);
     }
   }, [userQuery.error]);
 
   return (
-    <div className="whitespace-pre-line break-inside-auto font-mono">{JSON.stringify(userQuery.data, null, 2)}</div>
+    <>
+      <PageMeta title="User" />
+      <div className="whitespace-pre-line break-inside-auto font-mono">{JSON.stringify(userQuery.data, null, 2)}</div>
+    </>
   );
 }
 

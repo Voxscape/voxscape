@@ -41,8 +41,24 @@ export const LayoutHeaderButtons: React.FC = () => {
   return (
     <>
       <ButtonGroup>
+        <NewModelButton />
         <AuthButton />
       </ButtonGroup>
     </>
   );
+};
+
+const NewModelButton = () => {
+  const session = useSession();
+
+  if (session.status === 'authenticated') {
+    return (
+      <Link href="/models/new">
+        <Button size="sm" type="button">
+          new model
+        </Button>
+      </Link>
+    );
+  }
+  return null;
 };

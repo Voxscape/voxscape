@@ -47,7 +47,7 @@ export const AuthButton: React.FC = () => {
   if (session.data?.user) {
     return (
       <Button color="primary.500" size="sm" className={styles.authButton}>
-        {session.data.user.name}
+        {session.data.user.name ?? 'username not set'}
       </Button>
     );
   }

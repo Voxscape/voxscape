@@ -11,8 +11,8 @@ export const DevLinks: FC = () => {
     <div className="p-4 space-x-2">
       <span className="text-xl font-bold">DEV</span>
       <ul className="space-x-2 inline-block w-full">
-        {['/users'].map((path) => (
-          <li key={path}>
+        {['/users', '/models'].map((path) => (
+          <li key={path} className="inline">
             <Link href={path}>{path}</Link>
           </li>
         ))}

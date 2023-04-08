@@ -42,8 +42,6 @@ export const trpcClient = {
   $: trpcImperativeClient,
 } as const;
 
-const TrpcContext = createContext(trpcClient);
-
 export function useTrpcClient(): typeof trpcClient {
-  return useContext(TrpcContext);
+  return trpcClient;
 }

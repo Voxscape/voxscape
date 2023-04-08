@@ -54,10 +54,19 @@ const logger = createDebugLogger(__filename);
 const privateProcedure = t.procedure.use(requireUserLogin);
 
 const searchModelQuery = z.object({
-  name: z.ostring(),
+  query: z.string(),
+});
+
+const findByUserQuery = z.object({
+  userId: z.string(),
 });
 
 export const modelsRouter = t.router({
+  recent: t.procedure.query(async ({ input }) => {
+    const models = await prisma.voxelModel.findMany({ where: {}, orderBy: { createdAt: 'desc' }, take: 20 });
+    return { models };
+  }),
+
   search: t.procedure.input(searchModelQuery).query(async ({ input }) => {
     const models = await prisma.voxelModel.findMany({ where: {} });
     return [];
