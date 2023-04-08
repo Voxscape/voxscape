@@ -12,7 +12,6 @@ export default function UserIndexPage(): ReactElement {
   const session = useSession();
   const trpcClient = useTrpcClient();
   const users = trpcClient.hook.user.list.useQuery({});
-  session.wtf;
 
   const content =
     users.data &&
