@@ -8,7 +8,7 @@ const RefModelsShowPage: NextPage = (props) => {
 
   useEffect(() => {
     if (typeof path === 'string') {
-      const fullPath = `/_ref-models/${path}`;
+      const fullPath = `/ref-models/${path}`;
       fetch(fullPath).then(async (res) => {
         const blob = await res.blob();
         console.debug('blob', blob);

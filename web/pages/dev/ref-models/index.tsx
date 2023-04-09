@@ -14,7 +14,7 @@ const RefModelsIndexPage: NextPage = () => {
       <PageMeta title="ref models" />
       {index.fulfilled ? (
         <RefModelsTable
-          models={index.value}
+          files={index.value}
           onClick={(m) => {
             window.open(`/dev/ref-models/show?path=${encodeURIComponent(m.path)}`, '_blank');
           }}

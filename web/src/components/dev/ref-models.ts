@@ -3,24 +3,32 @@ import { Ordering } from 'fp-ts/Ordering';
 import { sort } from 'fp-ts/Array';
 import { inBrowser } from '../../config/build-config';
 import { Never } from '@jokester/ts-commonutil/lib/concurrency/timing';
+import { VoxFileDigest } from '@voxscape/vox.ts/src/parser/digester';
 
-export interface RefModelIndexEntry {
-  path: string;
-  size: number;
-  numModels: number;
-  numWarnings: number;
+export interface RefModelIndexEntry extends VoxFileDigest {}
+
+async function fetchRefModelIndex(): Promise<VoxFileDigest[]> {
+  const res = await fetch('/ref-models/index.ndjson');
+  const lines = await res.text();
+  const list = lines
+    .split(/\r\n|\r|\n/)
+    .filter((line) => line.trim())
+    .map((line) => {
+      return JSON.parse(line) as VoxFileDigest;
+    })
+    .filter((d) => d.models.length > 0);
+
+  const ord: Ord<VoxFileDigest> = fromCompare(
+    (a, b) => Math.sign(a.models[0].numVoxels - b.models[0].numVoxels) as Ordering,
+  );
+  return sort(ord)(list);
 }
 
-async function fetchRefModelIndex(): Promise<RefModelIndexEntry[]> {
-  const res = await fetch('/_ref-models/index.json');
-  const data = await res.json();
-  return data;
-}
+let fetched: Promise<VoxFileDigest[]> | null = null;
 
-export function fetchBaseModelIndex(): Promise<RefModelIndexEntry[]> {
+export async function fetchBaseModelIndex(): Promise<VoxFileDigest[]> {
   if (!inBrowser) {
     return Never;
   }
-  const ord: Ord<RefModelIndexEntry> = fromCompare((a, b) => Math.sign(a.size - b.size) as Ordering);
-  return fetchRefModelIndex().then((models) => sort(ord)(models));
+  return await (fetched ??= fetchRefModelIndex());
 }
