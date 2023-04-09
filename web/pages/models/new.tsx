@@ -16,12 +16,19 @@ function CreateModelPageContent() {
     const f = fileRef.current.files?.[0];
     if (!f) return;
     try {
-      const uploadUrl = await api.$.models.requestUpload.mutate({ filename: 'wtf.vox', contentType: 'wtf' });
+      const uploadUrl = await api.$.models.requestUpload.mutate({ filename: f.name, contentType: f.type });
 
-      const uploaded = await fetch(uploadUrl.url, {
+      const uploaded = await fetch(uploadUrl.uploadUrl, {
         method: 'PUT',
         body: f,
+        headers: {
+          'Content-Disposition': encodeURIComponent(f.name),
+        },
       });
+      if (!uploaded.ok) {
+        throw new Error(uploaded.statusText);
+      }
+      await modal.alert('uploaded', uploadUrl.publicUrl);
     } catch (e: any) {
       await modal.alert(`???`, e.message);
     }

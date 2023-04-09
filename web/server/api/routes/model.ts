@@ -20,24 +20,10 @@ export const uploadModelAssetRequest = z.object({
   contentType: z.string(),
 });
 
-export const uploadAssetResponse = z.object({
-  url: z.string().url(),
-});
-
 const xyz = z.object({
   x: z.number(),
   y: z.number(),
   z: z.number(),
-});
-
-const modelView = z.object({
-  id: z.number(),
-  cameraPosition: xyz,
-  cameraTarget: xyz,
-});
-
-const modelList = z.object({
-  models: z.array(modelView),
 });
 
 export namespace DevOnly {
@@ -73,15 +59,26 @@ export const modelsRouter = t.router({
   }),
   requestUpload: privateProcedure.input(uploadModelAssetRequest).mutation(async ({ input, ctx }) => {
     const pathInBucket = `u-${ctx.session.user.id}/models/${Date.now()}-${input.filename}`;
-    const uploadUrl = await getBucket()
+    const publicPath = `publicPath: TODO`;
+    const [uploadUrl] = await getBucket()
       .file(pathInBucket)
       .getSignedUrl({
+        version: 'v4',
         action: 'write',
         expires: Date.now() + 3 * 3600e3, // 3hr
-        contentType: input.contentType,
+        contentType: input.contentType, // MUST match the followed PUT request
+        virtualHostedStyle: false, // too complicated to use custom domain
+        // extensionHeaders: {
+        //   'Content-Disposition': encodeURIComponent(input.filename),
+        // },
       });
+
+    const publicUrl = new URL(uploadUrl);
+    publicUrl.search = '';
+
     return {
-      url: uploadUrl[0],
-    } as z.infer<typeof uploadAssetResponse>;
+      uploadUrl,
+      publicUrl: publicUrl.toString(),
+    };
   }),
 });

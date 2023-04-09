@@ -12,11 +12,14 @@ function getStorage(): Storage {
       // we'd better be running in GCE
       storage ||= new Storage();
     }
+    storage.authClient.getClient().then((c) => {
+      if ('email' in c) {
+        console.debug('GCP Service Account', c.email);
+      }
+    });
   }
   return storage;
 }
-
-console.debug('getStorage', process.env.GOOGLE_SERVICE_ACCOUNT_CRED);
 
 export function getBucket(name = process.env.GOOGLE_STORAGE_BUCKET!): Bucket {
   return getStorage().bucket(name);
