@@ -15,7 +15,9 @@
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --watch --noEmit",
     "lint": "next lint -d .",
-    "lint:fix": "next lint --fix -d ."
+    "lint:fix": "next lint --fix -d .",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.4.6",
@@ -65,7 +67,13 @@
     "@babylonjs/serializers": "^5.40.0",
     "@next/bundle-analyzer": "^13",
     "@next/eslint-plugin-next": "^13.1.1",
+    "@storybook/addon-essentials": "^7.0.5",
+    "@storybook/addon-interactions": "^7.0.5",
+    "@storybook/addon-links": "^7.0.5",
+    "@storybook/blocks": "^7.0.5",
     "@storybook/nextjs": "^7.0.5",
+    "@storybook/react": "^7.0.5",
+    "@storybook/testing-library": "^0.0.14-next.2",
     "@types/debug": "^4.1.7",
     "@types/jest": "^29",
     "@types/lodash-es": "^4.17.6",
