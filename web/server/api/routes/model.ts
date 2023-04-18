@@ -5,9 +5,9 @@ import { requireUserLogin } from '../common/auth';
 import { t } from '../common/_base';
 import { getBucket } from '../../external/gcp';
 
-enum ModelContentType {
-  vox = 'vox',
-}
+export const ModelContentType = Object.freeze({
+  vox : 'application/vnd.magicavoxel',
+})
 
 const VoxelModel = z.object({
   id: z.number().optional(),
@@ -25,6 +25,19 @@ const xyz = z.object({
   y: z.number(),
   z: z.number(),
 });
+
+const createModelRequest = z.object({
+  contentType: z.string().and(z.enum([ModelContentType.vox])),
+  assetUrl: z.string().url(),
+  origFilename: z.string(),
+  isPrivate: z.boolean(),
+  cameraPos: xyz,
+  cameraLookAt: xyz,
+})
+
+const createViewRequest = z.object({
+  modelId: z.number(),
+})
 
 export namespace DevOnly {
   export const demoModel = z.object({
@@ -59,7 +72,6 @@ export const modelsRouter = t.router({
   }),
   requestUpload: privateProcedure.input(uploadModelAssetRequest).mutation(async ({ input, ctx }) => {
     const pathInBucket = `u-${ctx.session.user.id}/models/${Date.now()}-${input.filename}`;
-    const publicPath = `publicPath: TODO`;
     const [uploadUrl] = await getBucket()
       .file(pathInBucket)
       .getSignedUrl({
@@ -67,7 +79,7 @@ export const modelsRouter = t.router({
         action: 'write',
         expires: Date.now() + 3 * 3600e3, // 3hr
         contentType: input.contentType, // MUST match the followed PUT request
-        virtualHostedStyle: false, // too complicated to use custom domain
+        virtualHostedStyle: false, // too complicated / restrictive to use custom domain
         // extensionHeaders: {
         //   'Content-Disposition': encodeURIComponent(input.filename),
         // },
@@ -81,4 +93,29 @@ export const modelsRouter = t.router({
       publicUrl: publicUrl.toString(),
     };
   }),
+
+  create: privateProcedure.input(createModelRequest).mutation(async ({input, ctx}) => {
+
+    const saved = await prisma.voxelModel.create({
+      data: {
+        contentType: input.contentType,
+        ownerUserId: ctx.session.user.id,
+        assetUrl: input.assetUrl,
+        isPrivate: input.isPrivate,
+        modelViews: {
+          create: {
+            isDefault: true,
+            perspective: {
+              cameraLookAt: input.cameraLookAt,
+              cameraPos: input.cameraPos,
+            } 
+          }
+        }
+
+      }
+      
+    })
+
+    return [saved]
+  })
 });
