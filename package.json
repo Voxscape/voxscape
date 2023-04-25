@@ -40,7 +40,6 @@
   "packageManager": "yarn@3.2.4",
   "workspaces": [
     "web",
-    "hasura",
     "scripts",
     "packages/vox.ts"
   ]
