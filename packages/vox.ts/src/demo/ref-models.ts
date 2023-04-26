@@ -1,14 +1,14 @@
 import { Ord, fromCompare } from 'fp-ts/lib/Ord';
 import { Ordering } from 'fp-ts/Ordering';
 import { sort } from 'fp-ts/Array';
-import { inBrowser } from '../../config/build-config';
+import { inBrowser } from '@voxscape/web/src/config/build-config';
 import { Never } from '@jokester/ts-commonutil/lib/concurrency/timing';
-import { VoxFileDigest } from '@voxscape/vox.ts/src/parser/digester';
+import { VoxFileDigest } from '../parser/digester';
 
 export interface RefModelIndexEntry extends VoxFileDigest {}
 
-async function fetchRefModelIndex(): Promise<VoxFileDigest[]> {
-  const res = await fetch('/ref-models/index.ndjson');
+async function doFetchRefModelIndex(): Promise<RefModelIndexEntry[]> {
+  const res = await fetch('/ref-models-2/index.ndjson');
   const lines = await res.text();
   const list = lines
     .split(/\r\n|\r|\n/)
@@ -26,9 +26,9 @@ async function fetchRefModelIndex(): Promise<VoxFileDigest[]> {
 
 let fetched: Promise<VoxFileDigest[]> | null = null;
 
-export async function fetchBaseModelIndex(): Promise<VoxFileDigest[]> {
+export async function fetchRefModelIndex(): Promise<RefModelIndexEntry[]> {
   if (!inBrowser) {
     return Never;
   }
-  return await (fetched ??= fetchRefModelIndex());
+  return await (fetched ??= doFetchRefModelIndex());
 }

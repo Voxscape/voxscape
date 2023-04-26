@@ -3,20 +3,13 @@ import { Button } from '@blueprintjs/core';
 import { VoxFileDigest } from '../../parser/digester';
 import style from './demo-model-list.module.scss';
 import clsx from 'clsx';
-
-async function fetchIndex(): Promise<VoxFileDigest[]> {
-  const res = await fetch('/ref-models-2/index.txt');
-  const resText = await res.text();
-  const jsonLines = resText.split('\n').filter((line) => line.startsWith('{'));
-  console.debug('jsonLines', jsonLines);
-  return jsonLines.map((line) => JSON.parse(line));
-}
+import { fetchRefModelIndex } from '../ref-models';
 
 export const DemoModelList: React.FC<{ onPick?(): void }> = (props) => {
   const [files, setFiles] = useState<VoxFileDigest[]>([]);
 
   useEffect(() => {
-    fetchIndex().then(setFiles);
+    fetchRefModelIndex().then(setFiles);
   }, []);
 
   return (
@@ -43,7 +36,7 @@ export const DemoModelList: React.FC<{ onPick?(): void }> = (props) => {
 
 const ModelPickerCell: React.FC<{ file: VoxFileDigest }> = ({ file }) => {
   const onOpenViewer = (modelIndex: number) => {
-    window.open(`/demo/babylon-viewer?file=${encodeURIComponent(file.path)}&modelIndex=${modelIndex}`, '_blank');
+    window.open(`/demo-models/show?file=${encodeURIComponent(file.path)}&modelIndex=${modelIndex}`, '_blank');
   };
   return (
     <div>
