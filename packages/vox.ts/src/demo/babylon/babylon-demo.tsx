@@ -6,9 +6,9 @@ import { basicParser } from '../../parser/basic-parser';
 import { BabylonModelRenderer } from './babylon-model-renderer';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 
-interface ModelPath {
+export interface ModelPath {
   modelUrl: string;
-  modelIndex: string;
+  modelIndex: number | string;
 }
 
 function useDemoModel(modelUrl?: string) {
