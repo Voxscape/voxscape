@@ -8,13 +8,15 @@ const IndexPage: NextPage = (props) => {
     <div>
       <DefaultMeta title="TITLE" />
       <h1>vox.ts demo</h1>
-      <ul>
+      <ul className="space-x-2">
         <li>
           <a className="underscore" href="/demo-models">
             demo models
           </a>
-          <a className="underscore" href="/babylon/demo">
-            model
+        </li>
+        <li>
+          <a className="underscore" href="/demo/babylon">
+            babylonjs demo
           </a>
         </li>
       </ul>

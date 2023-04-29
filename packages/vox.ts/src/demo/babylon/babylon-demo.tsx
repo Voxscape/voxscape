@@ -7,90 +7,64 @@ import { BabylonModelRenderer } from './babylon-model-renderer';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 
 interface ModelPath {
-  file: string;
+  modelUrl: string;
   modelIndex: string;
 }
 
-export const BabylonDemo: React.FC<{ path?: ModelPath }> = (props) => {
+function useDemoModel(modelUrl?: string) {
   const [model, setModel] = useState<null | ParsedVoxFile>(null);
 
   useAsyncEffect(
     async (mounted) => {
-      if (props.path?.file) {
-        const blob = await fetch('/ref-models-2/' + encodeURIComponent(props.path.file).replaceAll('%2F', '/')).then(
-          (_) => _.blob(),
-        );
-        const parsed = basicParser(await binaryConversion.blob.toArrayBuffer(blob));
-        setModel(parsed);
+      if (!modelUrl) {
+        setModel(null);
+        return;
       }
+      const blob = await fetch(modelUrl).then((_) => _.blob());
+      const parsed = basicParser(await binaryConversion.blob.toArrayBuffer(blob));
+      setModel(parsed);
+      // TODO: revoke if it's a object URL
     },
-    [props.path],
+    [modelUrl],
   );
+  return model;
+}
 
+export const BabylonDemo: React.FC<{ initialPath?: ModelPath }> = (props) => {
+  const [modelUrl, setModelUrl] = useState(props.initialPath?.modelUrl);
+  const model = useDemoModel(modelUrl);
   if (model) {
     return (
       <div className="p-4">
         <h1 className="mb-2 text-xl">model viewer</h1>
-        <BabylonModelRenderer
-          modelFile={model}
-          modelIndex={Number(props.path?.modelIndex ?? '0')}
-          onReset={() => setModel(null)}
-        />
+        <BabylonModelRenderer modelFile={model} modelIndex={Number(props.initialPath?.modelIndex ?? '0')} />
       </div>
     );
   } else {
     return (
       <div className="p-4">
         <h1 className="mb-2 text-xl">pick a vox file</h1>
-        <BabylonFilePicker onModelRead={setModel} />
+        <BabylonFilePicker onModelRead={setModelUrl} />
       </div>
     );
   }
 };
 
-const BabylonFilePicker: React.FC<{ onModelRead?(got: ParsedVoxFile): void }> = (props) => {
-  const [reading, setReading] = useState(false);
+const BabylonFilePicker: React.FC<{ onModelRead?(modelUrl: string): void }> = (props) => {
   const mounted = useMounted();
 
   const [file, setFile] = useState<null | File>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    // TODO
-  }, [file]);
-
-  const doReadBlob = async (blob: Blob) => {
-    const bytes = await binaryConversion.blob.toArrayBuffer(blob);
-    const parsed = basicParser(bytes);
-    if (parsed.models.length >= 1) {
-      props.onModelRead?.(parsed);
-    } else {
-      console.error('cannot read model', bytes, parsed);
-    }
-  };
-
   const onFileSelected = async (f: File) => {
     try {
-      if (reading) return;
-      setReading(true);
-      await doReadBlob(f);
+      const url = URL.createObjectURL(f);
+      props.onModelRead?.(url);
     } finally {
       if (mounted.current && inputRef.current) {
-        setReading(false);
         inputRef.current.value = '';
       }
-    }
-  };
-
-  const onRequestResource = async (url: string) => {
-    try {
-      if (reading) return;
-      setReading(true);
-      const blob = await fetch(url).then((_) => _.blob());
-      await doReadBlob(blob);
-    } finally {
-      mounted.current && setReading(false);
     }
   };
 
@@ -102,7 +76,6 @@ const BabylonFilePicker: React.FC<{ onModelRead?(got: ParsedVoxFile): void }> = 
           <input
             type="file"
             ref={inputRef}
-            disabled={reading}
             onChange={(ev) => {
               const file0 = ev.target.files?.item(0);
               file0 && onFileSelected(file0);
@@ -114,8 +87,7 @@ const BabylonFilePicker: React.FC<{ onModelRead?(got: ParsedVoxFile): void }> = 
             <button
               type="button"
               className="border border-white p-1 disabled:opacity-25"
-              disabled={reading}
-              onClick={() => onRequestResource(path)}
+              onClick={() => props.onModelRead?.(path)}
             >
               load {path}
             </button>
