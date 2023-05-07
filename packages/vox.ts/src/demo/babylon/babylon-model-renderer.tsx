@@ -28,7 +28,7 @@ export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: Pars
       if (modelFile && typeof modelIndex === 'number') {
         renderModel(babylonCtx, modelIndex, modelFile, () => !mounted.current);
       } else {
-        babylonCtx.camera.setRadius(50);
+        console.warn('no model to render, rendering playground');
         renderPlayground(babylonCtx);
       }
 

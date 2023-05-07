@@ -135,6 +135,7 @@ function initBabylon(canvas: HTMLCanvasElement, deps: typeof babylonAllDeps): Ba
       setRadius(lower: number, upper = lower) {
         camera.lowerRadiusLimit = lower;
         camera.upperRadiusLimit = upper;
+        camera.radius = upper;
       },
     },
 

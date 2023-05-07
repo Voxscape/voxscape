@@ -25,7 +25,7 @@ export async function renderModel(
   );
 
   ctx.camera.setRadius(
-    0.2 * Math.min(model.size.x, model.size.y, model.size.z),
+    0.5 * Math.min(model.size.x, model.size.y, model.size.z),
     1.5 * Math.max(model.size.x, model.size.y, model.size.z),
   );
 

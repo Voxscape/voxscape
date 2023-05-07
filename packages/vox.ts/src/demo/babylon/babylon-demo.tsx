@@ -97,10 +97,10 @@ const demoAssets = ['/ref-models/chr_fox.vox', '/ref-models/deer.vox', '/ref-mod
 
 export const RefModelList = () => {
   return (
-    <ul>
+    <ul className="space-x-4">
       {demoAssets.map((path, i) => (
-        <li key={i}>
-          <Link href={`/demo-models/show?file=${path}`} />
+        <li key={i} className="inline-block">
+          <Link href={`/demo-models/show?file=${path}`}>{path}</Link>
         </li>
       ))}
     </ul>
