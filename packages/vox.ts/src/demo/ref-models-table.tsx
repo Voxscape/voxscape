@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { RefModelIndexEntry } from './ref-models';
 import { Button, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
+import { DemoModelLink } from "./demo-model-link";
 
 export const RefModelsTable: FC<{
   files: RefModelIndexEntry[];
@@ -30,9 +31,7 @@ export const RefModelsTable: FC<{
                   <Td isNumeric>{model.numVoxels}</Td>
                   <Td isNumeric>{f.warnings.length}</Td>
                   <Td>
-                    <Button type="button" onClick={() => props.onClick?.(f, i)}>
-                      Open
-                    </Button>
+                    <DemoModelLink entry={f} index={i} />
                   </Td>
                 </Tr>
               );

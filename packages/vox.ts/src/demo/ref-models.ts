@@ -1,4 +1,4 @@
-import { Ord, fromCompare } from 'fp-ts/lib/Ord';
+import { fromCompare, Ord } from 'fp-ts/lib/Ord';
 import { Ordering } from 'fp-ts/Ordering';
 import { sort } from 'fp-ts/Array';
 import { inBrowser } from '@voxscape/web/src/config/build-config';
@@ -16,7 +16,11 @@ async function doFetchRefModelIndex(): Promise<RefModelIndexEntry[]> {
     .map((line) => {
       return JSON.parse(line) as VoxFileDigest;
     })
-    .filter((d) => d.models.length > 0);
+    .filter((d) => d.models.length > 0)
+    .map((i) => ({
+      ...i,
+      path: `/ref-models-2/` + i.path,
+    }));
 
   const ord: Ord<VoxFileDigest> = fromCompare(
     (a, b) => Math.sign(a.models[0].numVoxels - b.models[0].numVoxels) as Ordering,

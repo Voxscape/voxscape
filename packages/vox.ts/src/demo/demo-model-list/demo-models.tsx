@@ -4,6 +4,7 @@ import { VoxFileDigest } from '../../parser/digester';
 import style from './demo-model-list.module.scss';
 import clsx from 'clsx';
 import { fetchRefModelIndex } from '../ref-models';
+import { RefModelsTable } from '../ref-models-table';
 
 export const DemoModelList: React.FC<{ onPick?(): void }> = (props) => {
   const [files, setFiles] = useState<VoxFileDigest[]>([]);
@@ -12,26 +13,7 @@ export const DemoModelList: React.FC<{ onPick?(): void }> = (props) => {
     fetchRefModelIndex().then(setFiles);
   }, []);
 
-  return (
-    <table className={clsx('text-lg', style.listTable)}>
-      <thead>
-        <tr>
-          <th>path</th>
-          <th>models</th>
-        </tr>
-      </thead>
-      <tbody>
-        {files.map((file, fileIndex) => (
-          <tr className="border-white" key={file.path}>
-            <td>{file.path}</td>
-            <td>
-              <ModelPickerCell file={file} />
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+  return <RefModelsTable files={files} onClick={(f, i) => props.onPick?.()} />;
 };
 
 const ModelPickerCell: React.FC<{ file: VoxFileDigest }> = ({ file }) => {
