@@ -23,8 +23,10 @@ function useDemoModel(modelUrl?: string) {
       }
       const blob = await fetch(modelUrl.replaceAll('#', encodeURIComponent('#'))).then((_) => _.blob());
       const parsed = basicParser(await binaryConversion.blob.toArrayBuffer(blob));
+      if (!mounted.current) {
+        return;
+      }
       setModel(parsed);
-      // TODO: revoke if it's a object URL
     },
     [modelUrl],
   );
