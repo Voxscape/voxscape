@@ -20,7 +20,13 @@ const BabylonViewerPage: FC = () => {
     console.debug('initialPath', initialPath);
   }
 
-  return <div>{initialPath && <BabylonDemo initialPath={initialPath} />}</div>;
+  return (
+    <div>
+      {initialPath && (
+        <BabylonDemo key={`${initialPath.modelUrl}-${initialPath.modelIndex}}`} initialPath={initialPath} />
+      )}
+    </div>
+  );
 };
 
 export default BabylonViewerPage;
