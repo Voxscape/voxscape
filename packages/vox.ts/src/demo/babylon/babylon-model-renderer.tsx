@@ -21,9 +21,7 @@ export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: Pars
         return;
       }
 
-      // fixme: should re-init scene when model changes
-      createRefAxes(100, babylonCtx.scene, babylonCtx.deps);
-      babylonCtx.engine.start();
+      createRefAxes(100, babylonCtx.scene);
 
       if (modelFile && typeof modelIndex === 'number') {
         renderModel(babylonCtx, modelIndex, modelFile, () => !mounted.current);
@@ -32,6 +30,7 @@ export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: Pars
         renderPlayground(babylonCtx);
       }
 
+      babylonCtx.engine.start();
       effectReleased.then(() => {
         babylonCtx.engine.stop();
       });

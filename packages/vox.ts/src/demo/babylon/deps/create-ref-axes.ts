@@ -1,73 +1,95 @@
-import type { Scene } from '@babylonjs/core';
-import type { babylonAllDeps } from './babylon-deps';
+import {
+  Color3,
+  CreateLines,
+  CreatePlane,
+  DynamicTexture,
+  Mesh,
+  MeshBuilder,
+  Scene,
+  StandardMaterial,
+  Vector3,
+} from '@babylonjs/core';
+
+function makeTextPlane(text: string, color: string, planeSize: number, scene: Scene) {
+  const dynamicTexture = new DynamicTexture('DynamicTexture', 50, scene, true);
+  dynamicTexture.hasAlpha = true;
+  dynamicTexture.drawText(text, 5, 40, 'bold 36px Arial', color, 'transparent', true);
+  const plane = CreatePlane(`text-${text}`, { size: planeSize, updatable: false }, scene);
+  const material = (plane.material = new StandardMaterial('TextPlaneMaterial', scene));
+  plane.material.backFaceCulling = false;
+  material.specularColor = new Color3(0, 0, 0);
+  material.diffuseTexture = dynamicTexture;
+  return plane;
+}
 
 /**
  * likely taken from babylon forum
  * @param {number} size
  * @param {Scene} scene
- * @param {typeof babylonAllDeps} deps
  */
-export function createRefAxes(size: number, scene: Scene, deps: typeof babylonAllDeps): void {
-  const makeTextPlane = function (text: string, color: string, planeSize: number) {
-    const dynamicTexture = new deps.DynamicTexture('DynamicTexture', 50, scene, true);
-    dynamicTexture.hasAlpha = true;
-    dynamicTexture.drawText(text, 5, 40, 'bold 36px Arial', color, 'transparent', true);
-    const plane = deps.Mesh.CreatePlane('TextPlane', planeSize, scene, true);
-    const material = (plane.material = new deps.StandardMaterial('TextPlaneMaterial', scene));
-    plane.material.backFaceCulling = false;
-    material.specularColor = new deps.Color3(0, 0, 0);
-    material.diffuseTexture = dynamicTexture;
-    return plane;
-  };
-  const axisX = deps.MeshBuilder.CreateLines(
-    'axisX',
-    {
-      updatable: false,
-      points: [
-        deps.Vector3.Zero(),
-        new deps.Vector3(size, 0, 0),
-        new deps.Vector3(size * 0.95, 0.05 * size, 0),
-        new deps.Vector3(size, 0, 0),
-        new deps.Vector3(size * 0.95, -0.05 * size, 0),
-      ],
-    },
-    scene,
-  );
-  axisX.color = new deps.Color3(1, 0, 0);
-  const xChar = makeTextPlane('X', 'red', size / 10);
-  xChar.position = new deps.Vector3(0.9 * size, -0.05 * size, 0);
-  const axisY = deps.MeshBuilder.CreateLines(
-    'axisY',
-    {
-      updatable: false,
-      points: [
-        deps.Vector3.Zero(),
-        new deps.Vector3(0, size, 0),
-        new deps.Vector3(-0.05 * size, size * 0.95, 0),
-        new deps.Vector3(0, size, 0),
-        new deps.Vector3(0.05 * size, size * 0.95, 0),
-      ],
-    },
-    scene,
-  );
-  axisY.color = new deps.Color3(0, 1, 0);
-  const yChar = makeTextPlane('Y', 'green', size / 10);
-  yChar.position = new deps.Vector3(0, 0.9 * size, -0.05 * size);
-  const axisZ = deps.MeshBuilder.CreateLines(
-    'axisZ',
-    {
-      updatable: false,
-      points: [
-        deps.Vector3.Zero(),
-        new deps.Vector3(0, 0, size),
-        new deps.Vector3(0, -0.05 * size, size * 0.95),
-        new deps.Vector3(0, 0, size),
-        new deps.Vector3(0, 0.05 * size, size * 0.95),
-      ],
-    },
-    scene,
-  );
-  axisZ.color = new deps.Color3(0, 0, 1);
-  const zChar = makeTextPlane('Z', 'blue', size / 10);
-  zChar.position = new deps.Vector3(0, 0.05 * size, 0.9 * size);
+export function createRefAxes(size: number, scene: Scene): Mesh {
+  const group = new Mesh('axis-group', scene);
+
+  {
+    const axisX = CreateLines(
+      'axisX',
+      {
+        updatable: false,
+        points: [
+          Vector3.Zero(),
+          new Vector3(size, 0, 0),
+          new Vector3(size * 0.95, 0.05 * size, 0),
+          new Vector3(size, 0, 0),
+          new Vector3(size * 0.95, -0.05 * size, 0),
+        ],
+      },
+      scene,
+    );
+    axisX.color = new Color3(1, 0, 0);
+    const xChar = makeTextPlane('X', 'red', size / 10, scene);
+    xChar.position = new Vector3(0.9 * size, -0.05 * size, 0);
+    group.addChild(axisX).addChild(xChar);
+  }
+
+  {
+    const axisY = CreateLines(
+      'axisY',
+      {
+        updatable: false,
+        points: [
+          Vector3.Zero(),
+          new Vector3(0, size, 0),
+          new Vector3(-0.05 * size, size * 0.95, 0),
+          new Vector3(0, size, 0),
+          new Vector3(0.05 * size, size * 0.95, 0),
+        ],
+      },
+      scene,
+    );
+    axisY.color = new Color3(0, 1, 0);
+    const yChar = makeTextPlane('Y', 'green', size / 10, scene);
+    yChar.position = new Vector3(0, 0.9 * size, -0.05 * size);
+    group.addChild(axisY).addChild(yChar);
+  }
+  {
+    const axisZ = CreateLines(
+      'axisZ',
+      {
+        updatable: false,
+        points: [
+          Vector3.Zero(),
+          new Vector3(0, 0, size),
+          new Vector3(0, -0.05 * size, size * 0.95),
+          new Vector3(0, 0, size),
+          new Vector3(0, 0.05 * size, size * 0.95),
+        ],
+      },
+      scene,
+    );
+    axisZ.color = new Color3(0, 0, 1);
+    const zChar = makeTextPlane('Z', 'blue', size / 10, scene);
+    zChar.position = new Vector3(0, 0.05 * size, 0.9 * size);
+    group.addChild(axisZ).addChild(zChar);
+  }
+  return group;
 }
