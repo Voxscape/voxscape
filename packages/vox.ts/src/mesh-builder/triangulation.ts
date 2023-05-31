@@ -13,7 +13,7 @@ const debug = require('debug')('vox:mesh-builder:triangulation');
  * mostly a port from https://github.com/FlorianFe/vox-viewer/blob/master/vox-viewer.js
  */
 export async function buildTriangulatedMesh(f: Vox.VoxelModel, palette: Vox.VoxelPalette, scene: Scene, options?: {name: string}): Promise<Mesh> {
-  const xyzc: ndarray.NdArray = zeros(f.size.x, f.size.y, f.size.z);
+  const xyzc: ndarray.NdArray = zeros([f.size.x, f.size.y, f.size.z]);
   f.voxels.forEach((v) => {
     xyzc.set(v.x, v.y, v.z, v.colorIndex);
   });
