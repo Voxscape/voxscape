@@ -4,6 +4,25 @@ import { BabylonMeshBuilder } from '../../babylon/babylon-mesh-builder';
 import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 import { getDefaultPalette } from '../../parser/chunk-reader';
 
+export async function renderModelAlt(ctx: BabylonContext,
+  voxFile: ParsedVoxFile,
+  modelIndex: number,
+  ): Promise<void> {
+  if (!voxFile.palette) {
+    console.warn('no palette found, fallback to use default');
+  }
+
+  const model = voxFile.models[modelIndex];
+  const palette = voxFile.palette ?? getDefaultPalette();
+
+  const mesh = await BabylonMeshBuilder.buildTriangulatedMesh(model, palette, ctx.scene);
+
+  ctx.camera.setRadius(
+    0.5 * Math.min(model.size.x, model.size.y, model.size.z),
+    1.5 * Math.max(model.size.x, model.size.y, model.size.z),
+  );
+}
+
 export async function renderModel(
   ctx: BabylonContext,
   modelIndex: number,

@@ -3,7 +3,7 @@ import { ParsedVoxFile } from '../../types/vox-types';
 import { useBabylonContext, useBabylonInspector } from './init-babylon';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { createRefAxes } from './deps/create-ref-axes';
-import { renderModel } from './render-vox-model';
+import { renderModel, renderModelAlt } from './render-vox-model';
 import { renderPlayground } from './render-playground';
 import classNames from 'classnames';
 
@@ -23,8 +23,9 @@ export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: Pars
 
       createRefAxes(100, babylonCtx.scene);
 
-      if (modelFile && typeof modelIndex === 'number') {
-        renderModel(babylonCtx, modelIndex, modelFile, () => !mounted.current);
+      if (typeof modelIndex === 'number' && modelFile?.models[modelIndex]) {
+        // renderModel(babylonCtx, modelIndex, modelFile, () => !mounted.current);
+        renderModelAlt(babylonCtx, modelFile, modelIndex);
       } else {
         console.warn('no model to render, rendering playground');
         renderPlayground(babylonCtx);

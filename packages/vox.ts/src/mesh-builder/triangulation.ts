@@ -12,7 +12,7 @@ const debug = require('debug')('vox:mesh-builder:triangulation');
 /**
  * mostly a port from https://github.com/FlorianFe/vox-viewer/blob/master/vox-viewer.js
  */
-export async function buildTriangulatedMesh(f: Vox.VoxelModel, ctx: Vox.ParsedVoxFile, scene: Scene): Promise<Mesh> {
+export async function buildTriangulatedMesh(f: Vox.VoxelModel, palette: Vox.VoxelPalette, scene: Scene, options?: {name: string}): Promise<Mesh> {
   const xyzc: ndarray.NdArray = zeros(f.size.x, f.size.y, f.size.z);
   f.voxels.forEach((v) => {
     xyzc.set(v.x, v.y, v.z, v.colorIndex);
@@ -34,14 +34,14 @@ export async function buildTriangulatedMesh(f: Vox.VoxelModel, ctx: Vox.ParsedVo
     voxelValues: number[];
   } = triangulateVoxels(transposed);
 
-  console.debug('triangulaized', triangulaized);
+  debug('triangulaized', triangulaized);
 
-  const colors = expandColor(ctx.palette ?? getDefaultPalette());
+  const colors = expandColor(palette);
 
   /**
    * @see https://doc.babylonjs.com/features/featuresDeepDive/mesh/creation/custom/custom
    */
-  const mesh = new Mesh('voxel', scene);
+  const mesh = new Mesh(options?.name ?? 'voxel', scene);
 
   const vertexData = new VertexData();
   vertexData.positions = triangulaized.verices;
