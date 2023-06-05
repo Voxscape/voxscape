@@ -7,16 +7,25 @@ import ndarray from 'ndarray';
 import triangulateVoxels from 'voxel-triangulation';
 import type * as Vox from '../types/vox-types';
 import { getDefaultPalette } from '../parser/chunk-reader';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const debug = require('debug')('vox:mesh-builder:triangulation');
 
 /**
  * mostly a port from https://github.com/FlorianFe/vox-viewer/blob/master/vox-viewer.js
  */
-export async function buildTriangulatedMesh(f: Vox.VoxelModel, palette: Vox.VoxelPalette, scene: Scene, options?: {name: string}): Promise<Mesh> {
+export async function buildTriangulatedMesh(
+  f: Vox.VoxelModel,
+  palette: Vox.VoxelPalette,
+  scene: Scene,
+  options?: { name: string },
+): Promise<Mesh> {
+  debug('model', f);
   const xyzc: ndarray.NdArray = zeros([f.size.x, f.size.y, f.size.z]);
   f.voxels.forEach((v) => {
     xyzc.set(v.x, v.y, v.z, v.colorIndex);
   });
+
+  debug('voxels', xyzc);
   /**
    * transpose to (y,z,x)=>color ndarray?
    * @xxx why is this required?
