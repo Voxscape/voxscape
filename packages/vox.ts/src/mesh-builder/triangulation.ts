@@ -19,8 +19,16 @@ export async function buildTriangulatedMesh(
   scene: Scene,
   options?: { name: string },
 ): Promise<Mesh> {
+  const vertexData = triangulate(f, palette);
+  const mesh = new Mesh(options?.name ?? 'voxel', scene);
+  vertexData.applyToMesh(mesh);
+
+  return mesh;
+}
+
+export function triangulate(f: Vox.VoxelModel, palette: Vox.VoxelPalette): VertexData {
   debug('model', f);
-  const xyzc: ndarray.NdArray = zeros([f.size.x, f.size.y, f.size.z]);
+  const xyzc: ndarray.NdArray = zeros([f.size.x, f.size.y, f.size.z], 'float');
   f.voxels.forEach((v) => {
     xyzc.set(v.x, v.y, v.z, v.colorIndex);
   });
@@ -50,16 +58,12 @@ export async function buildTriangulatedMesh(
   /**
    * @see https://doc.babylonjs.com/features/featuresDeepDive/mesh/creation/custom/custom
    */
-  const mesh = new Mesh(options?.name ?? 'voxel', scene);
-
   const vertexData = new VertexData();
   vertexData.positions = triangulaized.verices;
   vertexData.indices = triangulaized.indices;
   vertexData.normals = triangulaized.normals;
   vertexData.colors = colors;
-
-  vertexData.applyToMesh(mesh);
-  return mesh;
+  return vertexData;
 }
 
 function expandColor(palette: Vox.VoxelPalette): Float32Array {
