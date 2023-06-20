@@ -1,5 +1,5 @@
 import vox from 'vox.js';
-import { wait } from '../util/timing';
+import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 
 export async function parseBuffer(buffer: ArrayBuffer): Promise<vox.VoxelData> {
   await wait(0);

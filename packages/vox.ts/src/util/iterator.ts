@@ -1,4 +1,4 @@
-import { wait } from './timing';
+import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 
 function first<T>(it: Iterable<T>): T | null {
   for (const i of it) return i;
