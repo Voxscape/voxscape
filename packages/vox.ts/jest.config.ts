@@ -1,5 +1,9 @@
-module.exports = {
-  preset: 'ts-jest/presets/js-with-ts',
+import type { JestConfigWithTsJest } from 'ts-jest';
+
+import { defaults as tsjPreset } from 'ts-jest/presets';
+
+const config: JestConfigWithTsJest = {
+  preset: 'ts-jest',
   roots: ['src'],
   transformIgnorePatterns: ['<rootDir>/node_modules/.*\\.js', '<rootDir>/build/.*\\.js'],
   testMatch: ['**/*\\.(spec|test)\\.(ts|js|tsx|jsx)'],
@@ -11,12 +15,18 @@ module.exports = {
       '<rootDir>/src/test/__mocks__/resolves-to-path.json',
     '\\.(css|less|scss|sass)$': '<rootDir>/src/test/__mocks__/resolves-to-path.json',
   },
-  globals: {
-    'ts-jest': {
-      tsconfig: {
-        jsx: 'react',
-        skipLibCheck: true,
+  transform: {
+    ['^.+\\.(ts|tsx)$']: [
+      'ts-jest',
+      {
+        ...tsjPreset,
+        tsconfig: {
+          jsx: 'react',
+          skipLibCheck: true,
+        },
       },
-    },
+    ],
   },
 };
+
+export default config;
