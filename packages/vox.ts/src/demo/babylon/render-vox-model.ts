@@ -3,11 +3,9 @@ import { ParsedVoxFile, VoxelModel } from '../../types/vox-types';
 import { BabylonMeshBuilder } from '../../babylon/babylon-mesh-builder';
 import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 import { getDefaultPalette } from '../../parser/chunk-reader';
+import { buildTriangulatedMesh } from '../../mesh-builder/triangulation';
 
-export async function renderModelAlt(ctx: BabylonContext,
-  voxFile: ParsedVoxFile,
-  modelIndex: number,
-  ): Promise<void> {
+export async function renderModelAlt(ctx: BabylonContext, voxFile: ParsedVoxFile, modelIndex: number): Promise<void> {
   if (!voxFile.palette) {
     console.warn('no palette found, fallback to use default');
   }
@@ -15,7 +13,7 @@ export async function renderModelAlt(ctx: BabylonContext,
   const model = voxFile.models[modelIndex];
   const palette = voxFile.palette ?? getDefaultPalette();
 
-  const mesh = await BabylonMeshBuilder.buildTriangulatedMesh(model, palette, ctx.scene);
+  const mesh = await buildTriangulatedMesh(model, palette, ctx.scene);
 
   ctx.camera.setRadius(
     0.5 * Math.min(model.size.x, model.size.y, model.size.z),

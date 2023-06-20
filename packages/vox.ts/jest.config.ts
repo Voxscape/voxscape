@@ -1,32 +1,18 @@
-import type { JestConfigWithTsJest } from 'ts-jest';
+const nodeModulesToTranspile = ['@babylonjs'];
 
-import { defaults as tsjPreset } from 'ts-jest/presets';
-
-const config: JestConfigWithTsJest = {
-  preset: 'ts-jest',
+export default {
   roots: ['src'],
-  transformIgnorePatterns: ['<rootDir>/node_modules/.*\\.js', '<rootDir>/build/.*\\.js'],
+  transformIgnorePatterns: [`node_modules/(?!(${nodeModulesToTranspile.join('|')})/)`, '<rootDir>/build/.*\\.js'],
   testMatch: ['**/*\\.(spec|test)\\.(ts|js|tsx|jsx)'],
   collectCoverageFrom: ['src/**/*.(ts|tsx)', '!out/', '!build/', '!**/node_modules', '!/coverage'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   coverageReporters: ['json', 'lcov', 'text', 'html'],
   moduleNameMapper: {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-      '<rootDir>/src/test/__mocks__/resolves-to-path.json',
-    '\\.(css|less|scss|sass)$': '<rootDir>/src/test/__mocks__/resolves-to-path.json',
+      '<rootDir>/test/mocks/resolves-to-path.json',
+    '\\.(css|less|scss|sass)$': '<rootDir>/test/mocks/resolves-to-path.json',
   },
   transform: {
-    ['^.+\\.(ts|tsx)$']: [
-      'ts-jest',
-      {
-        ...tsjPreset,
-        tsconfig: {
-          jsx: 'react',
-          skipLibCheck: true,
-        },
-      },
-    ],
+    ['^.+\\.(ts|tsx|js|jsx)$']: ['@swc/jest'],
   },
 };
-
-export default config;

@@ -1,8 +1,9 @@
-module.exports = {
-  preset: 'ts-jest/presets/js-with-ts',
+import type { Config } from 'jest';
+const nodeModulesToTranspile = ['@babylonjs'];
+
+export default {
   roots: ['src', 'test'],
-  transformIgnorePatterns: ['<rootDir>/node_modules/.*\\.js', '<rootDir>/build/.*\\.js'],
-  testMatch: ['**/*\\.(spec|test)\\.(ts|js|tsx|jsx)'],
+  transformIgnorePatterns: [`node_modules/(?!(${nodeModulesToTranspile.join('|')})/)`, '<rootDir>/build/.*\\.js'],
   collectCoverageFrom: ['src/**/*.(ts|tsx)', '!out/', '!build/', '!**/node_modules', '!/coverage'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   coverageReporters: ['json', 'lcov', 'text', 'html'],
@@ -11,11 +12,7 @@ module.exports = {
       '<rootDir>/test/mocks/resolves-to-path.json',
     '\\.(css|less|scss|sass)$': '<rootDir>/test/mocks/resolves-to-path.json',
   },
-  globals: {
-    'ts-jest': {
-      tsconfig: {
-        jsx: 'react',
-      },
-    },
+  transform: {
+    ['^.+\\.(ts|tsx|js|jsx)$']: ['@swc/jest', {}],
   },
-};
+} as Config;
