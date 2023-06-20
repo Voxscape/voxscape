@@ -1,6 +1,7 @@
 import { chrFoxVox } from '../__test__/ref-models';
 import { parseBuffer as voxjsParseBuffer } from './voxjs-promised';
 import { basicParser } from '../parser/basic-parser';
+import { getDefaultPalette } from '../parser/chunk-reader';
 
 describe('vox.ts', () => {
   it('got same result with vox.js', async () => {
@@ -24,6 +25,7 @@ describe('vox.ts', () => {
     }
 
     // skip palette[0]: voxjs fills it with palette[1] for unknown reason
-    expect(voxtsParsed.palette.slice(1)).toEqual(voxjsParsed.palette.slice(1));
+    const palette = voxjsParsed.palette ?? getDefaultPalette();
+    expect(palette.slice(1)).toEqual(voxjsParsed.palette.slice(1));
   });
 });

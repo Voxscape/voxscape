@@ -74,7 +74,7 @@ interface IndexedRow {
  * @param start
  * @return count of voxels, minimum of 1
  */
-export function findVoxelSegment(voxels: readonly VoxTypes.Voxel[], start: number): number {
+export function findVoxelSegment(voxels: readonly VoxTypes.Voxel[], axis: string, start: number): number {
   let count = 1;
   while (
     start + count < voxels.length &&
