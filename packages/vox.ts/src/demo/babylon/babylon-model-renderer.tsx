@@ -21,14 +21,13 @@ export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: Pars
         return;
       }
 
-      createRefAxes(100, babylonCtx.scene);
+      createRefAxes(10, babylonCtx.scene);
 
       if (typeof modelIndex === 'number' && modelFile?.models[modelIndex]) {
         // renderModel(babylonCtx, modelIndex, modelFile, () => !mounted.current);
         renderModelAlt(babylonCtx, modelFile, modelIndex);
       } else {
         console.warn('no model to render, rendering playground');
-        renderPlayground(babylonCtx);
       }
 
       babylonCtx.engine.start();
