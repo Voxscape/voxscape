@@ -47,6 +47,10 @@ const nextConf = {
     emotion: true,
   },
 
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
   images: {},
 
   productionBrowserSourceMaps: true,

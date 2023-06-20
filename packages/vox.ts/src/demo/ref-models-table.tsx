@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { RefModelIndexEntry } from './ref-models';
 import { Button, Table, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from '@chakra-ui/react';
-import { DemoModelLink } from "./demo-model-link";
+import { DemoModelLink } from './demo-model-link';
 
 export const RefModelsTable: FC<{
   files: RefModelIndexEntry[];

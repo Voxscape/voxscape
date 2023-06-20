@@ -6,8 +6,8 @@ import { t } from '../common/_base';
 import { getBucket } from '../../external/gcp';
 
 export const ModelContentType = Object.freeze({
-  vox : 'application/vnd.magicavoxel',
-})
+  vox: 'application/vnd.magicavoxel',
+});
 
 const VoxelModel = z.object({
   id: z.number().optional(),
@@ -33,11 +33,11 @@ const createModelRequest = z.object({
   isPrivate: z.boolean(),
   cameraPos: xyz,
   cameraLookAt: xyz,
-})
+});
 
 const createViewRequest = z.object({
   modelId: z.number(),
-})
+});
 
 export namespace DevOnly {
   export const demoModel = z.object({
@@ -94,8 +94,7 @@ export const modelsRouter = t.router({
     };
   }),
 
-  create: privateProcedure.input(createModelRequest).mutation(async ({input, ctx}) => {
-
+  create: privateProcedure.input(createModelRequest).mutation(async ({ input, ctx }) => {
     const saved = await prisma.voxelModel.create({
       data: {
         contentType: input.contentType,
@@ -105,17 +104,17 @@ export const modelsRouter = t.router({
         modelViews: {
           create: {
             isDefault: true,
+            previewImageUrl: 'TODO',
+            ownerUserId: ctx.session.user.id,
             perspective: {
               cameraLookAt: input.cameraLookAt,
               cameraPos: input.cameraPos,
-            } 
-          }
-        }
+            },
+          },
+        },
+      },
+    });
 
-      }
-      
-    })
-
-    return [saved]
-  })
+    return [saved];
+  }),
 });
