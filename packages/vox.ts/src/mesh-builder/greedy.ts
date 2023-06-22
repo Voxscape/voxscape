@@ -1,5 +1,5 @@
 // @ts-nocheck
-import * as VoxTypes from '../types/vox-types';
+import * as Vox from '../types/vox-types';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 
 export interface FacetSpec {
@@ -14,6 +14,17 @@ export interface FacetSpec {
 interface SurfaceBatch {
   readonly progress: number;
   readonly facets: readonly FacetSpec[];
+}
+
+class GreedyExtractor {
+  private readonly index: VoxelIndex;
+  constructor(private m: Vox.VoxelModel, private p: Vox.VoxelPalette) {
+    this.index = createVoxelIndexFull(m.voxels);
+  }
+
+  extractGrid(x: number): FacetSpec[] {
+    return [];
+  }
 }
 
 /**
@@ -87,9 +98,14 @@ export function findVoxelSegment(voxels: readonly VoxTypes.Voxel[], axis: string
   return count;
 }
 
+/**
+ *
+ * @param voxels
+ * @return x => y => ROW
+ */
 function createVoxelIndexFull(voxels: readonly VoxTypes.Voxel[]): ReadonlyMap<number, ReadonlyMap<number, IndexedRow>> {
   const built = new DefaultMap<number, DefaultMap<number, IndexedRow>>(
-    (axis0) => new DefaultMap((axis1) => ({ voxels: [], set: new Set<number>() })),
+    (x) => new DefaultMap((y) => ({ voxels: [], set: new Set<number>() })),
   );
 
   voxels.forEach((v) => {
@@ -97,10 +113,12 @@ function createVoxelIndexFull(voxels: readonly VoxTypes.Voxel[]): ReadonlyMap<nu
     row.voxels.push(v);
     row.set.add(v.z);
   });
-  built.forEach((grid) => {
-    grid.forEach((row) => {
-      row.voxels.sort((v1, v2) => v1.z - v2.z);
+  built.forEach((yzGrid, x) => {
+    yzGrid.forEach((zRow, y) => {
+      zRow.voxels.sort((v1, v2) => v1.z - v2.z);
     });
   });
   return built;
 }
+
+type VoxelIndex = ReturnType<typeof createVoxelIndexFull>;

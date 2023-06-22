@@ -4,7 +4,6 @@ import { useBabylonContext, useBabylonInspector } from './init-babylon';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { createRefAxes } from './deps/create-ref-axes';
 import { renderModel, renderModelAlt } from './render-vox-model';
-import { renderPlayground } from './render-playground';
 import classNames from 'classnames';
 
 export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: ParsedVoxFile; modelIndex?: number }> = (
