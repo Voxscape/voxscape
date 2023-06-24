@@ -1,3 +1,4 @@
+import { set } from 'lodash-es';
 import * as Vox from '../types/vox-types';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 
@@ -5,7 +6,7 @@ import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
  *
  */
 export interface FacetSpec {
-  positions: number[] & { [9]: number };
+  positions: number[]
   // no indexes:
   colorIndex: number;
 }
@@ -20,6 +21,17 @@ class GreedyExtractor {
   constructor(private m: Vox.VoxelModel, private p: Vox.VoxelPalette) {
     this.index = createVoxelIndexFull(m.voxels);
   }
+}
+
+function toCoordinates(v: Vox.Voxel) {
+  return {
+    x1: v.x - 1,
+    x2: v.x,
+    y1: v.y - 1,
+    y2: v.y,
+    z1: v.z - 1,
+    z2: v.z,
+  };
 }
 
 export function splitRow(voxels: Vox.Voxel[]): Vox.Voxel[][] {
@@ -62,6 +74,13 @@ export function* extractSurfacesGreedy(
       const segments = splitRow(zRow.voxels);
 
       for (const segment of segments) {
+        const zStart = segment[0].z;
+        const zEnd = segment[segment.length - 1].z;
+
+        facets.push({
+        positions: [// TODO */],
+          colorIndex: segment[0].colorIndex,
+        })
       }
     }
   }
