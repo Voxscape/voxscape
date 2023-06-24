@@ -1,14 +1,13 @@
-// @ts-nocheck
 import * as Vox from '../types/vox-types';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 
+/**
+ *
+ */
 export interface FacetSpec {
-  p1: readonly [number, number, number];
-  p2: readonly [number, number, number];
-  p3: readonly [number, number, number];
-
-  color: VoxTypes.VoxelColor;
-  // TODO: material?
+  positions: number[] & { [9]: number };
+  // no indexes:
+  colorIndex: number;
 }
 
 interface SurfaceBatch {
@@ -21,10 +20,20 @@ class GreedyExtractor {
   constructor(private m: Vox.VoxelModel, private p: Vox.VoxelPalette) {
     this.index = createVoxelIndexFull(m.voxels);
   }
+}
 
-  extractGrid(x: number): FacetSpec[] {
-    return [];
+export function splitRow(voxels: Vox.Voxel[]): Vox.Voxel[][] {
+  const segments: Vox.Voxel[][] = [];
+
+  for (let i = 0; i < voxels.length; i++) {
+    const lastSegment = segments[segments.length - 1];
+    if (lastSegment && lastSegment[lastSegment.length - 1].colorIndex === voxels[i].z) {
+      lastSegment.push(voxels[i]);
+    } else {
+      segments.push([voxels[i]]);
+    }
   }
+  return segments;
 }
 
 /**
@@ -34,8 +43,8 @@ class GreedyExtractor {
  * @param batchSize
  */
 export function* extractSurfacesGreedy(
-  model: VoxTypes.VoxelModel,
-  palette: VoxTypes.VoxelPalette,
+  model: Vox.VoxelModel,
+  palette: Vox.VoxelPalette,
   batchSize: number,
 ): IterableIterator<SurfaceBatch> {
   const facets: FacetSpec[] = [];
@@ -45,57 +54,19 @@ export function* extractSurfacesGreedy(
     facets,
   };
 
-  const indexXyz = createVoxelIndexFull(model.voxels);
-  indexXyz.forEach((layer, x) => {
-    layer.forEach((row, y) => {
-      /**
-       * looking along z+ direction
-       */
-      for (let z = 0; z < row.voxels.length; ) {
-        const count = findVoxelSegment(row.voxels, z);
+  const index = createVoxelIndexFull(model.voxels);
 
-        const firstVoxel = row.voxels[z];
-        const lastVoxel = row.voxels[z + count - 1];
-
-        facets.push({
-          // FIXME
-          p1: [x, y, firstVoxel.z],
-          p2: [x, y, firstVoxel.z],
-          p3: [x, y, firstVoxel.z],
-          color: palette[firstVoxel.colorIndex],
-        });
-
-        z += count;
-      }
-    });
-  });
-
+  for (const [x, yzGrid] of index) {
+    for (const [y, zRow] of yzGrid) {
+      const segments = splitRow(zRow.voxels);
+    }
+  }
   yield batch;
 }
 
 interface IndexedRow {
-  voxels: VoxTypes.Voxel[];
-  set: Set<number>;
-}
-
-/**
- * find
- * @param voxels
- * @param axis
- * @param start
- * @return count of voxels, minimum of 1
- */
-export function findVoxelSegment(voxels: readonly VoxTypes.Voxel[], axis: string, start: number): number {
-  let count = 1;
-  while (
-    start + count < voxels.length &&
-    voxels[start + count].colorIndex === voxels[start].colorIndex &&
-    voxels[start + count][axis] === 1 + voxels[start + count - 1][axis]
-  ) {
-    ++count;
-  }
-
-  return count;
+  voxels: Vox.Voxel[];
+  // set: Set<number>;
 }
 
 /**
@@ -103,15 +74,19 @@ export function findVoxelSegment(voxels: readonly VoxTypes.Voxel[], axis: string
  * @param voxels
  * @return x => y => ROW
  */
-function createVoxelIndexFull(voxels: readonly VoxTypes.Voxel[]): ReadonlyMap<number, ReadonlyMap<number, IndexedRow>> {
+function createVoxelIndexFull(voxels: readonly Vox.Voxel[]): ReadonlyMap<number, ReadonlyMap<number, IndexedRow>> {
   const built = new DefaultMap<number, DefaultMap<number, IndexedRow>>(
-    (x) => new DefaultMap((y) => ({ voxels: [], set: new Set<number>() })),
+    (x) =>
+      new DefaultMap((y) => ({
+        voxels: [],
+        // set: new Set<number>()
+      })),
   );
 
   voxels.forEach((v) => {
     const row = built.getOrCreate(v.x).getOrCreate(v.y);
     row.voxels.push(v);
-    row.set.add(v.z);
+    // row.set.add(v.z);
   });
   built.forEach((yzGrid, x) => {
     yzGrid.forEach((zRow, y) => {
