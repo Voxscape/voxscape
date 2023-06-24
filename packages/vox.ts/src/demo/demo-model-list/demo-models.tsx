@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@blueprintjs/core';
 import { VoxFileDigest } from '../../parser/digester';
 import style from './demo-model-list.module.scss';
 import clsx from 'clsx';
@@ -26,9 +25,9 @@ const ModelPickerCell: React.FC<{ file: VoxFileDigest }> = ({ file }) => {
         <div key={modelIndex}>
           model#{modelIndex}: {m.size.x}x{m.size.y}x{m.size.z} / {m.numVoxels} voxels
           <br />
-          <Button type="button" onClick={() => onOpenViewer(modelIndex)}>
+          <button type="button" onClick={() => onOpenViewer(modelIndex)}>
             preview
-          </Button>
+          </button>
           <hr />
         </div>
       ))}

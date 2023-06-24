@@ -27,7 +27,8 @@ export function splitRow(voxels: Vox.Voxel[]): Vox.Voxel[][] {
 
   for (let i = 0; i < voxels.length; i++) {
     const lastSegment = segments[segments.length - 1];
-    if (lastSegment && lastSegment[lastSegment.length - 1].colorIndex === voxels[i].z) {
+    const lastVoxel = lastSegment && lastSegment[lastSegment.length - 1];
+    if (lastVoxel && lastVoxel.z === voxels[i].z - 1 && lastVoxel.colorIndex === voxels[i].colorIndex) {
       lastSegment.push(voxels[i]);
     } else {
       segments.push([voxels[i]]);
@@ -59,6 +60,9 @@ export function* extractSurfacesGreedy(
   for (const [x, yzGrid] of index) {
     for (const [y, zRow] of yzGrid) {
       const segments = splitRow(zRow.voxels);
+
+      for (const segment of segments) {
+      }
     }
   }
   yield batch;

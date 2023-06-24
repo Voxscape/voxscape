@@ -4,7 +4,7 @@ import { useBabylonContext, useBabylonInspector } from './init-babylon';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { createRefAxes } from './deps/create-ref-axes';
 import { renderModel, renderModelAlt } from './render-vox-model';
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: ParsedVoxFile; modelIndex?: number }> = (
   props,
@@ -41,8 +41,8 @@ export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: Pars
   useBabylonInspector(babylonCtx, enableInspector);
 
   return (
-    <div className={classNames('py-24')}>
-      <canvas ref={canvasRef} className={classNames('bg-white mx-auto')} style={{ width: 640, height: 480 }} />
+    <div className={clsx('py-24')}>
+      <canvas ref={canvasRef} className={clsx('bg-white mx-auto')} style={{ width: 640, height: 480 }} />
       <hr />
       <p className="p-2 space-x-2">
         <button type="button" className="p-2" onClick={() => setEnableInspector(!enableInspector)}>

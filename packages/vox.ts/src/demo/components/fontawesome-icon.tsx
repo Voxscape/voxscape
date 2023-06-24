@@ -1,5 +1,5 @@
 import React from 'react';
-import classNames from 'classnames';
+import clsx from 'clsx';
 
 interface FontawesomeIconProps {
   iconName: string;
@@ -9,7 +9,7 @@ interface FontawesomeIconProps {
 
 export const FontAwesomeIcon = React.forwardRef<HTMLElement, FontawesomeIconProps>(
   ({ large, iconName, style }, ref) => {
-    const className = classNames(
+    const className = clsx(
       'fas inline-block m-2 relative',
       {
         'text-2xl w-6 h-6': large,
