@@ -1,5 +1,6 @@
-import * as Vox from '../types/vox-types';
+import type * as Vox from '../types/vox-types';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
+import { buildXMinus, buildXPlus, buildYMinus, buildYPlus, buildZMinus, buildZPlus } from './greedy-coordinates';
 
 /**
  *
@@ -40,165 +41,15 @@ function buildSegmentSpec(x: number, y: number, segment: Vox.Voxel[]) {
   const v1 = segment[0]; // of smaller z
   const v2 = segment[segment.length - 1]; // of larger z
 
-  const zMinus = [
-    // 2 triangles look from z+ direction, clockwise
-    // p1
-    x - 1,
-    y,
-    v2.z,
-    // p2
-    x,
-    y - 1,
-    v2.z,
-    // p3
-    x - 1,
-    y - 1,
-    v2.z,
-    // p4
-    x,
-    y - 1,
-    v2.z,
-    // p5
-    x - 1,
-    y,
-    v2.z,
-    // p6
-    x,
-    y,
-    v2.z,
-  ];
-
-  const zPlus = [
-    // 2 triangles looking from z-axis, clockwise
-    x,
-    y,
-    v1.z - 1,
-    x - 1,
-    y - 1,
-    v1.z - 1,
-    x,
-    y - 1,
-    v1.z - 1,
-    x - 1,
-    y - 1,
-    v1.z - 1,
-    x,
-    y,
-    v1.z - 1,
-    x - 1,
-    y,
-    v1.z - 1,
-  ];
-
-  const xPlus = [
-    //
-    x - 1,
-    y,
-    v1.z - 1,
-    //
-    x - 1,
-    y - 1,
-    v2.z,
-    //
-    x - 1,
-    y - 1,
-    v1.z - 1,
-    //
-    x - 1,
-    y - 1,
-    v2.z,
-    //
-    x - 1,
-    y,
-    v1.z - 1,
-    //
-    x - 1,
-    y,
-    v2.z,
-  ];
-
-  const xMinus = [
-    // triangle 1
-    x,
-    y,
-    v2.z,
-    //
-    x,
-    y - 1,
-    v1.z - 1,
-    //
-    x,
-    y - 1,
-    v2.z,
-    // triangle 2
-    x,
-    y - 1,
-    v1.z - 1,
-    //
-    x,
-    y,
-    v2.z,
-    //
-    x,
-    y,
-    v1.z - 1,
-  ];
-
-  const yPlus = [
-    // triangle 1
-    x - 1,
-    y - 1,
-    v2.z,
-    x,
-    y - 1,
-    v1.z - 1,
-    x - 1,
-    y - 1,
-    v1.z - 1,
-    // triangle 2
-    x,
-    y - 1,
-    v1.z - 1,
-    x - 1,
-    y - 1,
-    v2.z,
-    x,
-    y - 1,
-    v2.z,
-  ];
-
-  const yMinus = [
-    // triangle 1
-    x - 1,
-    y,
-    v1.z - 1,
-    x,
-    y,
-    v2.z,
-    x - 1,
-    y,
-    v2.z,
-    // triangle 2
-    x,
-    y,
-    v2.z,
-    x - 1,
-    y,
-    v1.z - 1,
-    x,
-    y,
-    v1.z - 1,
-  ];
-
   return {
     v1,
     v2,
-    zMinus,
-    zPlus,
-    xMinus,
-    xPlus,
-    yPlus,
-    yMinus,
+    zMinus: buildZMinus(v1, v2),
+    zPlus: buildZPlus(v1, v2),
+    xMinus: buildXMinus(v1, v2),
+    xPlus: buildXPlus(v1, v2),
+    yPlus: buildYPlus(v1, v2),
+    yMinus: buildYMinus(v1, v2),
   };
 }
 
