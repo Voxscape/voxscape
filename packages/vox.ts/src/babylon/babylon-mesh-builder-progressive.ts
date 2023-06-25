@@ -143,7 +143,7 @@ function* extractSurfaces(
   const vertex: [number, number, number][] = [];
   const face: [number, number, number][] = [];
 
-  const colorMap = new DefaultMap<number, Color4>((colorIndex) => buildBabylonColor(palette[colorIndex], deps));
+  const colorMap = new DefaultMap<number, Color4>((colorIndex) => buildBabylonColor(palette[colorIndex]));
   let numProcessedVoxels = 0;
 
   /** FIXME: we should merge faces when possible */

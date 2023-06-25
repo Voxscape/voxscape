@@ -1,12 +1,7 @@
-import type { Scene } from '@babylonjs/core/scene';
-import type { Engine } from '@babylonjs/core/Engines';
-import { Vector3 } from '@babylonjs/core';
 import { RefObject, useEffect, useState } from 'react';
 import type { babylonAllDeps } from './deps/babylon-deps';
-import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
-import { Deferred } from '@jokester/ts-commonutil/lib/concurrency/deferred';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
-import { HemisphericLight } from '@babylonjs/core/Lights';
+import { Engine, Scene, ArcRotateCamera, HemisphericLight, Vector3, Color3, Color4 } from '@babylonjs/core';
 
 /**
  * a object to control camera/scene/stuff
@@ -22,8 +17,6 @@ export interface BabylonContext {
     instance: ArcRotateCamera;
     setRadius(lowerDistance: number, upperDistance?: number): void;
   };
-  deps: typeof babylonAllDeps;
-
   disposeAll(): void;
 }
 
@@ -39,7 +32,7 @@ export function useBabylonContext(canvasRef: RefObject<HTMLCanvasElement>): null
 
     const { babylonAllDeps } = await import('./deps/babylon-deps');
     if (!mounted.current) return;
-    const ctx = initBabylon(maybeCanvas, babylonAllDeps);
+    const ctx = initBabylon(maybeCanvas);
     ctx.engine.start();
     setCtx(ctx);
 
@@ -97,9 +90,7 @@ export function createArcRotateCamera(scene: Scene, radius = 1): ArcRotateCamera
 /**
  * @internal
  */
-function initBabylon(canvas: HTMLCanvasElement, deps: typeof babylonAllDeps): BabylonContext {
-  const { Engine, Scene, ArcRotateCamera, HemisphericLight, Vector3, Color3, Color4 } = deps;
-
+function initBabylon(canvas: HTMLCanvasElement): BabylonContext {
   const engine = new Engine(canvas, true, {
     useHighPrecisionMatrix: true,
     premultipliedAlpha: false,
@@ -147,6 +138,5 @@ function initBabylon(canvas: HTMLCanvasElement, deps: typeof babylonAllDeps): Ba
       defaultScene.dispose();
       engine.dispose();
     },
-    deps,
   } as const;
 }

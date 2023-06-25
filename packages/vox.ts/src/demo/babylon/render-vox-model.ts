@@ -32,13 +32,14 @@ export async function renderModel(
   if (!voxFile.palette) {
     console.warn('no palette found, fallback to use default');
   }
+  const { babylonAllDeps } = await import('./deps/babylon-deps');
   // new mesh builder
   const started = BabylonMeshBuilder.progessive(
     model,
     voxFile.palette ?? getDefaultPalette(),
     `model-${modelIndex}`,
     ctx.scene,
-    ctx.deps,
+    babylonAllDeps,
     1000,
   );
 

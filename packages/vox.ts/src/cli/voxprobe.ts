@@ -4,7 +4,7 @@ import { digestFile } from '../parser/digester';
 
 async function main(...args: string[]): Promise<void> {
   if (!args.length) {
-    console.log(`Usage: voxprobe <vox-file>`);
+    console.log(`Usage: voxprobe <vox-file>+`);
     return;
   }
 
