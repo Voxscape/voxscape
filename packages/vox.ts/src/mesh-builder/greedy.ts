@@ -6,9 +6,7 @@ import { buildXMinus, buildXPlus, buildYMinus, buildYPlus, buildZMinus, buildZPl
  *
  */
 export interface FacetSpec {
-  x: number;
-  y: number;
-  z: number;
+  start: Vox.Voxel;
   positions: number[];
   // no indexes:
   colorIndex: number;
@@ -79,9 +77,7 @@ export function* extractSurfacesGreedy(model: Vox.VoxelModel, batchSize = -1): I
         const coordinaes = buildSegmentSpec(x, y, s);
 
         facets.push({
-          x,
-          y,
-          z: s[0].z,
+          start: s[0],
           colorIndex: s[0].colorIndex,
           positions: [
             coordinaes.zPlus,

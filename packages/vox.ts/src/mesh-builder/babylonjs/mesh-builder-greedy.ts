@@ -66,7 +66,7 @@ async function startGreedyBuildMesh(
     }
     batch.facets.forEach((facet) => {
       const parent = submeshMapXY.getOrCreate(`voxels-${batch.progress.x}-${batch.progress.y}`);
-      const subMesh = buildNoLodMesh(facet, palette);
+      const subMesh = buildNoLodMesh(facet);
       // TODO: build lod-available meshes
       subMesh.parent = parent; // this is the way to let subMesh inherit parent's transform
       subMesh.material = materialMap.getOrCreate(facet.colorIndex);
@@ -75,8 +75,8 @@ async function startGreedyBuildMesh(
   return false;
 }
 
-function buildNoLodMesh(facet: FacetSpec, palette: Vox.VoxelPalette): Mesh {
-  const subMesh = new Mesh(`voxels-${facet.x}-${facet.y}-${facet.z}`);
+function buildNoLodMesh(facet: FacetSpec): Mesh {
+  const subMesh = new Mesh(`voxels-${facet.start.x}-${facet.start.y}-${facet.start.z}`);
   const vertexData = new VertexData();
   const positions = facet.positions;
   vertexData.positions = positions;

@@ -1,4 +1,14 @@
 import * as Vox from '../types/vox-types';
+
+export const facetDirection = Object.freeze({
+  xPlus: 0,
+  xMinus: 1,
+  yPlus: 2,
+  yMinus: 3,
+  zPlus: 4,
+  zMinus: 5,
+});
+
 export function buildXPlus(v1: Vox.Voxel, v2: Vox.Voxel) {
   const { x, y } = v1;
 
