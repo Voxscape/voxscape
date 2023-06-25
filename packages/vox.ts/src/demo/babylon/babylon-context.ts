@@ -111,7 +111,7 @@ function initBabylon(canvas: HTMLCanvasElement): BabylonContext {
 
       start(theScene = defaultScene) {
         engine.stopRenderLoop();
-        engine.runRenderLoop(() => theScene.render());
+        engine.runRenderLoop(() => theScene?.render());
       },
       stop() {
         engine.stopRenderLoop();

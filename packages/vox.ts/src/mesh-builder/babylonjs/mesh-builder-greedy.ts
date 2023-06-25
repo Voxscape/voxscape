@@ -13,18 +13,24 @@ export function greedyBuild(
   palette: Vox.VoxelPalette,
   meshName: string,
   scene: Scene,
-  shouldStop?: () => boolean,
+  options?: {
+    flipXZ?: boolean;
+    createFrame?: boolean;
+    shouldStop?: () => boolean;
+  },
 ): Mesh {
   const root = new Mesh(meshName, scene);
 
-  const frameMesh = createModelFrameMesh(model.size, scene, root);
-  {
+  if (options?.createFrame ?? false) {
+    const frameMesh = createModelFrameMesh(model.size, scene, root);
+  }
+  if (options?.flipXZ ?? true) {
     const normalize = createNormalizationTransform(model.size);
     root.position = normalize.translation;
     root.rotationQuaternion = normalize.rotation;
     root.scaling = normalize.scale;
   }
-  startGreedyBuildMesh(model, palette, meshName, root, scene, shouldStop).then((broke) => {
+  startGreedyBuildMesh(model, palette, meshName, root, scene, options?.shouldStop).then((broke) => {
     console.debug('finished', broke);
   });
 

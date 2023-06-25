@@ -21,24 +21,6 @@ interface SurfaceBatch {
   readonly facets: readonly FacetSpec[];
 }
 
-class GreedyExtractor {
-  private readonly index: VoxelIndex;
-  constructor(private m: Vox.VoxelModel, private p: Vox.VoxelPalette) {
-    this.index = createVoxelIndexFull(m.voxels);
-  }
-}
-
-function toCoordinates(v: Vox.Voxel) {
-  return {
-    x1: v.x - 1,
-    x2: v.x,
-    y1: v.y - 1,
-    y2: v.y,
-    z1: v.z - 1,
-    z2: v.z,
-  };
-}
-
 export function splitRow(voxels: Vox.Voxel[]): Vox.Voxel[][] {
   const segments: Vox.Voxel[][] = [];
 
@@ -90,22 +72,122 @@ function buildSegmentSpec(x: number, y: number, segment: Vox.Voxel[]) {
     // 2 triangles looking from z-axis, clockwise
     x,
     y,
-    v1.z,
+    v1.z - 1,
     x - 1,
     y - 1,
-    v1.z,
+    v1.z - 1,
     x,
     y - 1,
-    v1.z,
+    v1.z - 1,
     x - 1,
     y - 1,
-    v1.z,
+    v1.z - 1,
     x,
     y,
-    v1.z,
+    v1.z - 1,
     x - 1,
     y,
-    v1.z,
+    v1.z - 1,
+  ];
+
+  const xPlus = [
+    //
+    x - 1,
+    y,
+    v1.z - 1,
+    //
+    x - 1,
+    y - 1,
+    v2.z,
+    //
+    x - 1,
+    y - 1,
+    v1.z - 1,
+    //
+    x - 1,
+    y - 1,
+    v2.z,
+    //
+    x - 1,
+    y,
+    v1.z - 1,
+    //
+    x - 1,
+    y,
+    v2.z,
+  ];
+
+  const xMinus = [
+    // triangle 1
+    x,
+    y,
+    v2.z,
+    //
+    x,
+    y - 1,
+    v1.z - 1,
+    //
+    x,
+    y - 1,
+    v2.z,
+    // triangle 2
+    x,
+    y - 1,
+    v1.z - 1,
+    //
+    x,
+    y,
+    v2.z,
+    //
+    x,
+    y,
+    v1.z - 1,
+  ];
+
+  const yPlus = [
+    // triangle 1
+    x - 1,
+    y - 1,
+    v2.z,
+    x,
+    y - 1,
+    v1.z - 1,
+    x - 1,
+    y - 1,
+    v1.z - 1,
+    // triangle 2
+    x,
+    y - 1,
+    v1.z - 1,
+    x - 1,
+    y - 1,
+    v2.z,
+    x,
+    y - 1,
+    v2.z,
+  ];
+
+  const yMinus = [
+    // triangle 1
+    x - 1,
+    y,
+    v1.z - 1,
+    x,
+    y,
+    v2.z,
+    x - 1,
+    y,
+    v2.z,
+    // triangle 2
+    x,
+    y,
+    v2.z,
+    x - 1,
+    y,
+    v1.z - 1,
+    x,
+    y,
+    v1.z - 1,
   ];
 
   return {
@@ -113,6 +195,10 @@ function buildSegmentSpec(x: number, y: number, segment: Vox.Voxel[]) {
     v2,
     zMinus,
     zPlus,
+    xMinus,
+    xPlus,
+    yPlus,
+    yMinus,
   };
 }
 
@@ -146,7 +232,14 @@ export function* extractSurfacesGreedy(model: Vox.VoxelModel, batchSize = -1): I
           y,
           z: s[0].z,
           colorIndex: s[0].colorIndex,
-          positions: [coordinaes.zPlus, coordinaes.zMinus].flat(),
+          positions: [
+            coordinaes.zPlus,
+            coordinaes.zMinus,
+            coordinaes.xPlus,
+            coordinaes.xMinus,
+            coordinaes.yPlus,
+            coordinaes.yMinus,
+          ].flat(),
         });
       });
 

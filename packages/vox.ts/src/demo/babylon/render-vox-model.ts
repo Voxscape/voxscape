@@ -60,20 +60,16 @@ export async function renderModel(
   ctx: BabylonContext,
   voxFile: ParsedVoxFile,
   modelIndex: number,
-  shouldBreak?: () => boolean,
+  shouldStop?: () => boolean,
 ) {
   const model = voxFile.models[modelIndex];
   if (!voxFile.palette) {
     console.warn('no palette found, fallback to use default');
   }
   // new mesh builder
-  const mesh = greedyBuild(
-    model,
-    voxFile.palette ?? getDefaultPalette(),
-    `model-${modelIndex}`,
-    ctx.scene,
-    shouldBreak,
-  );
+  const mesh = greedyBuild(model, voxFile.palette ?? getDefaultPalette(), `model-${modelIndex}`, ctx.scene, {
+    shouldStop,
+  });
 
   ctx.camera.setRadius(
     0.5 * Math.min(model.size.x, model.size.y, model.size.z),
