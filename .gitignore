@@ -1,5 +1,4 @@
-/data-pgsql
-/data-hasura
+/dev/data-*
 .idea
 node_modules
 
