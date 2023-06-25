@@ -15,6 +15,10 @@ web:
 	@printf '\ek[web]next dev\e\\'
 	cd web && yarn && exec yarn dev
 
+voxPreview:
+	@printf '\ek[voxPreview]next dev\e\\'
+	cd packages/vox.ts && yarn && exec yarn dev
+
 webTsc:
 	@printf '\ek[web]tsc watch\e\\'
 	cd web && exec yarn typecheck:watch

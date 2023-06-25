@@ -51,6 +51,8 @@ model User {
   // ours
   models        VoxelModel[]
   modelViews    VoxelModelView[]
+  updatedAt     DateTime         @updatedAt
+  createdAt     DateTime         @default(now())
 }
 
 // next-auth
@@ -68,11 +70,13 @@ model VoxelModel {
   ownerUser   User             @relation(fields: [ownerUserId], references: [id])
   contentType String
   assetUrl    String
+  isPrivate Boolean @default(false)
   modelViews  VoxelModelView[]
   // defaultViewId Int
   // defaultView   VoxelModelView @relation(fields: [defaultViewId], references: [id])
   updatedAt   DateTime         @updatedAt
   createdAt   DateTime         @default(now())
+
   @@index([ownerUserId])
 }
 
@@ -85,6 +89,9 @@ model VoxelModelView {
   previewImageUrl String
   isDefault       Boolean    @default(false)
   perspective     Json
+  updatedAt       DateTime   @updatedAt
+  createdAt       DateTime   @default(now())
+
   @@index([modelId])
   @@index([ownerUserId])
 }

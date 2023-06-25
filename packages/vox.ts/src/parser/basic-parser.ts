@@ -37,9 +37,7 @@ export function basicParser(bytes: ArrayBuffer, flipYZ = false, enableExtension 
       materials.push(readMatt(l, chunk));
     } else {
       switch (chunk.id) {
-        case enableExtension && 'MATL': {
-          break;
-        }
+        case 'MATL':
         case 'nTRN':
         case 'nGRP':
         case 'nSHP':

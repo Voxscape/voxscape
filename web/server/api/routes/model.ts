@@ -3,10 +3,11 @@ import { createDebugLogger } from '../../../shared/logger';
 import { prisma } from '../../prisma';
 import { requireUserLogin } from '../common/auth';
 import { t } from '../common/_base';
+import { getBucket } from '../../external/gcp';
 
-enum ModelContentType {
-  vox = 'vox',
-}
+export const ModelContentType = Object.freeze({
+  vox: 'application/vnd.magicavoxel',
+});
 
 const VoxelModel = z.object({
   id: z.number().optional(),
@@ -19,25 +20,23 @@ export const uploadModelAssetRequest = z.object({
   contentType: z.string(),
 });
 
-export const uploadAssetResponse = z.object({
-  uploadUrl: z.string().url(),
-  url: z.string().url(),
-});
-
 const xyz = z.object({
   x: z.number(),
   y: z.number(),
   z: z.number(),
 });
 
-const modelView = z.object({
-  id: z.number(),
-  cameraPosition: xyz,
-  cameraTarget: xyz,
+const createModelRequest = z.object({
+  contentType: z.string().and(z.enum([ModelContentType.vox])),
+  assetUrl: z.string().url(),
+  origFilename: z.string(),
+  isPrivate: z.boolean(),
+  cameraPos: xyz,
+  cameraLookAt: xyz,
 });
 
-const modelList = z.object({
-  models: z.array(modelView),
+const createViewRequest = z.object({
+  modelId: z.number(),
 });
 
 export namespace DevOnly {
@@ -54,16 +53,68 @@ const logger = createDebugLogger(__filename);
 const privateProcedure = t.procedure.use(requireUserLogin);
 
 const searchModelQuery = z.object({
-  name: z.ostring(),
+  query: z.string(),
 });
 
-export const modelsRoute = t.router({
+const findByUserQuery = z.object({
+  userId: z.string(),
+});
+
+export const modelsRouter = t.router({
+  recent: t.procedure.query(async ({ input }) => {
+    const models = await prisma.voxelModel.findMany({ where: {}, orderBy: { createdAt: 'desc' }, take: 20 });
+    return { models };
+  }),
+
   search: t.procedure.input(searchModelQuery).query(async ({ input }) => {
     const models = await prisma.voxelModel.findMany({ where: {} });
-    // TODO: try superjson transform
     return [];
   }),
-  requestUpload: privateProcedure.input(uploadAssetResponse).mutation(({ input, ctx }) => {
-    return {};
+  requestUpload: privateProcedure.input(uploadModelAssetRequest).mutation(async ({ input, ctx }) => {
+    const pathInBucket = `u-${ctx.session.user.id}/models/${Date.now()}-${input.filename}`;
+    const [uploadUrl] = await getBucket()
+      .file(pathInBucket)
+      .getSignedUrl({
+        version: 'v4',
+        action: 'write',
+        expires: Date.now() + 3 * 3600e3, // 3hr
+        contentType: input.contentType, // MUST match the followed PUT request
+        virtualHostedStyle: false, // too complicated / restrictive to use custom domain
+        // extensionHeaders: {
+        //   'Content-Disposition': encodeURIComponent(input.filename),
+        // },
+      });
+
+    const publicUrl = new URL(uploadUrl);
+    publicUrl.search = '';
+
+    return {
+      uploadUrl,
+      publicUrl: publicUrl.toString(),
+    };
+  }),
+
+  create: privateProcedure.input(createModelRequest).mutation(async ({ input, ctx }) => {
+    const saved = await prisma.voxelModel.create({
+      data: {
+        contentType: input.contentType,
+        ownerUserId: ctx.session.user.id,
+        assetUrl: input.assetUrl,
+        isPrivate: input.isPrivate,
+        modelViews: {
+          create: {
+            isDefault: true,
+            previewImageUrl: 'TODO',
+            ownerUserId: ctx.session.user.id,
+            perspective: {
+              cameraLookAt: input.cameraLookAt,
+              cameraPos: input.cameraPos,
+            },
+          },
+        },
+      },
+    });
+
+    return [saved];
   }),
 });

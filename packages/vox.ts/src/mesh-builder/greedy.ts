@@ -1,111 +1,137 @@
-import * as VoxTypes from '../types/vox-types';
+import type * as Vox from '../types/vox-types';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
+import { buildXMinus, buildXPlus, buildYMinus, buildYPlus, buildZMinus, buildZPlus } from './greedy-coordinates';
 
+/**
+ *
+ */
 export interface FacetSpec {
-  p1: readonly [number, number, number];
-  p2: readonly [number, number, number];
-  p3: readonly [number, number, number];
-
-  color: VoxTypes.VoxelColor;
-  // TODO: material?
+  start: Vox.Voxel;
+  positions: number[];
+  // no indexes:
+  colorIndex: number;
 }
 
 interface SurfaceBatch {
-  readonly progress: number;
+  readonly progress: {
+    x: number;
+    y: number;
+  };
   readonly facets: readonly FacetSpec[];
+}
+
+export function splitRow(voxels: Vox.Voxel[]): Vox.Voxel[][] {
+  const segments: Vox.Voxel[][] = [];
+
+  for (let i = 0; i < voxels.length; i++) {
+    const lastSegment = segments[segments.length - 1];
+    const lastVoxel = lastSegment && lastSegment[lastSegment.length - 1];
+    if (lastVoxel && lastVoxel.z === voxels[i].z - 1 && lastVoxel.colorIndex === voxels[i].colorIndex) {
+      lastSegment.push(voxels[i]);
+    } else {
+      segments.push([voxels[i]]);
+    }
+  }
+  return segments;
+}
+
+function buildSegmentSpec(x: number, y: number, segment: Vox.Voxel[]) {
+  const v1 = segment[0]; // of smaller z
+  const v2 = segment[segment.length - 1]; // of larger z
+
+  return {
+    v1,
+    v2,
+    zMinus: buildZMinus(v1, v2),
+    zPlus: buildZPlus(v1, v2),
+    xMinus: buildXMinus(v1, v2),
+    xPlus: buildXPlus(v1, v2),
+    yPlus: buildYPlus(v1, v2),
+    yMinus: buildYMinus(v1, v2),
+  };
+}
+
+export function buildVertexIndex(positions: number[]): number[] {
+  if (positions.length % 3) {
+    throw new Error(`invalid positions: ${positions.length}`);
+  }
+
+  return new Array(positions.length / 3).fill(null).map((_, i) => i);
 }
 
 /**
  * TODO: implement greedy meshing algorithm in https://0fps.net/2012/06/30/meshing-in-a-minecraft-game/
  * @param model
- * @param palette
  * @param batchSize
  */
-export function* extractSurfacesGreedy(
-  model: VoxTypes.VoxelModel,
-  palette: VoxTypes.VoxelPalette,
-  batchSize: number,
-): IterableIterator<SurfaceBatch> {
+export function* extractSurfacesGreedy(model: Vox.VoxelModel, batchSize = -1): IterableIterator<SurfaceBatch> {
   const facets: FacetSpec[] = [];
 
-  const batch: SurfaceBatch = {
-    progress: 0,
-    facets,
-  };
+  const index = createVoxelIndexFull(model.voxels);
 
-  const indexXyz = createVoxelIndexFull(model.voxels, ['x', 'y', 'z']);
-  indexXyz.forEach((grid, x) => {
-    grid.forEach((row, y) => {
-      /**
-       * looking along z+ direction
-       */
-      for (let start = 0; start < row.voxels.length; ) {
-        const count = findVoxelSegment(row.voxels, 'z', start);
+  for (const [x, yzGrid] of index) {
+    for (const [y, zRow] of yzGrid) {
+      const segments = splitRow(zRow.voxels);
 
-        const firstVoxel = row.voxels[start];
-        const lastVoxel = row.voxels[start + count - 1];
+      segments.forEach((s) => {
+        const coordinaes = buildSegmentSpec(x, y, s);
 
         facets.push({
-          // FIXME
-          p1: [x, y, firstVoxel.z],
-          p2: [x, y, firstVoxel.z],
-          p3: [x, y, firstVoxel.z],
-          color: palette[firstVoxel.colorIndex],
+          start: s[0],
+          colorIndex: s[0].colorIndex,
+          positions: [
+            coordinaes.zPlus,
+            coordinaes.zMinus,
+            coordinaes.xPlus,
+            coordinaes.xMinus,
+            coordinaes.yPlus,
+            coordinaes.yMinus,
+          ].flat(),
         });
+      });
 
-        start += count;
-      }
-    });
-  });
-
-  yield batch;
+      yield {
+        progress: {
+          x,
+          y,
+        },
+        facets,
+      };
+      facets.length = 0;
+    }
+  }
 }
 
-type AxisSpec = 'x' | 'y' | 'z';
-
 interface IndexedRow {
-  voxels: VoxTypes.Voxel[];
-  set: Set<number>;
+  voxels: Vox.Voxel[];
+  // set: Set<number>;
 }
 
 /**
- * find
+ *
  * @param voxels
- * @param axis
- * @param start
- * @return count of voxels, minimum of 1
+ * @return x => y => ROW
  */
-export function findVoxelSegment(voxels: readonly VoxTypes.Voxel[], axis: AxisSpec, start: number): number {
-  let count = 1;
-  while (
-    start + count < voxels.length &&
-    voxels[start + count].colorIndex === voxels[start].colorIndex &&
-    voxels[start + count][axis] === 1 + voxels[start + count - 1][axis]
-  ) {
-    ++count;
-  }
-
-  return count;
-}
-
-function createVoxelIndexFull(
-  voxels: readonly VoxTypes.Voxel[],
-  axis: readonly [AxisSpec, AxisSpec, AxisSpec],
-): ReadonlyMap<number, ReadonlyMap<number, IndexedRow>> {
-  const [axis0, axis1, axis2] = axis;
+function createVoxelIndexFull(voxels: readonly Vox.Voxel[]): ReadonlyMap<number, ReadonlyMap<number, IndexedRow>> {
   const built = new DefaultMap<number, DefaultMap<number, IndexedRow>>(
-    (axis0) => new DefaultMap((axis1) => ({ voxels: [], set: new Set<number>() })),
+    (x) =>
+      new DefaultMap((y) => ({
+        voxels: [],
+        // set: new Set<number>()
+      })),
   );
 
   voxels.forEach((v) => {
-    const row = built.getOrCreate(v[axis0]).getOrCreate(v[axis1]);
+    const row = built.getOrCreate(v.x).getOrCreate(v.y);
     row.voxels.push(v);
-    row.set.add(v[axis2]);
+    // row.set.add(v.z);
   });
-  built.forEach((grid) => {
-    grid.forEach((row) => {
-      row.voxels.sort((v1, v2) => v1[axis2] - v2[axis2]);
+  built.forEach((yzGrid, x) => {
+    yzGrid.forEach((zRow, y) => {
+      zRow.voxels.sort((v1, v2) => v1.z - v2.z);
     });
   });
   return built;
 }
+
+type VoxelIndex = ReturnType<typeof createVoxelIndexFull>;

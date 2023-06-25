@@ -1,0 +1,10 @@
+.listTable {
+  tbody {
+    tr + tr {
+      border-top: 0.5px solid #cccccc;
+    }
+  }
+  td {
+    vertical-align: top;
+  }
+}

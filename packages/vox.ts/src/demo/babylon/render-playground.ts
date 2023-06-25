@@ -1,7 +1,7 @@
-import { BabylonContext } from './init-babylon';
+import { BabylonContext } from './babylon-context';
+import { MeshBuilder, Color4, Vector3 } from '@babylonjs/core';
 
 export function renderPlayground(ctx: BabylonContext) {
-  const { Color4, MeshBuilder, Vector3 } = ctx.deps;
   const parentMesh = MeshBuilder.CreateBox('box', {
     size: 5,
     faceColors: [

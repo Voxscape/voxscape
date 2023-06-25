@@ -1,4 +1,4 @@
-import React, { createRef, Fragment, useContext, useState } from 'react';
+import React, { createRef, Fragment, ReactNode, RefObject, useContext, useState } from 'react';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -19,7 +19,7 @@ type ModalResult<T> =
       error?: null;
     }
   | {
-      result: 'cancelled';
+      result: 'dismissed';
       value?: null;
       error?: null;
     }
@@ -29,46 +29,62 @@ type ModalResult<T> =
       error: unknown;
     };
 
-const CANCEL_SENTRY = Symbol('modal-context-cancel-sentry');
+/**
+ * @private
+ */
+const DISMISS_SENTRY = Symbol('modal-context-dismiss-sentry');
 
-interface ModalInput<T> {
+export interface ModalHandle<T> {
   deferred: Deferred<T>;
-  onClose(): void;
+  dismiss(): void;
+  leastDestructiveRef: RefObject<HTMLButtonElement>;
+}
+
+interface ModalOptions {
+  closeOnOverlayClick?: boolean;
 }
 
 class ModalApi {
   private _current: null | { deferred: Deferred<unknown> } = null;
-  constructor(private setModalElem: React.Dispatch<null | React.ReactElement>) {}
+  constructor(private readonly setModalElem: React.Dispatch<null | React.ReactElement>) {}
 
   get isShowing(): boolean {
     return !!this._current;
   }
 
   async dismiss() {
-    this._current?.deferred.reject(CANCEL_SENTRY);
+    this._current?.deferred.reject(DISMISS_SENTRY);
   }
 
-  alert(title: string, body: string | React.ReactElement, buttonText = 'OK'): Promise<ModalResult<void>> {
-    const okButtonRef = createRef<HTMLButtonElement>();
-    return this.showElement<void>((input) => {
-      const onOk = () => input.deferred.fulfill(undefined);
-      const onDismiss = () => input.deferred.reject(CANCEL_SENTRY);
+  /**
+   * An alert modal with a single OK button.
+   */
+  alert(
+    title: string,
+    body: string | React.ReactElement,
+    buttonText = 'OK',
+    options?: ModalOptions,
+  ): Promise<ModalResult<void>> {
+    return this.showElement<void>((handle) => {
+      const onOk = () => handle.deferred.fulfill(undefined);
       return (
         <AlertDialog
           motionPreset="slideInBottom"
-          leastDestructiveRef={okButtonRef}
-          onClose={onDismiss}
+          leastDestructiveRef={handle.leastDestructiveRef}
+          closeOnOverlayClick={options?.closeOnOverlayClick /* defaults to true */}
+          onClose={handle.dismiss}
           isOpen
           isCentered
+          useInert
         >
           <AlertDialogOverlay />
 
           <AlertDialogContent>
             <AlertDialogHeader>{title}</AlertDialogHeader>
-            <AlertDialogCloseButton />
+            <AlertDialogCloseButton onClick={handle.dismiss} ref={handle.leastDestructiveRef} />
             <AlertDialogBody>{body}</AlertDialogBody>
             <AlertDialogFooter>
-              <Button colorScheme="blue" onClick={onOk} ref={okButtonRef}>
+              <Button colorScheme="blue" onClick={onOk}>
                 {buttonText}
               </Button>
             </AlertDialogFooter>
@@ -84,18 +100,17 @@ class ModalApi {
     options?: { destructive?: boolean; confirmButtonText?: string },
   ): Promise<ModalResult<boolean>> {
     return this.showElement<boolean>((input) => {
-      const cancelButtonRef = createRef<HTMLButtonElement>();
       const onOk = () => input.deferred.fulfill(true);
       const onCancel = () => input.deferred.fulfill(false);
-      const onDismiss = () => input.deferred.reject(CANCEL_SENTRY);
 
       return (
         <AlertDialog
           motionPreset="slideInBottom"
-          leastDestructiveRef={cancelButtonRef}
-          onClose={onDismiss}
+          leastDestructiveRef={input.leastDestructiveRef}
+          onClose={input.dismiss}
           isOpen
           isCentered
+          useInert
         >
           <AlertDialogOverlay />
 
@@ -104,7 +119,7 @@ class ModalApi {
             <AlertDialogCloseButton />
             <AlertDialogBody>{body}</AlertDialogBody>
             <AlertDialogFooter>
-              <Button onClick={onCancel} ref={cancelButtonRef}>
+              <Button onClick={onCancel} ref={input.leastDestructiveRef}>
                 Cancel
               </Button>
               <Button colorScheme={options?.destructive ? 'red' : 'blue'} onClick={onOk} ml={3}>
@@ -117,17 +132,59 @@ class ModalApi {
     });
   }
 
-  private async showElement<T>(builder: (input: ModalInput<T>) => React.ReactElement): Promise<ModalResult<T>> {
+  build<T>(
+    builder: (handle: ModalHandle<T>) => {
+      title?: ReactNode;
+      body?: ReactNode;
+      footer?: ReactNode;
+    },
+    options?: {
+      noCloseButton?: boolean;
+      closeOnOverlayClick?: boolean;
+    },
+  ): Promise<ModalResult<T>> {
+    return this.showElement((handle) => {
+      const built = builder(handle);
+
+      return (
+        <AlertDialog
+          motionPreset="slideInBottom"
+          leastDestructiveRef={handle.leastDestructiveRef}
+          onClose={handle.dismiss}
+          closeOnOverlayClick={options?.closeOnOverlayClick}
+          isOpen
+          isCentered
+          blockScrollOnMount
+          useInert
+        >
+          <AlertDialogOverlay />
+
+          <AlertDialogContent>
+            <AlertDialogHeader>{built.title}</AlertDialogHeader>
+            {!options?.noCloseButton && (
+              <AlertDialogCloseButton onClick={handle.dismiss} ref={handle.leastDestructiveRef} />
+            )}
+            <AlertDialogBody>{built.body}</AlertDialogBody>
+            <AlertDialogFooter>{built.footer}</AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      );
+    });
+  }
+
+  private async showElement<T>(builder: (handle: ModalHandle<T>) => React.ReactElement): Promise<ModalResult<T>> {
     if (this._current) {
       return Promise.reject('modal slot in use');
     }
     const d = new Deferred<T>();
     this._current = { deferred: d as Deferred<unknown> };
+    const leastDestructiveRef = createRef<HTMLButtonElement>();
     const elem = builder({
       deferred: d,
-      onClose() {
-        // TODO
+      dismiss() {
+        d.reject(DISMISS_SENTRY);
       },
+      leastDestructiveRef,
     });
     this.setModalElem(elem);
 
@@ -137,9 +194,9 @@ class ModalApi {
         value: await d,
       };
     } catch (e) {
-      if (e === CANCEL_SENTRY) {
+      if (e === DISMISS_SENTRY) {
         return {
-          result: 'cancelled',
+          result: 'dismissed',
         };
       } else {
         return {
@@ -167,4 +224,4 @@ export const ModalHolder: React.FC<React.PropsWithChildren> = (props) => {
   );
 };
 
-export const useModalApi = () => useContext(ModalContext);
+export const useModalApi = (): ModalApi => useContext(ModalContext);

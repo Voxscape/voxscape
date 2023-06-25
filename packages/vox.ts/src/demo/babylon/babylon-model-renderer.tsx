@@ -1,19 +1,21 @@
 import React, { useRef, useState } from 'react';
 import { ParsedVoxFile } from '../../types/vox-types';
-import { useBabylonContext, useBabylonInspector } from './init-babylon';
+import { useBabylonContext, useBabylonInspector } from './babylon-context';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
-import { createRefAxes } from './deps/create-ref-axes';
-import { renderModel } from './render-vox-model';
-import { renderPlayground } from './render-playground';
-import classNames from 'classnames';
+import { createRefAxes } from './create-ref-axes';
+import { renderModel, renderModelV0 } from './render-vox-model';
+import clsx from 'clsx';
 
-export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: ParsedVoxFile; modelIndex?: number }> = (
-  props,
-) => {
+export const BabylonModelRenderer: React.FC<{
+  onReset?(): void;
+  modelFile?: ParsedVoxFile;
+  modelIndex?: number;
+  builder?: string;
+}> = (props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const babylonCtx = useBabylonContext(canvasRef);
   const modelFile = props.modelFile;
-  const model = modelFile?.models[props.modelIndex ?? 0];
+  const modelIndex = props.modelIndex;
 
   useAsyncEffect(
     async (mounted, effectReleased) => {
@@ -21,30 +23,31 @@ export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: Pars
         return;
       }
 
-      // fixme: should re-init scene when model changes
-      createRefAxes(100, babylonCtx.scene, babylonCtx.deps);
-      babylonCtx.engine.start();
+      const refMesh = createRefAxes(10, babylonCtx.scene);
 
-      if (modelFile && model) {
-        renderModel(babylonCtx, model, modelFile, () => !mounted.current);
+      if (typeof modelIndex === 'number' && modelFile?.models[modelIndex]) {
+        // renderModel(babylonCtx, modelIndex, modelFile, () => !mounted.current);
+        const start = props.builder === 'v0' ? renderModelV0 : renderModel;
+        start(babylonCtx, modelFile, modelIndex, () => !mounted.current);
       } else {
-        babylonCtx.camera.setRadius(50);
-        renderPlayground(babylonCtx);
+        console.warn('no model to render, rendering playground');
       }
 
+      babylonCtx.engine.start();
       effectReleased.then(() => {
+        refMesh.dispose();
         babylonCtx.engine.stop();
       });
     },
-    [babylonCtx, modelFile, model],
+    [babylonCtx, modelFile, modelIndex],
   );
 
   const [enableInspector, setEnableInspector] = useState(false);
   useBabylonInspector(babylonCtx, enableInspector);
 
   return (
-    <div className={classNames('py-24')}>
-      <canvas ref={canvasRef} className={classNames('bg-white mx-auto')} style={{ width: 640, height: 480 }} />
+    <div className={clsx('py-24')}>
+      <canvas ref={canvasRef} className={clsx('bg-white mx-auto')} style={{ width: 640, height: 480 }} />
       <hr />
       <p className="p-2 space-x-2">
         <button type="button" className="p-2" onClick={() => setEnableInspector(!enableInspector)}>

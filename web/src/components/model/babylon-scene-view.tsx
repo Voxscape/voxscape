@@ -1,4 +1,4 @@
-import { BabylonContext, useBabylonContext } from '@voxscape/vox.ts/src/demo/babylon/init-babylon';
+import { BabylonContext, useBabylonContext } from '@voxscape/vox.ts/src/demo/babylon/babylon-context';
 import React, { useImperativeHandle, useRef } from 'react';
 import type { Scene } from '@babylonjs/core';
 import { Engine, SceneLoader } from '@babylonjs/core';

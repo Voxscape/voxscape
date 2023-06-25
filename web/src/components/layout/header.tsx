@@ -4,6 +4,8 @@ import { useSession } from 'next-auth/react';
 import logoPng from './logo.png';
 import Image from 'next/image';
 import styles from './header.module.scss';
+import Link from 'next/link';
+import { AuthButton } from '../auth/auth_button';
 
 export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
   return (
@@ -13,13 +15,15 @@ export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
         alignItems="center"
         justifyContent="space-between"
         marginX="auto"
-        maxW="2xl"
         paddingX={[2, null, 2]}
         paddingY={[2, null, 2]}
         borderBottom="2px solid"
         borderColor="primary.50"
+        className="max-w-screen-sm md:max-w-screen-md"
       >
-        <Image src={logoPng} alt="Voxscape" className={styles.logoImg} />
+        <Link href="/" title="Voxscape" className={styles.logoText}>
+          Voxscape
+        </Link>
         <chakra.span flex="1 0" />
         {props.children}
       </chakra.div>
@@ -37,10 +41,24 @@ export const LayoutHeaderButtons: React.FC = () => {
   return (
     <>
       <ButtonGroup>
-        <Button backgroundColor="primary.500" size="sm" className={styles.button}>
-          Login
-        </Button>
+        <NewModelButton />
+        <AuthButton />
       </ButtonGroup>
     </>
   );
+};
+
+const NewModelButton = () => {
+  const session = useSession();
+
+  if (session.status === 'authenticated') {
+    return (
+      <Link href="/models/new">
+        <Button size="sm" type="button">
+          new model
+        </Button>
+      </Link>
+    );
+  }
+  return null;
 };

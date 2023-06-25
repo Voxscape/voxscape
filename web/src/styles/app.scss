@@ -19,3 +19,12 @@ body {
   font-weight: normal;
   font-style: normal;
 }
+
+@font-face {
+  // from https://transfonter.org/
+  font-family: 'x12y16pxLineLinker';
+  src: url('subset-x12y16pxLineLinker.woff2') format('woff2'), url('subset-x12y16pxLineLinker.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}

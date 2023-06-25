@@ -1,5 +1,6 @@
 /* eslint @typescript-eslint/no-var-requires: 0 */
 const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require('next/constants');
+
 /**
  * when in problem, try to sync with {@link https://github.com/vercel/next.js/tree/canary/packages/create-next-app/templates/typescript}
  * @type {import('next').NextConfig}
@@ -7,6 +8,20 @@ const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require('next/const
 const nextConf = {
   poweredByHeader: false,
 
+  /**
+   * runtime server-only configuration
+   * @type {import('./server/runtime-config').ServerRuntimeConfig}
+   */
+  serverRuntimeConfig: {
+    serverStartAt: new Date().toISOString(),
+  },
+  /**
+   * build-time configuration
+   */
+  env: {
+    // becomes process.env.SOME_CONSTANT : boolean
+    builtAt: new Date().toISOString(),
+  },
   // see https://nextjs.org/docs/#customizing-webpack-config
   webpack(config, { buildId, dev, isServer, webpack }) {
     config.plugins.push(
@@ -25,6 +40,9 @@ const nextConf = {
     };
     return config;
   },
+
+  transpilePackages: ['lodash-es', '@jokester/ts-commonutil'],
+
   reactStrictMode: true,
 };
 
@@ -37,8 +55,6 @@ module.exports = (phase, { defaultConfig }) => {
   if (phase === PHASE_PRODUCTION_BUILD) {
     merged = require('@next/bundle-analyzer')({ enabled: true, openAnalyzer: false })(merged);
   }
-
-  merged = require('next-transpile-modules')(['lodash-es', '@jokester/ts-commonutil'])(merged);
 
   return merged;
 };

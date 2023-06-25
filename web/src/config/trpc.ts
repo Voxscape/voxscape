@@ -3,6 +3,8 @@ import type { AppRouter } from '../../server/api';
 import { createTRPCReact } from '@trpc/react-query';
 import { inBrowser } from './build-config';
 import { QueryClient } from '@tanstack/react-query';
+import superjson from 'superjson';
+
 function getBaseUrl() {
   if (inBrowser) {
     // browser should use relative path
@@ -26,8 +28,19 @@ const links = [
 export const queryClient = new QueryClient();
 export const trpcReactClient = trpcReact.createClient({
   links,
+  transformer: superjson,
 });
 
-export const trpcClient = createTRPCProxyClient<AppRouter>({
+const trpcImperativeClient = createTRPCProxyClient<AppRouter>({
   links,
+  transformer: superjson,
 });
+
+export const trpcClient = {
+  hook: trpcReact,
+  $: trpcImperativeClient,
+} as const;
+
+export function useTrpcClient(): typeof trpcClient {
+  return trpcClient;
+}

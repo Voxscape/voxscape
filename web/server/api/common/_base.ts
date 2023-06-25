@@ -1,4 +1,7 @@
 import { initTRPC } from '@trpc/server';
-import { TrpcReqContext } from './auth';
+import type { TrpcReqContext } from './auth';
+import superjson from 'superjson';
 
-export const t = initTRPC.context<TrpcReqContext>().create();
+export const t = initTRPC.context<TrpcReqContext>().create({
+  transformer: superjson,
+});

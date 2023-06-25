@@ -1,31 +1,62 @@
-import { findVoxelSegment } from './greedy';
-import * as VoxTypes from '../types/vox-types';
+import * as greedy from './greedy';
 
-/**
- * FIXME: jest fails to run
- */
-describe(findVoxelSegment, () => {
-  it('find consecutive along x axis - same color', () => {
-    const xs = [
-      // index=0
-      0,
-      // index=1
-      2, 3,
-      // index=3
-      5, 6, 7, 8, 9,
-      // index=8
-      12, 13,
-      // index=10
-      15,
+describe(greedy.buildVertexIndex.name, () => {
+  it('builds vertex index', () => {
+    expect(greedy.buildVertexIndex([])).toEqual([]);
+    expect(greedy.buildVertexIndex([1, 2, 3])).toEqual([0]);
+    expect(() => greedy.buildVertexIndex([1])).toThrow();
+    expect(() => greedy.buildVertexIndex([1, 3])).toThrow();
+  });
+});
+
+describe('splitRow', () => {
+  it('does not split when all voxels are consequent', () => {
+    const beforeSplit = [
+      {
+        x: 0,
+        y: 0,
+        z: 0,
+        colorIndex: 0,
+      },
+      {
+        x: 0,
+        y: 0,
+        z: 1,
+        colorIndex: 0,
+      },
     ];
-    const voxels: VoxTypes.Voxel[] = xs.map((x) => ({ x, y: 0, z: 0, colorIndex: 1 }));
-
-    expect(findVoxelSegment(voxels, 'x', 0)).toEqual(1);
-    expect(findVoxelSegment(voxels, 'x', 1)).toEqual(2);
-    expect(findVoxelSegment(voxels, 'x', 2)).toEqual(1);
-    expect(findVoxelSegment(voxels, 'x', 3)).toEqual(5);
-    expect(findVoxelSegment(voxels, 'x', 7)).toEqual(1);
-    expect(findVoxelSegment(voxels, 'x', 8)).toEqual(2);
-    expect(findVoxelSegment(voxels, 'x', 10)).toEqual(1);
+    const split = greedy.splitRow(beforeSplit);
+    expect(split).toHaveLength(1);
+    expect(split).toEqual([beforeSplit]);
+  });
+  it('splits inconsequent', () => {
+    const beforeSplit = [
+      {
+        x: 0,
+        y: 0,
+        z: 0,
+        colorIndex: 0,
+      },
+      {
+        x: 0,
+        y: 0,
+        z: 2, // inconsequent
+        colorIndex: 0,
+      },
+      {
+        x: 0,
+        y: 0,
+        z: 3,
+        colorIndex: 1, // inconsequent
+      },
+      {
+        x: 0,
+        y: 0,
+        z: 4,
+        colorIndex: 1,
+      },
+    ];
+    const split = greedy.splitRow(beforeSplit);
+    expect(split).toHaveLength(3);
   });
 });
