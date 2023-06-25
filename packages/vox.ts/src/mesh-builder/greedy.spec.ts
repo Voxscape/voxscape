@@ -1,5 +1,13 @@
-import exp from 'constants';
 import * as greedy from './greedy';
+
+describe(greedy.buildVertexIndex.name, () => {
+  it('builds vertex index', () => {
+    expect(greedy.buildVertexIndex([])).toEqual([]);
+    expect(greedy.buildVertexIndex([1, 2, 3])).toEqual([0]);
+    expect(() => greedy.buildVertexIndex([1])).toThrow();
+    expect(() => greedy.buildVertexIndex([1, 3])).toThrow();
+  });
+});
 
 describe('splitRow', () => {
   it('does not split when all voxels are consequent', () => {

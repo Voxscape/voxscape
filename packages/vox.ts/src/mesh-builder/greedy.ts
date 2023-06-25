@@ -5,6 +5,9 @@ import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
  *
  */
 export interface FacetSpec {
+  x: number;
+  y: number;
+  z: number;
   positions: number[];
   // no indexes:
   colorIndex: number;
@@ -118,7 +121,7 @@ export function buildVertexIndex(positions: number[]): number[] {
     throw new Error(`invalid positions: ${positions.length}`);
   }
 
-  return new Array(positions.length).map((_, i) => i);
+  return new Array(positions.length / 3).fill(null).map((_, i) => i);
 }
 
 /**
@@ -144,6 +147,9 @@ export function* extractSurfacesGreedy(
         const coordinaes = buildSegmentSpec(x, y, s);
 
         facets.push({
+          x,
+          y,
+          z: s[0].z,
           colorIndex: s[0].colorIndex,
           positions: [coordinaes.zPlus, coordinaes.zMinus].flat(),
         });
