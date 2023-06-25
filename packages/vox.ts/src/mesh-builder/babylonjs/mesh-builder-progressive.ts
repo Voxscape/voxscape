@@ -1,6 +1,6 @@
 import * as VoxTypes from '../../types/vox-types';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
-import { createModelFrameMesh, createNormalizationTransform } from '../../babylon/mesh-helpers';
+import { createModelFrameMesh, createNormalizationTransform } from './mesh-helpers';
 import { Mesh, MeshBuilder, Scene } from '@babylonjs/core';
 import { Color4 } from '@babylonjs/core/Maths';
 import { buildBabylonColor } from './colors';

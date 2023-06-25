@@ -2,6 +2,7 @@ import * as Vox from '../../types/vox-types';
 import { Scene } from '@babylonjs/core/scene';
 import { Mesh, VertexData } from '@babylonjs/core/Meshes';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
+import { createModelFrameMesh, createNormalizationTransform } from './mesh-helpers';
 import { Material } from '@babylonjs/core';
 import { StandardMaterial } from '@babylonjs/core/Materials';
 import { buildVertexIndex, extractSurfacesGreedy } from '../greedy';
@@ -16,6 +17,13 @@ export function greedyBuild(
 ): Mesh {
   const root = new Mesh(meshName, scene);
 
+  const frameMesh = createModelFrameMesh(model.size, scene, root);
+  {
+    const normalize = createNormalizationTransform(model.size);
+    root.position = normalize.translation;
+    root.rotationQuaternion = normalize.rotation;
+    root.scaling = normalize.scale;
+  }
   startGreedyBuildMesh(model, palette, meshName, root, scene, shouldStop).then((broke) => {
     console.debug('finished', broke);
   });

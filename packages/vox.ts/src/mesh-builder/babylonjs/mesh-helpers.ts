@@ -1,6 +1,6 @@
 import { Nullable, Mesh, Scene, MeshBuilder } from '@babylonjs/core';
 import { Vector3, Matrix, Quaternion } from '@babylonjs/core/Maths';
-import * as VoxTypes from '../types/vox-types';
+import * as VoxTypes from '../../types/vox-types';
 
 export function createModelFrameMesh(
   modelSize: VoxTypes.VoxelModelSize,
