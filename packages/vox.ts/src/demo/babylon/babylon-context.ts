@@ -1,5 +1,4 @@
 import { RefObject, useEffect, useState } from 'react';
-import type { babylonAllDeps } from './deps/babylon-deps';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { Engine, Scene, ArcRotateCamera, HemisphericLight, Vector3, Color3, Color4 } from '@babylonjs/core';
 
@@ -30,7 +29,6 @@ export function useBabylonContext(canvasRef: RefObject<HTMLCanvasElement>): null
       return;
     }
 
-    const { babylonAllDeps } = await import('./deps/babylon-deps');
     if (!mounted.current) return;
     const ctx = initBabylon(maybeCanvas);
     ctx.engine.start();
@@ -49,7 +47,7 @@ export function useBabylonInspector(ctx: null | BabylonContext, enabled: boolean
   useEffect(() => {
     let effective = true;
     setTimeout(async () => {
-      await import('./deps/babylon-deps-inspector');
+      await import('./babylon-deps-inspector');
       if (effective && ctx) {
         if (enabled) {
           await ctx.scene.debugLayer.show();
@@ -67,8 +65,7 @@ export function useBabylonInspector(ctx: null | BabylonContext, enabled: boolean
 export function useBabylonDepsPreload(): void {
   useEffect(() => {
     setTimeout(async () => {
-      import('./deps/babylon-deps');
-      import('./deps/babylon-deps-inspector');
+      import('./babylon-deps-inspector');
     });
   }, []);
 }

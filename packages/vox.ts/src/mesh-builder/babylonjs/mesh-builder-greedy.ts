@@ -1,11 +1,11 @@
-import * as Vox from '../types/vox-types';
+import * as Vox from '../../types/vox-types';
 import { Scene } from '@babylonjs/core/scene';
 import { Mesh, VertexData } from '@babylonjs/core/Meshes';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 import { Material } from '@babylonjs/core';
 import { StandardMaterial } from '@babylonjs/core/Materials';
-import { buildBabylonColor3 } from './util';
-import { buildVertexIndex, extractSurfacesGreedy } from '../mesh-builder/greedy';
+import { buildVertexIndex, extractSurfacesGreedy } from '../greedy';
+import { buildBabylonColor3 } from './colors';
 
 export function greedyBuild(
   model: Vox.VoxelModel,
@@ -31,13 +31,13 @@ async function startGreedyBuildMesh(
   scene: Scene,
   shouldStop?: () => boolean,
 ): Promise<boolean> {
-  const materials = new DefaultMap<number, Material>((colorIndex) => {
+  const materialMap = new DefaultMap<number, Material>((colorIndex) => {
     const material = new StandardMaterial(`voxel-material-${colorIndex}`, scene);
     material.diffuseColor = buildBabylonColor3(palette[colorIndex]);
     return material;
   });
 
-  for (const batch of extractSurfacesGreedy(model, palette)) {
+  for (const batch of extractSurfacesGreedy(model)) {
     if (shouldStop?.()) {
       return true;
     }
@@ -48,7 +48,7 @@ async function startGreedyBuildMesh(
       vertexData.positions = positions;
       vertexData.indices = buildVertexIndex(positions);
       vertexData.applyToMesh(subMesh);
-      subMesh.material = materials.getOrCreate(facet.colorIndex);
+      subMesh.material = materialMap.getOrCreate(facet.colorIndex);
       subMesh.parent = root;
 
       root.addChild(subMesh);

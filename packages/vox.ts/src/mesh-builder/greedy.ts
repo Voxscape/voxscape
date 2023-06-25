@@ -127,14 +127,9 @@ export function buildVertexIndex(positions: number[]): number[] {
 /**
  * TODO: implement greedy meshing algorithm in https://0fps.net/2012/06/30/meshing-in-a-minecraft-game/
  * @param model
- * @param palette
  * @param batchSize
  */
-export function* extractSurfacesGreedy(
-  model: Vox.VoxelModel,
-  palette: Vox.VoxelPalette,
-  batchSize = -1,
-): IterableIterator<SurfaceBatch> {
+export function* extractSurfacesGreedy(model: Vox.VoxelModel, batchSize = -1): IterableIterator<SurfaceBatch> {
   const facets: FacetSpec[] = [];
 
   const index = createVoxelIndexFull(model.voxels);

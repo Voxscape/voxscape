@@ -1,10 +1,10 @@
-import { BabylonContext } from './init-babylon';
-import { ParsedVoxFile, VoxelModel } from '../../types/vox-types';
-import { BabylonMeshBuilder } from '../../babylon/babylon-mesh-builder';
+import { BabylonContext } from './babylon-context';
+import { ParsedVoxFile } from '../../types/vox-types';
 import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 import { getDefaultPalette } from '../../parser/chunk-reader';
 import { buildTriangulatedMesh } from '../../mesh-builder/triangulation';
-import { greedyBuild } from '../../babylon/mesh-builder-greedy';
+import { greedyBuild } from '../../mesh-builder/babylonjs/mesh-builder-greedy';
+import { buildBabylonMeshProgressive } from '../../mesh-builder/babylonjs/mesh-builder-progressive';
 
 export async function renderModelAlt(ctx: BabylonContext, voxFile: ParsedVoxFile, modelIndex: number): Promise<void> {
   if (!voxFile.palette) {
@@ -22,7 +22,10 @@ export async function renderModelAlt(ctx: BabylonContext, voxFile: ParsedVoxFile
   );
 }
 
-export async function renderModel(
+/**
+ * @deprecated use {@function renderModel}
+ */
+export async function renderModelV0(
   ctx: BabylonContext,
   modelIndex: number,
   voxFile: ParsedVoxFile,
@@ -32,14 +35,12 @@ export async function renderModel(
   if (!voxFile.palette) {
     console.warn('no palette found, fallback to use default');
   }
-  const { babylonAllDeps } = await import('./deps/babylon-deps');
   // new mesh builder
-  const started = BabylonMeshBuilder.progessive(
+  const started = buildBabylonMeshProgressive(
     model,
     voxFile.palette ?? getDefaultPalette(),
     `model-${modelIndex}`,
     ctx.scene,
-    babylonAllDeps,
     1000,
   );
 
@@ -55,7 +56,7 @@ export async function renderModel(
   }
 }
 
-export async function renderModel3(
+export async function renderModel(
   ctx: BabylonContext,
   voxFile: ParsedVoxFile,
   modelIndex: number,

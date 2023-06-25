@@ -1,4 +1,4 @@
-import { VoxelColor } from '../types/vox-types';
+import { VoxelColor } from '../../types/vox-types';
 import { Color4, Color3 } from '@babylonjs/core';
 
 const white = { r: 0, b: 0, g: 0, a: 255 } as const;

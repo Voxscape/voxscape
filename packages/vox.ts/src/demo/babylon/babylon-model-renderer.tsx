@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { ParsedVoxFile } from '../../types/vox-types';
-import { useBabylonContext, useBabylonInspector } from './init-babylon';
+import { useBabylonContext, useBabylonInspector } from './babylon-context';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
-import { createRefAxes } from './deps/create-ref-axes';
-import { renderModel, renderModel3, renderModelAlt } from './render-vox-model';
+import { createRefAxes } from './create-ref-axes';
+import { renderModel } from './render-vox-model';
 import clsx from 'clsx';
 
 export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: ParsedVoxFile; modelIndex?: number }> = (
@@ -20,17 +20,18 @@ export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: Pars
         return;
       }
 
-      createRefAxes(10, babylonCtx.scene);
+      const refMesh = createRefAxes(10, babylonCtx.scene);
 
       if (typeof modelIndex === 'number' && modelFile?.models[modelIndex]) {
         // renderModel(babylonCtx, modelIndex, modelFile, () => !mounted.current);
-        renderModel3(babylonCtx, modelFile, modelIndex, () => !mounted.current);
+        renderModel(babylonCtx, modelFile, modelIndex, () => !mounted.current);
       } else {
         console.warn('no model to render, rendering playground');
       }
 
       babylonCtx.engine.start();
       effectReleased.then(() => {
+        refMesh.dispose();
         babylonCtx.engine.stop();
       });
     },

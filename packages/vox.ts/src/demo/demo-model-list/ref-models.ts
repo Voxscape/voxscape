@@ -3,7 +3,7 @@ import { Ordering } from 'fp-ts/Ordering';
 import { sort } from 'fp-ts/Array';
 import { inBrowser } from '@voxscape/web/src/config/build-config';
 import { Never } from '@jokester/ts-commonutil/lib/concurrency/timing';
-import { VoxFileDigest } from '../parser/digester';
+import { VoxFileDigest } from '../../parser/digester';
 
 export interface RefModelIndexEntry extends VoxFileDigest {}
 

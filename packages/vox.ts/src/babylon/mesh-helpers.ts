@@ -1,10 +1,8 @@
-import type { BabylonDeps } from './babylon-deps';
-import type { Nullable, Mesh, Scene } from '@babylonjs/core';
-import type { Vector3, Matrix, Quaternion } from '@babylonjs/core/Maths';
+import { Nullable, Mesh, Scene, MeshBuilder } from '@babylonjs/core';
+import { Vector3, Matrix, Quaternion } from '@babylonjs/core/Maths';
 import * as VoxTypes from '../types/vox-types';
 
 export function createModelFrameMesh(
-  { Vector3, MeshBuilder }: BabylonDeps,
   modelSize: VoxTypes.VoxelModelSize,
   scene: Nullable<Scene>,
   parent: Nullable<Mesh>,
@@ -51,7 +49,7 @@ export function createModelFrameMesh(
   return frame;
 }
 
-export function createNormalizationTransformMatrix({ Matrix }: BabylonDeps, size: VoxTypes.VoxelModelSize): Matrix {
+export function createNormalizationTransformMatrix(size: VoxTypes.VoxelModelSize): Matrix {
   /**
    * a transform that swaps y/z and places model center at origin
    */
@@ -75,19 +73,16 @@ export function createNormalizationTransformMatrix({ Matrix }: BabylonDeps, size
   );
 }
 
-export function createNormalizationTransform(
-  deps: BabylonDeps,
-  size: VoxTypes.VoxelModelSize,
-): {
+export function createNormalizationTransform(size: VoxTypes.VoxelModelSize): {
   readonly scale: Vector3;
   readonly rotation: Quaternion;
   readonly translation: Vector3;
 } {
-  const m = createNormalizationTransformMatrix(deps, size);
+  const m = createNormalizationTransformMatrix(size);
 
-  const scale = new deps.Vector3();
-  const rotation = new deps.Quaternion();
-  const translation = new deps.Vector3();
+  const scale = new Vector3();
+  const rotation = new Quaternion();
+  const translation = new Vector3();
 
   m.decompose(scale, rotation, translation);
   console.log('decomposed', scale, rotation, translation);

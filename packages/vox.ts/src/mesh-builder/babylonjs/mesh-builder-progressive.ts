@@ -1,11 +1,9 @@
-import type { Mesh } from '@babylonjs/core/Meshes';
-import type { Scene } from '@babylonjs/core/scene';
-import type { Color4 } from '@babylonjs/core/Maths';
-import type { BabylonDeps } from './babylon-deps';
-import * as VoxTypes from '../types/vox-types';
-import { buildBabylonColor } from './util';
+import * as VoxTypes from '../../types/vox-types';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
-import { createModelFrameMesh, createNormalizationTransform } from './mesh-helpers';
+import { createModelFrameMesh, createNormalizationTransform } from '../../babylon/mesh-helpers';
+import { Mesh, MeshBuilder, Scene } from '@babylonjs/core';
+import { Color4 } from '@babylonjs/core/Maths';
+import { buildBabylonColor } from './colors';
 
 export interface BabylonMeshBuildProgress {
   startAt: number;
@@ -40,11 +38,8 @@ export async function* buildBabylonMeshProgressive(
   palette: VoxTypes.VoxelPalette,
   meshName: string,
   scene: Scene,
-  deps: BabylonDeps,
   batchSize = 0,
 ): AsyncGenerator<BabylonMeshBuildProgress> {
-  const { Mesh, MeshBuilder, Vector3, Matrix, Quaternion } = deps;
-
   console.debug('buildBabylonMeshProgressive', model, palette);
 
   // vox (or MagicaVoxel): x-right / y-'deep' / z-top
@@ -52,11 +47,11 @@ export async function* buildBabylonMeshProgressive(
   const root = new Mesh(meshName, scene);
 
   {
-    const frameMesh = createModelFrameMesh(deps, model.size, scene, root);
+    const frameMesh = createModelFrameMesh(model.size, scene, root);
   }
 
   {
-    const normalize = createNormalizationTransform(deps, model.size);
+    const normalize = createNormalizationTransform(model.size);
 
     root.position = normalize.translation;
     root.rotationQuaternion = normalize.rotation;
@@ -79,7 +74,7 @@ export async function* buildBabylonMeshProgressive(
    * 3. all voxels in 1 mesh, with a complicated material
    */
   let c: null | CustomPolyhedronProps = null;
-  for (const p of extractSurfaces(model.voxels, palette, batchSize, deps)) {
+  for (const p of extractSurfaces(model.voxels, palette, batchSize)) {
     /**
      * FIXME: kkk
      */
@@ -135,7 +130,6 @@ function* extractSurfaces(
   voxels: readonly VoxTypes.Voxel[],
   palette: VoxTypes.VoxelPalette,
   batchSize: number,
-  deps: BabylonDeps,
 ): Generator<CustomPolyhedronProps & { progress: number }> {
   const voxelIndex = createVoxelIndex(voxels);
 

@@ -1,6 +1,6 @@
 import type { SceneBuilder } from '../model/babylon-scene-view';
 import type { Scene } from '@babylonjs/core';
-import { createArcRotateCamera } from '@voxscape/vox.ts/src/demo/babylon/init-babylon';
+import { createArcRotateCamera } from '@voxscape/vox.ts/src/demo/babylon/babylon-context';
 import {
   ArcRotateCamera,
   Camera,

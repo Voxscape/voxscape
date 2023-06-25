@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { RefModelIndexEntry } from './ref-models';
+import { RefModelIndexEntry } from './demo-model-list/ref-models';
 import { ReactElement } from 'react';
 
 export function DemoModelLink({ entry, index }: { entry: RefModelIndexEntry; index: number }): ReactElement {
