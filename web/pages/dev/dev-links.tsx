@@ -21,3 +21,5 @@ export const DevLinks: FC = () => {
     </div>
   );
 };
+
+export default DevLinks;
