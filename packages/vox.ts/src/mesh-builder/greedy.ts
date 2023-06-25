@@ -1,4 +1,3 @@
-import { set } from 'lodash-es';
 import * as Vox from '../types/vox-types';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 
@@ -6,13 +5,16 @@ import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
  *
  */
 export interface FacetSpec {
-  positions: number[]
+  positions: number[];
   // no indexes:
   colorIndex: number;
 }
 
 interface SurfaceBatch {
-  readonly progress: number;
+  readonly progress: {
+    x: number;
+    y: number;
+  };
   readonly facets: readonly FacetSpec[];
 }
 
@@ -49,6 +51,76 @@ export function splitRow(voxels: Vox.Voxel[]): Vox.Voxel[][] {
   return segments;
 }
 
+function buildSegmentSpec(x: number, y: number, segment: Vox.Voxel[]) {
+  const v1 = segment[0]; // of smaller z
+  const v2 = segment[segment.length - 1]; // of larger z
+
+  const zMinus = [
+    // 2 triangles look from z+ direction, clockwise
+    // p1
+    x - 1,
+    y,
+    v2.z,
+    // p2
+    x,
+    y - 1,
+    v2.z,
+    // p3
+    x - 1,
+    y - 1,
+    v2.z,
+    // p4
+    x,
+    y - 1,
+    v2.z,
+    // p5
+    x - 1,
+    y,
+    v2.z,
+    // p6
+    x,
+    y,
+    v2.z,
+  ];
+
+  const zPlus = [
+    // 2 triangles looking from z-axis, clockwise
+    x,
+    y,
+    v1.z,
+    x - 1,
+    y - 1,
+    v1.z,
+    x,
+    y - 1,
+    v1.z,
+    x - 1,
+    y - 1,
+    v1.z,
+    x,
+    y,
+    v1.z,
+    x - 1,
+    y,
+    v1.z,
+  ];
+
+  return {
+    v1,
+    v2,
+    zMinus,
+    zPlus,
+  };
+}
+
+export function buildVertexIndex(positions: number[]): number[] {
+  if (positions.length % 3) {
+    throw new Error(`invalid positions: ${positions.length}`);
+  }
+
+  return new Array(positions.length).map((_, i) => i);
+}
+
 /**
  * TODO: implement greedy meshing algorithm in https://0fps.net/2012/06/30/meshing-in-a-minecraft-game/
  * @param model
@@ -58,14 +130,9 @@ export function splitRow(voxels: Vox.Voxel[]): Vox.Voxel[][] {
 export function* extractSurfacesGreedy(
   model: Vox.VoxelModel,
   palette: Vox.VoxelPalette,
-  batchSize: number,
+  batchSize = -1,
 ): IterableIterator<SurfaceBatch> {
   const facets: FacetSpec[] = [];
-
-  const batch: SurfaceBatch = {
-    progress: 0,
-    facets,
-  };
 
   const index = createVoxelIndexFull(model.voxels);
 
@@ -73,18 +140,25 @@ export function* extractSurfacesGreedy(
     for (const [y, zRow] of yzGrid) {
       const segments = splitRow(zRow.voxels);
 
-      for (const segment of segments) {
-        const zStart = segment[0].z;
-        const zEnd = segment[segment.length - 1].z;
+      segments.forEach((s) => {
+        const coordinaes = buildSegmentSpec(x, y, s);
 
         facets.push({
-        positions: [// TODO */],
-          colorIndex: segment[0].colorIndex,
-        })
-      }
+          colorIndex: s[0].colorIndex,
+          positions: [coordinaes.zPlus, coordinaes.zMinus].flat(),
+        });
+      });
+
+      yield {
+        progress: {
+          x,
+          y,
+        },
+        facets,
+      };
+      facets.length = 0;
     }
   }
-  yield batch;
 }
 
 interface IndexedRow {

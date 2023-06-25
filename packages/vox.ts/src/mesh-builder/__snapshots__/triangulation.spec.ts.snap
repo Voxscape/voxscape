@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`buildNdArray builds an ndarray from a voxel model: xyzc 1`] = `
+View3dfloat32 {
+  "data": Float32Array [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    3,
+  ],
+  "offset": 0,
+  "shape": [
+    2,
+    2,
+    2,
+  ],
+  "stride": [
+    2,
+    1,
+    4,
+  ],
+}
+`;
+
+exports[`ndarray builds an ndarray from a voxel model: xyzc 1`] = `
+View3dfloat32 {
+  "data": Float32Array [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    3,
+  ],
+  "offset": 0,
+  "shape": [
+    2,
+    2,
+    2,
+  ],
+  "stride": [
+    2,
+    1,
+    4,
+  ],
+}
+`;
