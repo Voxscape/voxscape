@@ -5,7 +5,7 @@ import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 import { createModelFrameMesh, createNormalizationTransform } from './mesh-helpers';
 import { Material } from '@babylonjs/core';
 import { StandardMaterial } from '@babylonjs/core/Materials';
-import { buildVertexIndex, extractSurfacesGreedy } from '../greedy';
+import { buildVertexIndex, extractSurfacesGreedy, FacetSpec } from '../greedy';
 import { buildBabylonColor3 } from './colors';
 
 export function greedyBuild(
@@ -60,14 +60,21 @@ async function startGreedyBuildMesh(
     }
     batch.facets.forEach((facet) => {
       const parent = submeshMapXY.getOrCreate(`voxels-${batch.progress.x}-${batch.progress.y}`);
-      const subMesh = new Mesh(`voxels-${batch.progress.x}-${batch.progress.y}-${facet.z}`, null, parent);
-      const vertexData = new VertexData();
-      const positions = facet.positions;
-      vertexData.positions = positions;
-      vertexData.indices = buildVertexIndex(positions);
-      vertexData.applyToMesh(subMesh);
+      const subMesh = buildNoLodMesh(facet, palette);
+      // TODO: build lod-available meshes
+      subMesh.parent = parent; // this is the way to let subMesh inherit parent's transform
       subMesh.material = materialMap.getOrCreate(facet.colorIndex);
     });
   }
   return false;
+}
+
+function buildNoLodMesh(facet: FacetSpec, palette: Vox.VoxelPalette): Mesh {
+  const subMesh = new Mesh(`voxels-${facet.x}-${facet.y}-${facet.z}`);
+  const vertexData = new VertexData();
+  const positions = facet.positions;
+  vertexData.positions = positions;
+  vertexData.indices = buildVertexIndex(positions);
+  vertexData.applyToMesh(subMesh);
+  return subMesh;
 }
