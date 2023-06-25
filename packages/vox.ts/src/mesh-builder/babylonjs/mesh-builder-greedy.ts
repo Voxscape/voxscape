@@ -37,21 +37,28 @@ async function startGreedyBuildMesh(
     return material;
   });
 
+  const submeshMapX = new DefaultMap<number, Mesh>((x) => new Mesh(`voxels-${x}`, null, root));
+  const submeshMapXY = new DefaultMap<`voxels-${number}-${number}`, Mesh>((xy) => {
+    const [x, y] = xy
+      .split('-')
+      .slice(1)
+      .map((s) => parseInt(s, 10));
+    return new Mesh(xy, null, submeshMapX.getOrCreate(x));
+  });
+
   for (const batch of extractSurfacesGreedy(model)) {
     if (shouldStop?.()) {
       return true;
     }
     batch.facets.forEach((facet) => {
-      const subMesh = new Mesh(`voxels-${batch.progress.x}-${batch.progress.y}-${facet.z}`);
+      const parent = submeshMapXY.getOrCreate(`voxels-${batch.progress.x}-${batch.progress.y}`);
+      const subMesh = new Mesh(`voxels-${batch.progress.x}-${batch.progress.y}-${facet.z}`, null, parent);
       const vertexData = new VertexData();
       const positions = facet.positions;
       vertexData.positions = positions;
       vertexData.indices = buildVertexIndex(positions);
       vertexData.applyToMesh(subMesh);
       subMesh.material = materialMap.getOrCreate(facet.colorIndex);
-      subMesh.parent = root;
-
-      root.addChild(subMesh);
     });
   }
   return false;
