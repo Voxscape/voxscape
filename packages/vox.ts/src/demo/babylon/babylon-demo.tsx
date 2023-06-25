@@ -32,14 +32,18 @@ function useDemoModel(modelUrl?: string) {
   return model;
 }
 
-export const BabylonDemo: React.FC<{ initialPath: ModelPath }> = (props) => {
+export const BabylonDemo: React.FC<{ initialPath: ModelPath; builder?: string }> = (props) => {
   const [modelUrl, setModelUrl] = useState(props.initialPath.modelUrl);
   const model = useDemoModel(modelUrl);
   if (model) {
     return (
       <div className="p-4">
         <h1 className="mb-2 text-xl">model viewer</h1>
-        <BabylonModelRenderer modelFile={model} modelIndex={Number(props.initialPath?.modelIndex ?? '0')} />
+        <BabylonModelRenderer
+          modelFile={model}
+          modelIndex={Number(props.initialPath?.modelIndex ?? '0')}
+          builder={props.builder}
+        />
       </div>
     );
   }

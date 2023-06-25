@@ -27,8 +27,8 @@ export async function renderModelAlt(ctx: BabylonContext, voxFile: ParsedVoxFile
  */
 export async function renderModelV0(
   ctx: BabylonContext,
-  modelIndex: number,
   voxFile: ParsedVoxFile,
+  modelIndex: number,
   shouldBreak?: () => boolean,
 ): Promise<void> {
   const model = voxFile.models[modelIndex];

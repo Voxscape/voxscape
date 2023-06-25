@@ -3,12 +3,15 @@ import { ParsedVoxFile } from '../../types/vox-types';
 import { useBabylonContext, useBabylonInspector } from './babylon-context';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { createRefAxes } from './create-ref-axes';
-import { renderModel } from './render-vox-model';
+import { renderModel, renderModelV0 } from './render-vox-model';
 import clsx from 'clsx';
 
-export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: ParsedVoxFile; modelIndex?: number }> = (
-  props,
-) => {
+export const BabylonModelRenderer: React.FC<{
+  onReset?(): void;
+  modelFile?: ParsedVoxFile;
+  modelIndex?: number;
+  builder?: string;
+}> = (props) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const babylonCtx = useBabylonContext(canvasRef);
   const modelFile = props.modelFile;
@@ -24,7 +27,8 @@ export const BabylonModelRenderer: React.FC<{ onReset?(): void; modelFile?: Pars
 
       if (typeof modelIndex === 'number' && modelFile?.models[modelIndex]) {
         // renderModel(babylonCtx, modelIndex, modelFile, () => !mounted.current);
-        renderModel(babylonCtx, modelFile, modelIndex, () => !mounted.current);
+        const start = props.builder === 'v0' ? renderModelV0 : renderModel;
+        start(babylonCtx, modelFile, modelIndex, () => !mounted.current);
       } else {
         console.warn('no model to render, rendering playground');
       }

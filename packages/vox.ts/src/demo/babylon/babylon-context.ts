@@ -8,7 +8,7 @@ import { Engine, Scene, ArcRotateCamera, HemisphericLight, Vector3, Color3, Colo
 export interface BabylonContext {
   engine: {
     instance: Engine;
-    start(scene?: Scene): void;
+    start(): void;
     stop(): void;
   };
   scene: Scene;
@@ -31,7 +31,6 @@ export function useBabylonContext(canvasRef: RefObject<HTMLCanvasElement>): null
 
     if (!mounted.current) return;
     const ctx = initBabylon(maybeCanvas);
-    ctx.engine.start();
     setCtx(ctx);
 
     effectReleased.then(() => ctx.disposeAll());
@@ -109,9 +108,9 @@ function initBabylon(canvas: HTMLCanvasElement): BabylonContext {
     engine: {
       instance: engine,
 
-      start(theScene = defaultScene) {
+      start() {
         engine.stopRenderLoop();
-        engine.runRenderLoop(() => theScene?.render());
+        engine.runRenderLoop(() => defaultScene.render());
       },
       stop() {
         engine.stopRenderLoop();

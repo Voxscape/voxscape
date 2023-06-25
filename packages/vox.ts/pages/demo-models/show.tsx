@@ -4,7 +4,7 @@ import { FC, useMemo } from 'react';
 
 const BabylonViewerPage: FC = () => {
   const router = useRouter();
-  const query = router.query as { file: string; modelIndex: string };
+  const query = router.query as { file: string; modelIndex: string; builder?: string };
 
   const initialPath: undefined | ModelPath = useMemo(() => {
     if (router.isReady && query.file) {
