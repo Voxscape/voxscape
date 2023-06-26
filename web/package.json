@@ -64,6 +64,7 @@
     "@babylonjs/post-processes": "^5.40.0",
     "@babylonjs/procedural-textures": "^5.40.0",
     "@babylonjs/serializers": "^5.40.0",
+    "@faker-js/faker": "^8.0.2",
     "@next/bundle-analyzer": "^13",
     "@next/eslint-plugin-next": "^13.1.1",
     "@types/debug": "^4.1.7",
