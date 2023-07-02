@@ -3137,6 +3137,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tabler/icons-react@npm:^2.23.0":
+  version: 2.23.0
+  resolution: "@tabler/icons-react@npm:2.23.0"
+  dependencies:
+    "@tabler/icons": 2.23.0
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0
+  checksum: 9e40f615e20cd2a4f7a9f079fb076c8b53af7420b59b9cd80abc470c2cc39440012c0ede1779b5bca67a2f587d475571fd0c9b228e7e0071e069e90ccddc1828
+  languageName: node
+  linkType: hard
+
+"@tabler/icons@npm:2.23.0":
+  version: 2.23.0
+  resolution: "@tabler/icons@npm:2.23.0"
+  checksum: aceeebf5ea526e7cc00b128ae018f8501d78e4f5c91b4e0a1d4d5f2b6b9c67457f892b7f054e4f7f074b1189b4ea515455d130b8cf274265b5a12b67e1ee4d92
+  languageName: node
+  linkType: hard
+
 "@tanstack/query-core@npm:4.29.14":
   version: 4.29.14
   resolution: "@tanstack/query-core@npm:4.29.14"
@@ -3819,6 +3838,7 @@ __metadata:
     "@next/bundle-analyzer": ^13
     "@next/eslint-plugin-next": ^13.1.1
     "@prisma/client": ^4.9.0
+    "@tabler/icons-react": ^2.23.0
     "@tanstack/react-query": ^4.24.6
     "@trpc/client": ^10.11.1
     "@trpc/react-query": ^10.11.1
@@ -9301,7 +9321,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
