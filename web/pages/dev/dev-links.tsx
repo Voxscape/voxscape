@@ -1,6 +1,7 @@
 import { isDevBuild } from '../../src/config/build-config';
 import { FC } from 'react';
 import Link from 'next/link';
+const devLinks = ['/users', '/models'];
 
 export const DevLinks: FC = () => {
   if (!isDevBuild) {
@@ -8,12 +9,14 @@ export const DevLinks: FC = () => {
   }
 
   return (
-    <div className="p-4 space-x-2">
-      <span className="text-xl font-bold">DEV</span>
-      <ul className="space-x-2 inline-block w-full">
-        {['/users', '/models'].map((path) => (
-          <li key={path} className="inline">
-            <Link href={path}>{path}</Link>
+    <div className="p-4 space-x-2 absolute left-0 bottom-0">
+      <span className="text-xl font-bold">DEV LINKS</span>
+      <ul className="">
+        {devLinks.map((path) => (
+          <li key={path} className="block">
+            <Link className="w-full" href={path}>
+              {path}
+            </Link>
           </li>
         ))}
       </ul>

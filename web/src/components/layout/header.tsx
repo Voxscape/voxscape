@@ -1,7 +1,6 @@
 import { Button, ButtonGroup, chakra } from '@chakra-ui/react';
 import React from 'react';
 import { useSession } from 'next-auth/react';
-import logoPng from './logo.png';
 import Image from 'next/image';
 import styles from './header.module.scss';
 import Link from 'next/link';
@@ -19,7 +18,6 @@ export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
         paddingY={[2, null, 2]}
         borderBottom="2px solid"
         borderColor="primary.50"
-        className="max-w-screen-sm md:max-w-screen-md"
       >
         <Link href="/" title="Voxscape" className={styles.logoText}>
           Voxscape
@@ -31,17 +29,12 @@ export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
   );
 };
 
-export const DefaultHeader: React.FC = () => {
-  const session = useSession();
-
-  return <LayoutHeader></LayoutHeader>;
-};
-
 export const LayoutHeaderButtons: React.FC = () => {
+  const session = useSession();
   return (
     <>
       <ButtonGroup>
-        <NewModelButton />
+        {session.status === 'authenticated' && <NewModelButton />}
         <AuthButton />
       </ButtonGroup>
     </>

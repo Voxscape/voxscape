@@ -3,8 +3,10 @@ import { FaIcon } from '@jokester/ts-commonutil/lib/react/component/font-awesome
 import { signIn, useSession } from 'next-auth/react';
 import { ModalHandle, useModalApi } from '../modal/modal-context';
 import styles from './auth.module.scss';
-import clsx from 'clsx';
 import { Button } from '@chakra-ui/react';
+import { Session } from 'next-auth';
+import { IconSettings, IconUser } from '@tabler/icons-react';
+import Link from 'next/link';
 
 export const TwitterOAuth1Button: React.FC = () => {
   return (
@@ -28,12 +30,31 @@ function AuthProviderPicker(props: { handle: ModalHandle<string> }) {
   );
 }
 
+const UserButton: React.FC<{ userId: string }> = (props) => {
+  return (
+    <Link href={`/users/${props.userId}`}>
+      <Button size="sm" className={styles.authButton}>
+        <IconUser />
+      </Button>
+    </Link>
+  );
+};
+
+const SettingButton: React.FC = () => {
+  return (
+    <Link href="/settings">
+      <Button size="sm" className={styles.authButton}>
+        <IconSettings />
+      </Button>
+    </Link>
+  );
+};
+
 export const AuthButton: React.FC = () => {
   const session = useSession();
   const modal = useModalApi();
 
   const onStartAuth = async () => {
-    console.debug('modal', modal, modal.build);
     const provider = await modal.build<string>((handle) => ({
       title: 'auth',
       body: <AuthProviderPicker handle={handle} />,
@@ -44,11 +65,12 @@ export const AuthButton: React.FC = () => {
     }
   };
 
-  if (session.data?.user) {
+  if (session.data?.user?.id) {
     return (
-      <Button color="primary.500" size="sm" className={styles.authButton}>
-        {session.data.user.name ?? 'username not set'}
-      </Button>
+      <>
+        <UserButton session={session.data} />
+        <SettingButton />
+      </>
     );
   }
 
