@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import styles from './header.module.scss';
 import Link from 'next/link';
-import { AuthButton } from '../auth/auth_button';
+import { AuthButton, NewModelButton, OwnUserButton, SettingButton } from './header/header_button';
 
 export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
   return (
@@ -31,27 +31,14 @@ export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
 
 export const LayoutHeaderButtons: React.FC = () => {
   const session = useSession();
+  const authButton = session.status === 'unauthenticated' && <AuthButton />;
+  const userButton = session.status === 'authenticated' && <OwnUserButton userId={session.data.user!.id} />;
+
   return (
-    <>
-      <ButtonGroup>
-        {session.status === 'authenticated' && <NewModelButton />}
-        <AuthButton />
-      </ButtonGroup>
-    </>
+    <ButtonGroup>
+      <NewModelButton />
+      {authButton}
+      {userButton}
+    </ButtonGroup>
   );
-};
-
-const NewModelButton = () => {
-  const session = useSession();
-
-  if (session.status === 'authenticated') {
-    return (
-      <Link href="/models/new">
-        <Button size="sm" type="button">
-          new model
-        </Button>
-      </Link>
-    );
-  }
-  return null;
 };
