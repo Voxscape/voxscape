@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { createDebugLogger } from '../../../shared/logger';
 import { prisma } from '../../prisma';
-import { requireUserLogin } from '../common/auth';
+import { requireUserLogin } from '../common/session.middleware';
 import { t } from '../common/_base';
 import { getBucket } from '../../external/gcp';
 

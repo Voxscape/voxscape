@@ -1,5 +1,5 @@
 import { prisma } from './prisma';
-import {faker} from '@faker-js/faker'
+import { faker } from '@faker-js/faker';
 
 describe('prisma', () => {
   it('connects to db', async () => {
@@ -11,15 +11,14 @@ describe('prisma', () => {
 
 describe('prisma with generated model classes', () => {
   it('CRUD on User', async () => {
-
     const user = await prisma.user.create({
       data: {
         email: faker.internet.email(),
-      }
-    })
+      },
+    });
 
-    expect(user.email).toMatch(/.+@.+\..+/)
-    expect(user.emailVerified).toBe(null)
+    expect(user.email).toMatch(/.+@.+\..+/);
+    expect(user.emailVerified).toBe(null);
 
     /**
      * email is in small case
@@ -27,15 +26,15 @@ describe('prisma with generated model classes', () => {
     const notFound = await prisma.user.findUnique({
       where: {
         email: user.email?.toUpperCase(),
-      }
-    })
-    expect(notFound).toEqual(null)
+      },
+    });
+    expect(notFound).toEqual(null);
 
     const reloaded = await prisma.user.findUnique({
       where: {
         email: user.email!,
-      }
-    })
-    expect(reloaded).toBeTruthy()
-  })
-})
+      },
+    });
+    expect(reloaded).toBeTruthy();
+  });
+});

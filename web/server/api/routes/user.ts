@@ -2,7 +2,7 @@ import { t } from '../common/_base';
 import { z } from 'zod';
 import { ClientBad } from '../errors';
 import { createDebugLogger } from '../../../shared/logger';
-import { requireUserLogin } from '../common/auth';
+import { requireUserLogin } from '../common/session.middleware';
 import { prisma } from '../../prisma';
 import * as Prisma from '@prisma/client';
 

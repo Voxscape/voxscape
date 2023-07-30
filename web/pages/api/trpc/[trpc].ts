@@ -2,7 +2,7 @@ import * as trpcNext from '@trpc/server/adapters/next';
 import { appRouter } from '../../../server/api';
 import { ZodError } from 'zod';
 import { TRPCError } from '@trpc/server';
-import { createTrpcReqContext } from '../../../server/api/common/auth';
+import { createTrpcReqContext } from '../../../server/api/common/session.middleware';
 import { createDebugLogger } from '../../../shared/logger';
 import { ClientBad } from '../../../server/api/errors';
 const logger = createDebugLogger(__filename);
