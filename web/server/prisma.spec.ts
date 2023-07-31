@@ -1,3 +1,4 @@
+import { mimeTypes } from '../shared/const';
 import { prisma } from './prisma';
 import { faker } from '@faker-js/faker';
 
@@ -36,5 +37,56 @@ describe('prisma with generated model classes', () => {
       },
     });
     expect(reloaded).toBeTruthy();
+  });
+
+  describe.only('CRUD with nested relations', () => {
+    it('CRUD on User + VoxelModel', async () => {
+      const user = await prisma.user.create({
+        data: {
+          email: faker.internet.email(),
+        },
+      });
+
+      const model = await prisma.voxelModel.create({
+        data: {
+          ownerUserId: user.id,
+          contentType: mimeTypes.vox,
+          assetUrl: faker.internet.url(),
+        },
+        include: {
+          ownerUser: true,
+        },
+      });
+
+      expect(model.ownerUser.id).toEqual(user.id);
+    });
+
+    it('allows nested insert', async () => {
+      const user = await prisma.user.create({
+        data: {
+          email: faker.internet.email(),
+        },
+      });
+
+      const m = await prisma.voxelModel.create({
+        data: {
+          contentType: mimeTypes.vox,
+          assetUrl: faker.internet.url(),
+          ownerUserId: user.id,
+          // ownerUser: {
+          // connect: user
+          // },
+          modelViews: {
+            create: [
+              {
+                ownerUserId: user.id,
+                previewImageUrl: faker.internet.url(),
+                perspective: {},
+              },
+            ],
+          },
+        },
+      });
+    });
   });
 });
