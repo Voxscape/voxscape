@@ -22,8 +22,12 @@ function useDemoModel(modelUrl?: string) {
       }
       const escaped = modelUrl.replaceAll('#', () => encodeURIComponent('#'));
       const absolutified = escaped.replace(/^\\?/, '/');
-      console.debug('fetching', { modelUrl, escaped, absolutified });
-      const blob = await fetch(absolutified).then((_) => _.blob());
+      const rebuilt = new URL(absolutified, window.location.href);
+      console.debug('fetching', { modelUrl, escaped, absolutified, rebuilt });
+      const blob = await fetch(rebuilt).then((_) => _.blob());
+      if (!mounted.current) {
+        return;
+      }
       const parsed = basicParser(await binaryConversion.blob.toArrayBuffer(blob));
       if (!mounted.current) {
         return;
