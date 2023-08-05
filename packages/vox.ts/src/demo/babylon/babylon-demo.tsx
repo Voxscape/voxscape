@@ -20,7 +20,10 @@ function useDemoModel(modelUrl?: string) {
         setModel(null);
         return;
       }
-      const blob = await fetch(modelUrl.replaceAll('#', encodeURIComponent('#'))).then((_) => _.blob());
+      const escaped = modelUrl.replaceAll('#', () => encodeURIComponent('#'));
+      const absolutified = escaped.replace(/^\\?/, '/');
+      console.debug('fetching', { modelUrl, escaped, absolutified });
+      const blob = await fetch(absolutified).then((_) => _.blob());
       const parsed = basicParser(await binaryConversion.blob.toArrayBuffer(blob));
       if (!mounted.current) {
         return;
