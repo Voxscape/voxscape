@@ -10,3 +10,14 @@ node_modules
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+out
+build
+coverage
+.next
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.tsbuildinfo
+
+/packages/ref-models
