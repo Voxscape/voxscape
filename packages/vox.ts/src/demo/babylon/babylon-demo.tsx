@@ -21,9 +21,11 @@ function useDemoModel(modelUrl?: string) {
         return;
       }
       const escaped = modelUrl.replaceAll('#', () => encodeURIComponent('#'));
-      const absolutified = escaped.replace(/^\\?/, '/');
-      const rebuilt = new URL(absolutified, window.location.href);
-      console.debug('fetching', { modelUrl, escaped, absolutified, rebuilt });
+      // NOTE must ensure assetPath have exactly 1 leading slash,
+      // or new URL(assetPath, location.href) will return a strange URL
+      const assetPath = escaped.replace(/^\/*/, '/');
+      const rebuilt = new URL(assetPath, window.location.href);
+      console.debug('fetching', { modelUrl, escaped, absolutified: assetPath, rebuilt });
       const blob = await fetch(rebuilt).then((_) => _.blob());
       if (!mounted.current) {
         return;
