@@ -1,6 +1,9 @@
 import React from 'react';
 import Document, { Html, Main, NextScript, Head } from 'next/document';
 import { fontawesomeCss } from '@jokester/ts-commonutil/lib/react/component/font-awesome';
+import { GetServerSideProps } from 'next';
+import { getServerSession } from 'next-auth';
+import { nextAuthOptions } from '../server/next_auth';
 
 const defaultStyleSheets = [
   // eslint-disable-next-line @next/next/no-page-custom-font
