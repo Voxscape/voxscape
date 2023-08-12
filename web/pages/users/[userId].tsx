@@ -5,6 +5,10 @@ import { useEffect } from 'react';
 import { TRPCClientError } from '@trpc/client';
 import { Layout } from '../../src/components/layout/layout';
 import { PageMeta } from '../../src/components/meta/page-meta';
+import { signOut, useSession } from 'next-auth/react';
+import { Button } from '@chakra-ui/react';
+import { IconLogout } from '@tabler/icons-react';
+import { userRouter } from '../../server/api/routes/user';
 
 function UserDetailContent(props: { userId: string }) {
   const userQuery = trpcReact.user.getById.useQuery({ userId: props.userId });
@@ -28,14 +32,39 @@ function UserDetailContent(props: { userId: string }) {
   );
 }
 
+function UserSelfContent(props: { userId: string }) {
+  const session = useSession();
+  const router = useRouter();
+  if (session.status === 'authenticated' && session.data.user?.id === props.userId) {
+    const onLogout = () => {
+      signOut().then(() => {
+        router.reload();
+      });
+    };
+    return (
+      <div>
+        <div className="my-4">TODO: settings</div>
+        <div className="my-4">
+          LOGOUT:
+          <Button onClick={onLogout}>
+            <IconLogout />
+          </Button>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
 const UserDetailPage: NextPage = (props) => {
   const router = useRouter();
   const { userId } = router.query;
 
   if (router.isReady && typeof userId === 'string') {
     return (
-      <Layout>
-        <UserDetailContent userId={userId} key={userId} />
+      <Layout key={userId}>
+        <UserDetailContent userId={userId} />
+        <UserSelfContent userId={userId} />
       </Layout>
     );
   }

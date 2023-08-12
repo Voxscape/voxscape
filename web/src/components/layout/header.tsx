@@ -1,11 +1,10 @@
 import { Button, ButtonGroup, chakra } from '@chakra-ui/react';
 import React from 'react';
 import { useSession } from 'next-auth/react';
-import logoPng from './logo.png';
 import Image from 'next/image';
 import styles from './header.module.scss';
 import Link from 'next/link';
-import { AuthButton } from '../auth/auth_button';
+import { AuthButton, NewModelButton, OwnUserButton, SettingButton } from './header/header_button';
 
 export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
   return (
@@ -19,7 +18,6 @@ export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
         paddingY={[2, null, 2]}
         borderBottom="2px solid"
         borderColor="primary.50"
-        className="max-w-screen-sm md:max-w-screen-md"
       >
         <Link href="/" title="Voxscape" className={styles.logoText}>
           Voxscape
@@ -31,34 +29,16 @@ export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
   );
 };
 
-export const DefaultHeader: React.FC = () => {
-  const session = useSession();
-
-  return <LayoutHeader></LayoutHeader>;
-};
-
 export const LayoutHeaderButtons: React.FC = () => {
-  return (
-    <>
-      <ButtonGroup>
-        <NewModelButton />
-        <AuthButton />
-      </ButtonGroup>
-    </>
-  );
-};
-
-const NewModelButton = () => {
   const session = useSession();
+  const authButton = session.status === 'unauthenticated' && <AuthButton />;
+  const userButton = session.status === 'authenticated' && <OwnUserButton userId={session.data.user!.id} />;
 
-  if (session.status === 'authenticated') {
-    return (
-      <Link href="/models/new">
-        <Button size="sm" type="button">
-          new model
-        </Button>
-      </Link>
-    );
-  }
-  return null;
+  return (
+    <ButtonGroup>
+      <NewModelButton />
+      {authButton}
+      {userButton}
+    </ButtonGroup>
+  );
 };

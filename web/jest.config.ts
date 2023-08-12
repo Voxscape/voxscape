@@ -2,9 +2,15 @@ import type { Config } from 'jest';
 const nodeModulesToTranspile = ['@babylonjs'];
 
 export default {
-  roots: ['src', 'test'],
+  roots: ['src', 'test', 'server'],
   transformIgnorePatterns: [`node_modules/(?!(${nodeModulesToTranspile.join('|')})/)`, '<rootDir>/build/.*\\.js'],
-  collectCoverageFrom: ['src/**/*.(ts|tsx)', '!out/', '!build/', '!**/node_modules', '!/coverage'],
+  collectCoverageFrom: [
+    '{pages,src,server,shared}/**/*.(ts|tsx)',
+    '!out/',
+    '!build/',
+    '!**/node_modules',
+    '!/coverage',
+  ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   coverageReporters: ['json', 'lcov', 'text', 'html'],
   moduleNameMapper: {

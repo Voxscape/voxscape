@@ -7,6 +7,7 @@ function localTime(date: Date) {
 function relativeTime(date: Date, baseDate = Date.now()) {
   return formatDistance(date, baseDate);
 }
+
 function naturalTime(date: Date, now = Date.now()) {
   return formatDistance(date, now, { addSuffix: true });
 }
