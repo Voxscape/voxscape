@@ -19,11 +19,14 @@ function AuthProviderPicker(props: { handle: ModalHandle<string> }) {
   const fulfill = (provider: string) => props.handle.deferred.fulfill(provider);
   return (
     <div className="flex flex-col space-y-4">
-      <Button className={styles.authButton} onClick={() => fulfill('google')}>
-        Log in with Google
+      <Button className={styles.authButton} onClick={() => fulfill('twitter')}>
+        Log in with Twitter
       </Button>
       <Button className={styles.authButton} onClick={() => fulfill('discord')}>
         Log in with Discord
+      </Button>
+      <Button className={styles.authButton} onClick={() => fulfill('google')}>
+        Log in with Google
       </Button>
     </div>
   );
