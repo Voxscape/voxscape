@@ -1,25 +1,27 @@
 import type React from 'react';
 import { FaIcon } from '@jokester/ts-commonutil/lib/react/component/font-awesome';
-import { signIn } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
 import { ModalHandle, useModalApi } from '../../modal/modal-context';
 import styles from './header_button.module.scss';
 import { Button } from '@chakra-ui/react';
-import { IconLogin, IconScriptPlus, IconSettings, IconUser } from '@tabler/icons-react';
+import {
+  IconFilePlus,
+  IconLogin,
+  IconLogout,
+  IconScriptPlus,
+  IconSettings,
+  IconSquarePlus,
+  IconUser,
+} from '@tabler/icons-react';
 import Link from 'next/link';
-
-export const TwitterOAuth1Button: React.FC = () => {
-  return (
-    <button type="button">
-      Login With Twitter <FaIcon icon="twitter" />
-    </button>
-  );
-};
+import { useRouter } from 'next/router';
 
 function AuthProviderPicker(props: { handle: ModalHandle<string> }) {
   const fulfill = (provider: string) => props.handle.deferred.fulfill(provider);
   return (
     <div className="flex flex-col space-y-4">
       <Button className={styles.authButton} onClick={() => fulfill('twitter')}>
+        <FaIcon icon="twitter" />
         Log in with Twitter
       </Button>
       <Button className={styles.authButton} onClick={() => fulfill('discord')}>
@@ -52,7 +54,7 @@ export const SettingButton: React.FC = () => {
   );
 };
 
-export const AuthButton: React.FC = () => {
+export const LoginButton: React.FC = () => {
   const modal = useModalApi();
 
   const onStartAuth = async () => {
@@ -73,11 +75,29 @@ export const AuthButton: React.FC = () => {
   );
 };
 
+export const LogoutButton: React.FC = () => {
+  const modal = useModalApi();
+  const router = useRouter();
+
+  const onLogout = async () => {
+    const confirmed = await modal.confirm('Logout?', '');
+    if (confirmed.value) {
+      signOut().then(() => router.reload());
+    }
+  };
+
+  return (
+    <Button size="sm" className={styles.headerButton} onClick={onLogout}>
+      <IconLogout />
+    </Button>
+  );
+};
+
 export const NewModelButton = () => {
   return (
     <Link href="/models/new">
       <Button size="sm" type="button">
-        <IconScriptPlus />
+        <IconFilePlus />
       </Button>
     </Link>
   );

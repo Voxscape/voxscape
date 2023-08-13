@@ -9,7 +9,7 @@ function getStorage(): Storage {
         credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_CRED),
       });
     } else {
-      // we'd better be running in GCE
+      // we'd better be running in GCP
       storage ||= new Storage();
     }
     storage.authClient.getClient().then((c) => {

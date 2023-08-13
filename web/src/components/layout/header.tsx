@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import styles from './header.module.scss';
 import Link from 'next/link';
-import { AuthButton, NewModelButton, OwnUserButton, SettingButton } from './header/header_button';
+import { LoginButton, LogoutButton, NewModelButton, OwnUserButton, SettingButton } from './header/header_button';
 
 export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
   return (
@@ -22,8 +22,9 @@ export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
         <Link href="/" title="Voxscape" className={styles.logoText}>
           Voxscape
         </Link>
-        <chakra.span flex="1 0" />
         {props.children}
+        <chakra.span flex="1 0" />
+        <LayoutHeaderButtons />
       </chakra.div>
     </div>
   );
@@ -31,14 +32,16 @@ export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
 
 export const LayoutHeaderButtons: React.FC = () => {
   const session = useSession();
-  const authButton = session.status === 'unauthenticated' && <AuthButton />;
+  const loginButton = (session.status === 'unauthenticated' || session.status === 'loading') && <LoginButton />;
+  const logoutButton = session.status === 'authenticated' && <LogoutButton />;
   const userButton = session.status === 'authenticated' && <OwnUserButton userId={session.data.user!.id} />;
 
   return (
     <ButtonGroup>
       <NewModelButton />
-      {authButton}
       {userButton}
+      {loginButton}
+      {logoutButton}
     </ButtonGroup>
   );
 };
