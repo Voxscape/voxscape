@@ -8,9 +8,7 @@ export const Layout: React.FC<React.PropsWithChildren> = (props) => {
   return (
     <chakra.div display="flex" className="mx-auto max-w-screen-sm md:max-w-screen-md" flexDir="column" minH="100vh">
       <DevLinks />
-      <LayoutHeader>
-        <div>TODO</div>
-      </LayoutHeader>
+      <LayoutHeader />
       <chakra.div flex="1 0" className="py-4 container" alignSelf="center">
         {props.children}
       </chakra.div>

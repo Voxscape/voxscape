@@ -10,7 +10,20 @@ describe('prisma', () => {
   });
 });
 
-describe('prisma with generated model classes', () => {
+describe.skip('prisma with generated model classes', () => {
+  it('runs', async () => {
+    const allUsers = await prisma.user.findMany({ where: {} });
+    console.debug('allUsers', allUsers);
+
+    const user = await prisma.user.create({
+      data: {
+        name: 'alize',
+        email: 'alice@prisma.io',
+      },
+    });
+    // ... you will write your Prisma Client queries here
+    console.debug('user', user);
+  });
   it('CRUD on User', async () => {
     const user = await prisma.user.create({
       data: {

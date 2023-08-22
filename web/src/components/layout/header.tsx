@@ -22,7 +22,9 @@ export const LayoutHeader: React.FC<React.PropsWithChildren> = (props) => {
         <Link href="/" title="Voxscape" className={styles.logoText}>
           Voxscape
         </Link>
-        {props.children}
+        <div className="mx-2" flex="0 0">
+          <NewModelButton />
+        </div>
         <chakra.span flex="1 0" />
         <LayoutHeaderButtons />
       </chakra.div>
@@ -38,7 +40,6 @@ export const LayoutHeaderButtons: React.FC = () => {
 
   return (
     <ButtonGroup>
-      <NewModelButton />
       {userButton}
       {loginButton}
       {logoutButton}

@@ -5,6 +5,9 @@ import { ModalHandle, useModalApi } from '../../modal/modal-context';
 import styles from './header_button.module.scss';
 import { Button } from '@chakra-ui/react';
 import {
+  IconBrandDiscord,
+  IconBrandGoogle,
+  IconBrandTwitter,
   IconFilePlus,
   IconLogin,
   IconLogout,
@@ -21,13 +24,15 @@ function AuthProviderPicker(props: { handle: ModalHandle<string> }) {
   return (
     <div className="flex flex-col space-y-4">
       <Button className={styles.authButton} onClick={() => fulfill('twitter')}>
-        <FaIcon icon="twitter" />
+        <IconBrandTwitter />
         Log in with Twitter
       </Button>
       <Button className={styles.authButton} onClick={() => fulfill('discord')}>
+        <IconBrandDiscord />
         Log in with Discord
       </Button>
       <Button className={styles.authButton} onClick={() => fulfill('google')}>
+        <IconBrandGoogle />
         Log in with Google
       </Button>
     </div>
