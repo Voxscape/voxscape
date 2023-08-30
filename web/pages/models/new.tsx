@@ -6,33 +6,7 @@ import { Button } from '@chakra-ui/react';
 import { useBlocking } from '../../src/hooks/use-blocking';
 
 function CreateModelPageContent() {
-  const api = useTrpcClient();
-  const modal = useModalApi();
-
   const fileRef = useRef<HTMLInputElement>(null!);
-  const [blocking, inBlocking] = useBlocking();
-
-  const onUpload = inBlocking(async () => {
-    const f = fileRef.current.files?.[0];
-    if (!f) return;
-    try {
-      const uploadUrl = await api.$.models.requestUpload.mutate({ filename: f.name, contentType: f.type });
-
-      const uploaded = await fetch(uploadUrl.uploadUrl, {
-        method: 'PUT',
-        body: f,
-        headers: {
-          'Content-Disposition': encodeURIComponent(f.name),
-        },
-      });
-      if (!uploaded.ok) {
-        throw new Error(uploaded.statusText);
-      }
-      await modal.alert('uploaded', uploadUrl.publicUrl);
-    } catch (e: any) {
-      await modal.alert(`???`, e.message);
-    }
-  });
 
   return (
     <div>

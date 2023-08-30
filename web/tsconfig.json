@@ -2,7 +2,7 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "isolatedModules": true,
-    "jsxImportSource": "@emotion/react",
+    //    "jsxImportSource": "@emotion/react", // before tsc can recognize over-complicated Chakra types
     "jsx": "preserve",
     "module": "commonjs",
     "moduleResolution": "node",
