@@ -1,50 +1,54 @@
 import { createContext, ReactNode, useCallback, useContext, useState } from 'react';
-import { BehaviorSubject, Observable, single } from 'rxjs';
-import useConstant from 'use-constant';
-import { useExternalObservable } from '@jokester/ts-commonutil/lib/react/hook/use-observable-store';
+import { BehaviorSubject } from 'rxjs';
 import { from } from 'rxjs';
+import { useSingleton } from 'foxact/use-singleton';
 
 interface BlockingState {
   subject: BehaviorSubject<boolean>;
+  wrap<A extends unknown[], T>(foo: (...args: A) => Promise<T>): typeof foo;
 }
 
-const BlockingContextContext = createContext<BlockingState>(null!);
+const BlockingContextContext = createContext<null | BlockingState>(null);
 
 export function BlockingContextProvider(props: { children: ReactNode }) {
   // XXX: what is a consist definition of nested BlockingContext-s?
-  const state = useConstant(() => ({ subject: new BehaviorSubject(false) }));
+  const { current } = useSingleton(() => {
+    const subject = new BehaviorSubject(false);
+    const wrap = <A extends unknown[], T>(foo: (...args: A) => Promise<T>): typeof foo => {
+      return async (...args: A): Promise<T> => {
+        if (subject.value) {
+          throw new Error(`already blocking`);
+        }
+        try {
+          subject.next(true);
+          return await foo(...args);
+        } finally {
+          subject.next(false);
+        }
+      };
+    };
+    return { subject, wrap };
+  });
 
-  return <BlockingContextContext.Provider value={state}>{props.children}</BlockingContextContext.Provider>;
+  return <BlockingContextContext.Provider value={current}>{props.children}</BlockingContextContext.Provider>;
 }
 
 const alwaysFalse = from([false]);
 
-export function useBlocking2() {
+export function useBlocking(): readonly [boolean, BlockingState['wrap']] {
   const stateValue = useContext(BlockingContextContext);
 
-  const blocking = useExternalObservable(alwaysFalse, false);
-
-  const inBlocking = useCallback(
-    <A extends unknown[], T>(foo: (...args: A) => PromiseLike<T>): (() => Promise<T>) =>
-      async (...args: A) => {
-        if (blocking) {
-          throw new Error(`already blocking`);
-        }
-        try {
-          stateValue.subject.next(true);
-          return await foo(...args);
-        } finally {
-          stateValue.subject.next(false);
-        }
-      },
-    [blocking],
-  );
-
-  return [blocking, inBlocking] as const;
+  if (stateValue) {
+    return [stateValue.subject.value, stateValue.wrap];
+  } else {
+    return [false, (foo) => foo];
+  }
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function useBlocking() {
+/**
+ * @deprecated this does not support nested BlockingContext
+ */
+function useBlockingV0(): readonly [boolean, BlockingState['wrap']] {
   const [blocking, setBlocking] = useState(false);
 
   const inBlocking = useCallback(

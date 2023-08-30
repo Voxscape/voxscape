@@ -1,19 +1,23 @@
 import { Layout } from '../../src/components/layout/layout';
-import { useTrpcClient } from '../../src/config/trpc';
-import { useModalApi } from '../../src/components/modal/modal-context';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@chakra-ui/react';
-import { useBlocking } from '../../src/hooks/use-blocking';
+import { BlockingContextProvider, useBlocking } from '../../src/hooks/use-blocking';
+import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
+import { useKeyGenerator } from '../../src/hooks/use-key-generator';
+import { ModelFilePreview } from '../../src/components/vox-viewer/model-file-preview';
+import { ModelFilePicker } from '../../src/components/vox-viewer/model-file-picker';
 
 function CreateModelPageContent() {
-  const fileRef = useRef<HTMLInputElement>(null!);
+  const [modelFile, setModelFile] = useState<null | ParsedVoxFile>(null);
+  const flipCount = useKeyGenerator(modelFile);
 
   return (
     <div>
-      <input type="file" ref={fileRef} />
-      <Button type="button" onClick={onUpload}>
-        Upload
-      </Button>
+      {modelFile ? (
+        <ModelFilePreview key={flipCount} voxFile={modelFile} onReset={() => setModelFile(null)} />
+      ) : (
+        <ModelFilePicker key={flipCount} onModelRead={setModelFile} />
+      )}
     </div>
   );
 }
@@ -21,7 +25,9 @@ function CreateModelPageContent() {
 export default function CreateModelPage() {
   return (
     <Layout>
-      <CreateModelPageContent />
+      <BlockingContextProvider>
+        <CreateModelPageContent />
+      </BlockingContextProvider>
     </Layout>
   );
 }
