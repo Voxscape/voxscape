@@ -2,6 +2,7 @@ import { createContext, ReactNode, useCallback, useContext, useState } from 'rea
 import { BehaviorSubject } from 'rxjs';
 import { from } from 'rxjs';
 import { useSingleton } from 'foxact/use-singleton';
+import { useObservable } from 'react-use';
 
 interface BlockingState {
   subject: BehaviorSubject<boolean>;
@@ -37,10 +38,12 @@ const alwaysFalse = from([false]);
 
 export function useBlocking(): readonly [boolean, BlockingState['wrap']] {
   const stateValue = useContext(BlockingContextContext);
+  const latestValue = useObservable(stateValue?.subject ?? alwaysFalse) ?? false;
 
   if (stateValue) {
-    return [stateValue.subject.value, stateValue.wrap];
+    return [latestValue, stateValue.wrap];
   } else {
+    console.warn("useBlocking(): called outside of BlockingContextProvider's scope");
     return [false, (foo) => foo];
   }
 }
