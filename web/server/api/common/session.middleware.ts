@@ -15,7 +15,7 @@ export interface TrpcReqContext {
   };
 }
 
-interface AssertedReqContext {
+interface AssertedReqContext extends TrpcReqContext {
   session: NonNullable<TrpcReqContext['session']>;
 }
 
