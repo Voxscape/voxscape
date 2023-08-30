@@ -20,20 +20,27 @@ export function ModelFilePicker(props: { onModelRead?(voxFile: ParsedVoxFile): v
     const parsed = basicParser(bytes);
 
     if (parsed.warnings.length) {
-      const proceed = await modal.confirm(
-        'File loaded with warnings',
+      const confirmResult = await modal.confirm(
+        'Unsupported .vox extension detected',
         <>
-          <p>Not all .vox extensions are supported. You can still continue to preview and upload the file.</p>
+          <p>You can still proceed to preview and upload the file.</p>
+          {/*
+          <p>When .vox render gets improved in future, uploaded files will behave correctly.</p>
+             */}
+          <hr />
           <pre>{parsed.warnings.join('\n')}</pre>
         </>,
+        { confirmButtonText: 'Proceed' },
       );
-      if (!proceed) {
+      if (!confirmResult.value) {
         return;
       }
     }
-    await wait(5e3);
+    await wait(0.5e3); // to pretend we are doing something
     toast({
-      title: 'File loaded',
+      id: `model-uploaded`,
+      title: `${f.name} loaded`,
+      status: 'success',
     });
 
     props.onModelRead?.(parsed);
