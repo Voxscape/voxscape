@@ -4,7 +4,10 @@ import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next/types
 export type HTTPMethod = Lowercase<'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'>;
 
 class ApiError extends Error {
-  constructor(readonly status: number, readonly message: string) {
+  constructor(
+    readonly status: number,
+    readonly message: string,
+  ) {
     super(message);
   }
 }

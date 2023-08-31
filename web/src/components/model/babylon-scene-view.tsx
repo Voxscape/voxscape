@@ -18,7 +18,10 @@ export class SceneManager {
   private currentScene = 0;
   private state = SceneManagerState.created;
 
-  constructor(readonly ctx: BabylonContext, readonly canvas: HTMLCanvasElement) {
+  constructor(
+    readonly ctx: BabylonContext,
+    readonly canvas: HTMLCanvasElement,
+  ) {
     this.scenes.push({ name: 'empty', scene: ctx.scene });
   }
 

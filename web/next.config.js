@@ -48,7 +48,7 @@ const nextConf = {
   },
 
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
 
   images: {},

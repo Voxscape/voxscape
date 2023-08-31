@@ -1,6 +1,5 @@
 import { createContext, ReactNode, useCallback, useContext, useState } from 'react';
-import { BehaviorSubject } from 'rxjs';
-import { from } from 'rxjs';
+import { BehaviorSubject, from } from 'rxjs';
 import { useSingleton } from 'foxact/use-singleton';
 import { useObservable } from 'react-use';
 
