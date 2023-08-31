@@ -1,7 +1,7 @@
-# have to use node16 before prisma fixes https://github.com/prisma/prisma/issues/10649 
+# have to use node16 before prisma fixes https://github.com/prisma/prisma/issues/10649
 FROM node:16-bullseye-slim
 
 COPY . /opt/voxscape
 
 RUN set -uex && \
-        cd /opt/voxscape/web && yarn --version && yarn && yarn prisma generate && yarn build
+        cd /opt/voxscape/web && yarn --version && yarn && yarn prisma generate && yarn build && exit 0
