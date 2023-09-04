@@ -3,5 +3,5 @@ FROM node:16-bullseye-slim
 
 COPY . /opt/voxscape
 
-RUN set -uex && \
+RUN set -uex && npm i -g publicaddr && which publicaddr && \
         cd /opt/voxscape/web && yarn --version && yarn && yarn prisma generate && yarn build
