@@ -3,7 +3,7 @@ import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async
 import { Engine, Scene, ArcRotateCamera, HemisphericLight, Vector3, Color3, Color4 } from '@babylonjs/core';
 
 /**
- * a object to control camera/scene/stuff
+ * an object to control camera/scene/stuff
  */
 export interface BabylonContext {
   engine: {
