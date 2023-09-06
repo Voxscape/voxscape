@@ -1,23 +1,13 @@
 import { RefObject } from 'react';
-import { useBabylonEngine, useVoxScene } from './babylon-context2';
+import { useVoxScene } from './use-vox-scene';
 import type * as VoxTypes from '@voxscape/vox.ts/src/types/vox-types';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { Scene } from '@babylonjs/core';
 import { getDefaultPalette } from '@voxscape/vox.ts/src/parser/chunk-reader';
 import { greedyBuild } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-greedy';
+import { useBabylonEngine } from './use-babylon-engine';
 
-interface VoxViewerHandle {}
-export function VoxViewer(props: {}) {}
-
-const nextTick = Promise.resolve(1);
-
-export function useVoxViewer(
-  canvasRef: RefObject<HTMLCanvasElement>,
-  target?: {
-    file: VoxTypes.ParsedVoxFile;
-    modelIndex: number;
-  },
-) {
+export function useVoxViewer(canvasRef: RefObject<HTMLCanvasElement>, target: ViewerTarget) {
   const engine = useBabylonEngine(canvasRef);
   const _scene = useVoxScene(engine);
 
@@ -40,12 +30,14 @@ export function useVoxViewer(
       );
 
       const mesh = await loadModel(scene.scene, target, () => running.current!);
-
       await released;
       mesh.dispose(undefined, true);
     },
-    [_scene, target],
+
+    [_scene, target.file, target.modelIndex],
   );
+
+  return _scene;
 }
 
 interface ViewerTarget {

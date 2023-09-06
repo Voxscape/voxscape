@@ -1,7 +1,6 @@
 import { Layout } from '../../src/components/layout/layout';
-import { useRef, useState } from 'react';
-import { Button } from '@chakra-ui/react';
-import { BlockingContextProvider, useBlocking } from '../../src/hooks/use-blocking';
+import { useState } from 'react';
+import { BlockingContextProvider } from '../../src/hooks/use-blocking';
 import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
 import { useKeyGenerator } from '../../src/hooks/use-key-generator';
 import { ModelFilePreview } from '../../src/components/vox-viewer/model-file-preview';
