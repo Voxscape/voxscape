@@ -6,12 +6,13 @@ import { Scene } from '@babylonjs/core';
 import { getDefaultPalette } from '@voxscape/vox.ts/src/parser/chunk-reader';
 import { greedyBuild } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-greedy';
 import { useBabylonEngine } from './use-babylon-engine';
+import { useAsyncEffect2 } from '../../hooks/use-async-effect2';
 
 export function useVoxViewer(canvasRef: RefObject<HTMLCanvasElement>, target: ViewerTarget) {
   const engine = useBabylonEngine(canvasRef);
   const _scene = useVoxScene(engine);
 
-  useAsyncEffect(
+  useAsyncEffect2(
     async (running, released) => {
       const scene = await _scene;
 
@@ -20,6 +21,8 @@ export function useVoxViewer(canvasRef: RefObject<HTMLCanvasElement>, target: Vi
       }
 
       const model = target.file.models[target.modelIndex];
+      scene.createRefAxes(1.2 * Math.max(model.size.x, model.size.y, model.size.z));
+      scene.createDefaultLight();
 
       const camera = scene.createArcRotateCamera();
 
@@ -30,11 +33,14 @@ export function useVoxViewer(canvasRef: RefObject<HTMLCanvasElement>, target: Vi
       );
 
       const mesh = await loadModel(scene.scene, target, () => running.current!);
+      scene.startRenderLoop();
+
       await released;
       mesh.dispose(undefined, true);
     },
 
     [_scene, target.file, target.modelIndex],
+    true,
   );
 
   return _scene;

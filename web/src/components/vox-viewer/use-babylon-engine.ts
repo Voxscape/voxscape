@@ -2,8 +2,10 @@ import { Engine } from '@babylonjs/core';
 import { Deferred } from '@jokester/ts-commonutil/lib/concurrency/deferred';
 import { RefObject, useEffect } from 'react';
 import { useSingleton } from 'foxact/use-singleton';
+import { useKeyGenerator } from '../../hooks/use-key-generator';
 
 export interface BabylonEngineRef {
+  canvasRef: RefObject<HTMLCanvasElement>;
   initialized: PromiseLike<Engine>;
   released: PromiseLike<void>;
 }
@@ -15,12 +17,15 @@ interface RealRef extends BabylonEngineRef {
 
 export function useBabylonEngine(canvasRef: RefObject<HTMLCanvasElement>): BabylonEngineRef {
   const ref = useSingleton<RealRef>(() => ({
+    canvasRef,
     initialized: new Deferred<Engine>(),
     released: new Deferred<void>(),
   }));
+  const refCount = useKeyGenerator(canvasRef, ref);
+  console.debug(`refCount`, refCount);
 
   useEffect(() => {
-    if (canvasRef?.current) {
+    if (canvasRef?.current && !ref.current.initialized.resolved) {
       const engine = new Engine(canvasRef.current, true, {
         useHighPrecisionMatrix: true,
         premultipliedAlpha: false,
@@ -29,8 +34,9 @@ export function useBabylonEngine(canvasRef: RefObject<HTMLCanvasElement>): Babyl
         forceSRGBBufferSupportState: false,
       });
       ref.current.initialized.fulfill(engine);
+      console.debug(`engine initialized`, engine);
     }
-  }, [canvasRef]);
+  }, [canvasRef, ref]);
 
   useEffect(() => {
     return () => {

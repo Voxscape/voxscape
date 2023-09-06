@@ -4,7 +4,6 @@ import {
   CreatePlane,
   DynamicTexture,
   Mesh,
-  MeshBuilder,
   Scene,
   StandardMaterial,
   Vector3,

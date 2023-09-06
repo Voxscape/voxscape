@@ -22,10 +22,7 @@ function ModelViewer(props: { voxFile: ParsedVoxFile }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [enableInspector, toggleInspector] = useToggle(false);
 
-  const engine = useBabylonEngine(canvasRef);
-
   const sceneHandleP = useVoxViewer(canvasRef, { file: props.voxFile, modelIndex: ~~modelIndex.value });
-  useBabylonInspector(engine);
 
   useEffect(() => {
     sceneHandleP.then((handle) => {
@@ -35,6 +32,7 @@ function ModelViewer(props: { voxFile: ParsedVoxFile }) {
 
   return (
     <div>
+      <Button onClick={toggleInspector}>{enableInspector ? 'disable' : 'enable'} inspector</Button>
       <canvas height={480} width={960} ref={canvasRef} />
     </div>
   );
