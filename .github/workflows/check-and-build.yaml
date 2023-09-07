@@ -1,6 +1,7 @@
 name: Check and Build
 
 concurrency:
+  group: ${{ github.ref }}
   cancel-in-progress: true
 
 on:
@@ -32,7 +33,7 @@ jobs:
         working-directory: ./packages/vox.ts/
 
   check-web:
-    name: Check vox.ts
+    name: Check web
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
