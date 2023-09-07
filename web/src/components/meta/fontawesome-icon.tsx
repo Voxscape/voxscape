@@ -20,3 +20,5 @@ export const FontAwesomeIcon = React.forwardRef<HTMLElement, FontawesomeIconProp
     return <i className={className} style={{ ...style, zIndex: 50000 }} ref={ref} />;
   },
 );
+
+// TODO: JSX for fontawesome CSSs
