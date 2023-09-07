@@ -1,8 +1,0 @@
-target/
-/.idea
-/.bsp
-/.metals
-/.vscode
-/project/project
-.bloop
-.env
