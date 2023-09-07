@@ -19,7 +19,7 @@ async function doFetchRefModelIndex(): Promise<RefModelIndexEntry[]> {
     .filter((d) => d.models.length > 0)
     .map((i) => ({
       ...i,
-      path: `/ref-models-2/` + i.path,
+      path: `/ref-models/vox/` + i.path,
     }));
 
   const ord: Ord<VoxFileDigest> = fromCompare(

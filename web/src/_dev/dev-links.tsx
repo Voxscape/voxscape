@@ -2,7 +2,7 @@ import { FC } from 'react';
 import Link from 'next/link';
 import { useFps } from '@jokester/ts-commonutil/lib/react/hook/use-fps';
 
-const devLinks = ['/users', '/models'];
+const devLinks = ['/users', '/models', '/demo/vox.ts'];
 
 export function FpsMeter() {
   const fps = useFps(60);
