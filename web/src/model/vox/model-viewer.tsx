@@ -56,7 +56,7 @@ function RealModelViewer(props: { voxFile: ParsedVoxFile; onReset?(): void }) {
 function ModelIndexPicker(props: { voxFile: ParsedVoxFile; onChange?(value: number): void }) {
   return props.voxFile.models.map((model, index) => {
     return (
-      <Button type="button" onClick={() => props.onChange?.(index)}>
+      <Button type="button" onClick={() => props.onChange?.(index)} key={index}>
         model #{index + 1}
       </Button>
     );
