@@ -1,13 +1,27 @@
 import { isDevBuild } from '../../src/config/build-config';
-import { FC } from 'react';
+import { FC, PropsWithChildren, useEffect, useLayoutEffect, useState } from 'react';
 import Link from 'next/link';
+import { useFps } from '@jokester/ts-commonutil/lib/react/hook/use-fps';
 const devLinks = ['/users', '/models'];
 
-export const DevLinks: FC = () => {
-  if (!isDevBuild) {
-    return null;
-  }
+export function OnlyInDev(props: PropsWithChildren) {
+  const [render, setRender] = useState(false);
 
+  useLayoutEffect(() => {
+    if (isDevBuild) {
+      setRender(true);
+    }
+  }, []);
+
+  return render ? props.children : null;
+}
+
+export function FpsMeter() {
+  const fps = useFps(60);
+  return <div className="p-4 absolute right-0 bottom-0">{fps.toFixed(0)}FPS</div>;
+}
+
+export const DevLinks: FC = () => {
   return (
     <div className="p-4 space-x-2 absolute left-0 bottom-0">
       <span className="text-xl font-bold">DEV LINKS</span>

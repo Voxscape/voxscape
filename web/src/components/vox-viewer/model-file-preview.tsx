@@ -34,7 +34,7 @@ function ModelViewer(props: { voxFile: ParsedVoxFile }) {
         <Button onClick={toggleInspector}>{enableInspector ? 'disable' : 'enable'} inspector</Button>
       </div>
       <div>
-        <canvas height={480} width={960} ref={canvasRef} />
+        <canvas className="w-full h-64" height={480} width="100%" ref={canvasRef} />
       </div>
     </div>
   );
