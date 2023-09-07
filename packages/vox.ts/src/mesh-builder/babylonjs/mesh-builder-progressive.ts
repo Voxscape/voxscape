@@ -123,7 +123,6 @@ interface CustomPolyhedronProps {
  * @param {readonly Voxel[]} voxels
  * @param {VoxelPalette} palette
  * @param {number} batchSize
- * @param {BabylonDeps} deps
  * @returns {Generator<CustomPolyhedronProps & {progress: number}>}
  */
 function* extractSurfaces(

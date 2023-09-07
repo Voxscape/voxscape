@@ -3,11 +3,9 @@ import App, { AppProps } from 'next/app';
 import '../src/app.scss';
 import { DefaultMeta } from '../src/components/meta/default-meta';
 import Head from 'next/head';
-import { useBabylonDepsPreload } from '../src/demo/babylon/babylon-context';
 
 const CustomApp: React.FC<AppProps> & Partial<Pick<typeof App, 'getInitialProps'>> = (props) => {
   const { Component, pageProps } = props;
-  useBabylonDepsPreload();
   return (
     <>
       <Head>

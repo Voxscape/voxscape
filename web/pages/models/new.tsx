@@ -1,45 +1,22 @@
-import { Layout } from '../../src/components/layout/layout';
-import { useTrpcClient } from '../../src/config/trpc';
-import { useModalApi } from '../../src/components/modal/modal-context';
-import { useRef } from 'react';
-import { Button } from '@chakra-ui/react';
-import { useBlocking } from '../../src/hooks/use-blocking';
+import { Layout } from '../../src/layout/layout';
+import { useState } from 'react';
+import { BlockingContextProvider } from '../../src/hooks/use-blocking';
+import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
+import { useKeyGenerator } from '../../src/hooks/use-key-generator';
+import { ModelFilePicker } from '../../src/model/model-file-picker';
+import { ModelViewer } from '../../src/model/vox/model-viewer';
 
 function CreateModelPageContent() {
-  const api = useTrpcClient();
-  const modal = useModalApi();
-
-  const fileRef = useRef<HTMLInputElement>(null!);
-  const [blocking, inBlocking] = useBlocking();
-
-  const onUpload = inBlocking(async () => {
-    const f = fileRef.current.files?.[0];
-    if (!f) return;
-    try {
-      const uploadUrl = await api.$.models.requestUpload.mutate({ filename: f.name, contentType: f.type });
-
-      const uploaded = await fetch(uploadUrl.uploadUrl, {
-        method: 'PUT',
-        body: f,
-        headers: {
-          'Content-Disposition': encodeURIComponent(f.name),
-        },
-      });
-      if (!uploaded.ok) {
-        throw new Error(uploaded.statusText);
-      }
-      await modal.alert('uploaded', uploadUrl.publicUrl);
-    } catch (e: any) {
-      await modal.alert(`???`, e.message);
-    }
-  });
+  const [modelFile, setModelFile] = useState<null | ParsedVoxFile>(null);
+  const flipCount = useKeyGenerator(modelFile);
 
   return (
     <div>
-      <input type="file" ref={fileRef} />
-      <Button type="button" onClick={onUpload}>
-        Upload
-      </Button>
+      {modelFile ? (
+        <ModelViewer key={flipCount} voxFile={modelFile} onReset={() => setModelFile(null)} />
+      ) : (
+        <ModelFilePicker key={flipCount} onModelRead={setModelFile} />
+      )}
     </div>
   );
 }
@@ -47,7 +24,9 @@ function CreateModelPageContent() {
 export default function CreateModelPage() {
   return (
     <Layout>
-      <CreateModelPageContent />
+      <BlockingContextProvider>
+        <CreateModelPageContent />
+      </BlockingContextProvider>
     </Layout>
   );
 }

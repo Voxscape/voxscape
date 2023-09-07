@@ -30,7 +30,10 @@ const apiFactory = nextkit.createAPI({
 export const createApi = apiFactory.bare;
 
 export class ClientBad extends Error {
-  constructor(readonly httpCode: number, message: string) {
+  constructor(
+    readonly httpCode: number,
+    message: string,
+  ) {
     super(message);
   }
 }

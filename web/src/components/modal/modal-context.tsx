@@ -11,6 +11,7 @@ import {
   useConst,
 } from '@chakra-ui/react';
 import { Deferred } from '@jokester/ts-commonutil/lib/concurrency/deferred';
+import styles from './modal.module.scss';
 
 type ModalResult<T> =
   | {
@@ -114,10 +115,10 @@ class ModalApi {
         >
           <AlertDialogOverlay />
 
-          <AlertDialogContent>
+          <AlertDialogContent className={styles.modalContent}>
             <AlertDialogHeader>{title}</AlertDialogHeader>
             <AlertDialogCloseButton />
-            <AlertDialogBody>{body}</AlertDialogBody>
+            <AlertDialogBody className={styles.modalBody}>{body}</AlertDialogBody>
             <AlertDialogFooter>
               <Button onClick={onCancel} ref={input.leastDestructiveRef}>
                 Cancel

@@ -62,7 +62,10 @@ export interface ConfigWithContext<Context> extends ConfigWithoutContext {
 }
 
 export class NextkitError extends Error {
-  constructor(public readonly code: number, message: string) {
+  constructor(
+    public readonly code: number,
+    message: string,
+  ) {
     super(message);
   }
 }

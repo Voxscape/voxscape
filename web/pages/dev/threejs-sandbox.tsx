@@ -1,4 +1,4 @@
-import { ThreejsSandbox } from '../../src/components/dev/threejs-sandbox';
+import { ThreejsSandbox } from '../../src/_dev/threejs-sandbox';
 
 const ThreejsSandboxPage = () => {
   return <ThreejsSandbox />;

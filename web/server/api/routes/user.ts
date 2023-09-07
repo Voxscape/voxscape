@@ -58,8 +58,9 @@ export const userRouter = t.router({
   }),
 });
 
-interface SafeUser {
+export interface SafeUser {
   id: string;
+  name?: string;
   imageUrl?: string;
   createdAt: Date;
 }
@@ -67,6 +68,7 @@ interface SafeUser {
 function pickSafeFields(u: Prisma.User): SafeUser {
   return {
     id: u.id,
+    name: u.name ?? undefined,
     imageUrl: u.image ?? undefined,
     createdAt: u.createdAt,
   };

@@ -48,7 +48,7 @@ const nextConf = {
   },
 
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true, // required, we are not using emotion's jsx types
   },
 
   images: {},

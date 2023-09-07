@@ -3,7 +3,7 @@ import { trpcReact } from '../../src/config/trpc';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { TRPCClientError } from '@trpc/client';
-import { Layout } from '../../src/components/layout/layout';
+import { Layout } from '../../src/layout/layout';
 import { PageMeta } from '../../src/components/meta/page-meta';
 import { signOut, useSession } from 'next-auth/react';
 import { Button } from '@chakra-ui/react';

@@ -1,4 +1,4 @@
-import { Layout } from '../src/components/layout/layout';
+import { Layout } from '../src/layout/layout';
 import { UserAgreement } from '../src/components/meta/agreements';
 import { ReactElement } from 'react';
 

@@ -1,4 +1,4 @@
-import { Layout } from '../../src/components/layout/layout';
+import { Layout } from '../../src/layout/layout';
 import { ReactElement } from 'react';
 import { trpcReact, useTrpcClient } from '../../src/config/trpc';
 import Link from 'next/link';

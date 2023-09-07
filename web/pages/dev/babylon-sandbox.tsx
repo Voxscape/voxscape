@@ -1,5 +1,5 @@
 import React from 'react';
-import { BabylonGltfSandbox } from '../../src/components/dev/babylon-sandbox';
+import { BabylonGltfSandbox } from '../../src/_dev/babylon-sandbox';
 
 const BabylonSandboxPage = () => (
   <div>
