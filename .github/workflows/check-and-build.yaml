@@ -42,7 +42,7 @@ jobs:
           node-version: 18
           cache: yarn
           cache-dependency-path: 'yarn.lock'
-      - run: yarn
+      - run: yarn && yarn prisma generate
       - run: yarn lint
         working-directory: ./web/
       - run: yarn typecheck
