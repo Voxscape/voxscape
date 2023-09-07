@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { FC, useMemo } from 'react';
-import { BabylonDemo, ModelPath } from '../../src/demo/demo-models-show/demo-models';
+import { BabylonDemo, ModelPath } from '@voxscape/vox.ts/src/demo/demo-models-show/demo-models';
 
 const BabylonViewerPage: FC = () => {
   const router = useRouter();

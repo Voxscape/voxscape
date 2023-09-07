@@ -1,4 +1,4 @@
-import { DemoModelList } from '../../src/demo/demo-model-list/demo-models';
+import { DemoModelList } from '@voxscape/vox.ts/src/demo/demo-model-list/demo-models';
 import React from 'react';
 
 const DemoModelsPage: React.FC = () => {
