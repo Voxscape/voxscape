@@ -1,6 +1,5 @@
 import { BabylonEngineRef } from './use-babylon-engine';
 import { useToggle } from 'react-use';
-import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { useAsyncEffect2 } from '../../hooks/use-async-effect2';
 
 export function useBabylonInspector(engineRef: BabylonEngineRef) {

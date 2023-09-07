@@ -3,6 +3,11 @@ import { Deferred } from '@jokester/ts-commonutil/lib/concurrency/deferred';
 import { RefObject, useEffect } from 'react';
 import { useSingleton } from 'foxact/use-singleton';
 import { useKeyGenerator } from '../../hooks/use-key-generator';
+import { createDefaultEngine } from '@voxscape/vox.ts/src/demo/babylon/babylon-context';
+import { useAsyncEffect2 } from '../../hooks/use-async-effect2';
+import { createDebugLogger } from '../../../shared/logger';
+
+const logger = createDebugLogger(__filename);
 
 export interface BabylonEngineRef {
   canvasRef: RefObject<HTMLCanvasElement>;
@@ -22,35 +27,39 @@ export function useBabylonEngine(canvasRef: RefObject<HTMLCanvasElement>): Babyl
     released: new Deferred<void>(),
   }));
   const refCount = useKeyGenerator(canvasRef, ref);
-  console.debug(`refCount`, refCount);
+
+  logger(`refCount`, refCount);
 
   useEffect(() => {
+    if (!canvasRef.current) {
+      ref.current.initialized.reject(new Error(`canvasRef.current is null`));
+    }
+
     if (canvasRef?.current && !ref.current.initialized.resolved) {
-      const engine = new Engine(canvasRef.current, true, {
-        useHighPrecisionMatrix: true,
-        premultipliedAlpha: false,
-        preserveDrawingBuffer: true,
-        antialias: true,
-        forceSRGBBufferSupportState: false,
-      });
+      const engine = createDefaultEngine(canvasRef.current);
       ref.current.initialized.fulfill(engine);
       console.debug(`engine initialized`, engine);
     }
   }, [canvasRef, ref]);
 
-  useEffect(() => {
-    return () => {
-      ref.current.initialized.then((engine) => {
+  useAsyncEffect2(
+    async (running, released) => {
+      const [engine] = await Promise.all([ref.current.initialized, released]);
+
+      if (engine) {
         try {
+          logger(`before engine.dispose()`);
           engine.dispose();
         } catch (e) {
-          console.error(`error in engine.dispose()`);
-          console.error(e);
+          logger(`error in engine.dispose()`, e);
         }
-      });
+      }
+
       ref.current.released.fulfill();
-    };
-  }, []);
+    },
+    [],
+    true,
+  );
 
   return ref.current;
 }

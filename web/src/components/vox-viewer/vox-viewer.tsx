@@ -1,12 +1,12 @@
 import { RefObject } from 'react';
 import { useVoxScene } from './use-vox-scene';
 import type * as VoxTypes from '@voxscape/vox.ts/src/types/vox-types';
-import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
-import { Scene } from '@babylonjs/core';
+import { ArcRotateCamera, Scene } from '@babylonjs/core';
 import { getDefaultPalette } from '@voxscape/vox.ts/src/parser/chunk-reader';
 import { greedyBuild } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-greedy';
 import { useBabylonEngine } from './use-babylon-engine';
 import { useAsyncEffect2 } from '../../hooks/use-async-effect2';
+import { resetCameraForModel } from '@voxscape/vox.ts/src/demo/babylon/render-vox-model';
 
 export function useVoxViewer(canvasRef: RefObject<HTMLCanvasElement>, target: ViewerTarget) {
   const engine = useBabylonEngine(canvasRef);
@@ -25,14 +25,10 @@ export function useVoxViewer(canvasRef: RefObject<HTMLCanvasElement>, target: Vi
       scene.createDefaultLight();
 
       const camera = scene.createArcRotateCamera();
+      resetCameraForModel(camera, model);
 
-      scene.setCameraRadius(
-        camera,
-        0.5 * Math.min(model.size.x, model.size.y, model.size.z),
-        1.5 * Math.max(model.size.x, model.size.y, model.size.z),
-      );
+      const mesh = await loadModel(scene.scene, target, () => !running.current!);
 
-      const mesh = await loadModel(scene.scene, target, () => running.current!);
       scene.startRenderLoop();
 
       await released;

@@ -1,9 +1,7 @@
 import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
 import { Button, useCounter } from '@chakra-ui/react';
-import { useBabylonEngine } from './use-babylon-engine';
 import { useEffect, useRef } from 'react';
 import { useVoxViewer } from './vox-viewer';
-import { useBabylonInspector } from './use-babylon-inspector';
 import { useKeyGenerator } from '../../hooks/use-key-generator';
 import { useToggle } from 'react-use';
 
@@ -31,9 +29,13 @@ function ModelViewer(props: { voxFile: ParsedVoxFile }) {
   }, [enableInspector, sceneHandleP]);
 
   return (
-    <div>
-      <Button onClick={toggleInspector}>{enableInspector ? 'disable' : 'enable'} inspector</Button>
-      <canvas height={480} width={960} ref={canvasRef} />
+    <div className="bg-black">
+      <div>
+        <Button onClick={toggleInspector}>{enableInspector ? 'disable' : 'enable'} inspector</Button>
+      </div>
+      <div>
+        <canvas height={480} width={960} ref={canvasRef} />
+      </div>
     </div>
   );
 }

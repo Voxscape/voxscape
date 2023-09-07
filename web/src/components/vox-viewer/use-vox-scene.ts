@@ -1,45 +1,47 @@
-import { ArcRotateCamera, Color3, Engine, HemisphericLight, Scene, Vector3 } from '@babylonjs/core';
-import { createArcRotateCamera } from '@voxscape/vox.ts/src/demo/babylon/babylon-context';
+import { ArcRotateCamera, Color3, Color4, Engine, HemisphericLight, Scene, Vector3 } from '@babylonjs/core';
+import {
+  createArcRotateCamera,
+  createDefaultLight,
+  createDefaultScene,
+  startRunLoop,
+} from '@voxscape/vox.ts/src/demo/babylon/babylon-context';
 import { BabylonEngineRef } from './use-babylon-engine';
 import { createDebugLogger } from '../../../shared/logger';
 import { useDeferred } from '../../hooks/use-deferred';
 import { useAsyncEffect2 } from '../../hooks/use-async-effect2';
 import { createRefAxes } from '@voxscape/vox.ts/src/demo/babylon/create-ref-axes';
+import * as VoxTypes from '@voxscape/vox.ts/src/types/vox-types';
 
 const logger = createDebugLogger(__filename);
 
-const nextTick = Promise.resolve(1);
-
-class VoxSceneHandle {
+/**
+ * Wraps a Babylon scene, for use
+ */
+abstract class SceneHandle {
   #closed = false;
   constructor(
     private readonly engine: Engine,
     private readonly canvas: HTMLCanvasElement,
-    readonly scene: Scene,
+    readonly scene = createDefaultScene(engine),
   ) {
-    logger(`VoxSceneHandler: created`);
+    logger(`VoxSceneHandler: created`, this.canvas, this.engine, this.scene);
   }
 
   createRefAxes(size = 10) {
     const refMesh = createRefAxes(size, this.scene);
   }
 
-  createArcRotateCamera() {
+  createArcRotateCamera(use = true) {
     const camera = createArcRotateCamera(this.scene);
-    this.scene.setActiveCameraById(camera.id);
+    if (use) {
+      this.scene.setActiveCameraById(camera.id);
+      camera.attachControl(false, true, true);
+    }
     return camera;
   }
 
   createDefaultLight() {
-    const light = new HemisphericLight('light1', new Vector3(0, 1, 0), this.scene);
-    light.specular = Color3.Black();
-    light.groundColor = new Color3(1, 1, 1);
-  }
-
-  setCameraRadius(camera: ArcRotateCamera, lowerDistance: number, upper = lowerDistance) {
-    camera.lowerRadiusLimit = lowerDistance;
-    camera.upperRadiusLimit = upper;
-    camera.radius = 0.5 * (lowerDistance + upper);
+    return createDefaultLight(this.scene);
   }
 
   dispose() {
@@ -50,6 +52,9 @@ class VoxSceneHandle {
     logger(`VoxSceneHandler: dispose()`);
     try {
       this.stopRenderLoop();
+      this.scene.cameras.forEach((c) => {
+        c.detachControl();
+      });
       this.scene.dispose();
     } catch (e) {
       logger(`VoxSceneHandler: dispose() error`);
@@ -70,16 +75,19 @@ class VoxSceneHandle {
   }
 
   startRenderLoop() {
-    this.engine.stopRenderLoop();
-    this.engine.runRenderLoop(() => this.scene.render());
+    logger('startRenderLoop()');
+    startRunLoop(this.engine, this.scene);
   }
   stopRenderLoop() {
+    logger('stopRenderLoop()');
     this.engine.stopRenderLoop();
   }
 }
 
-export function useVoxScene(engineRef: BabylonEngineRef): PromiseLike<VoxSceneHandle> {
-  const value = useDeferred<VoxSceneHandle>();
+class VoxSceneHandle extends SceneHandle {}
+
+export function useVoxScene(engineRef: BabylonEngineRef): PromiseLike<SceneHandle> {
+  const value = useDeferred<SceneHandle>();
 
   useAsyncEffect2(
     async (running, released) => {
@@ -88,9 +96,7 @@ export function useVoxScene(engineRef: BabylonEngineRef): PromiseLike<VoxSceneHa
         return;
       }
 
-      const scene = new Scene(engine);
-      const handle = new VoxSceneHandle(engine, engineRef.canvasRef.current!, scene);
-      handle.startRenderLoop();
+      const handle = new VoxSceneHandle(engine, engineRef.canvasRef.current!);
       value.fulfill(handle);
 
       await released;

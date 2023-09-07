@@ -83,26 +83,55 @@ export function createArcRotateCamera(scene: Scene, radius = 1): ArcRotateCamera
   return camera;
 }
 
-/**
- * @internal
- */
-function initBabylon(canvas: HTMLCanvasElement): BabylonContext {
-  const engine = new Engine(canvas, true, {
+export function createDefaultScene(engine: Engine): Scene {
+  const defaultScene = new Scene(engine);
+  defaultScene.clearColor = new Color4(0.1, 0.1, 0.1, 1);
+  // console.debug('`wtf', engine.scenes);
+  return defaultScene;
+}
+
+export function createDefaultEngine(canvas: HTMLCanvasElement) {
+  // console.debug('`wtf', canvas);
+  return new Engine(canvas, true, {
     useHighPrecisionMatrix: true,
     premultipliedAlpha: false,
     preserveDrawingBuffer: true,
     antialias: true,
     forceSRGBBufferSupportState: false,
   });
-  const defaultScene = new Scene(engine);
+}
 
-  defaultScene.clearColor = new Color4(0.1, 0.1, 0.1, 1);
-  const camera = createArcRotateCamera(defaultScene);
-  camera.attachControl(canvas, false);
-
-  const light = new HemisphericLight('light1', new Vector3(0, 1, 0), defaultScene);
+export function createDefaultLight(scene: Scene) {
+  const light = new HemisphericLight('default-light', new Vector3(0, 1, 0), scene);
   light.specular = Color3.Black();
   light.groundColor = new Color3(1, 1, 1);
+  return light;
+}
+
+export function startRunLoop(engine: Engine, scene: Scene) {
+  if (!engine.scenes.includes(scene)) {
+    throw new Error(`scene not in engine.scenes`);
+  }
+  if (engine.activeRenderLoops.length) {
+    throw new Error(`other rendering loop(s) already running`);
+  }
+  engine.runRenderLoop(() => {
+    console.debug('rendering frame');
+    scene.render();
+  });
+}
+/**
+ * @internal
+ */
+function initBabylon(canvas: HTMLCanvasElement): BabylonContext {
+  const engine = createDefaultEngine(canvas);
+  console.debug(`engine`, engine);
+
+  const defaultScene = createDefaultScene(engine);
+
+  const camera = createArcRotateCamera(defaultScene);
+  camera.attachControl(canvas, false);
+  const light = createDefaultLight(defaultScene);
 
   return {
     engine: {
@@ -110,7 +139,7 @@ function initBabylon(canvas: HTMLCanvasElement): BabylonContext {
 
       start() {
         engine.stopRenderLoop();
-        engine.runRenderLoop(() => defaultScene.render());
+        startRunLoop(engine, defaultScene);
       },
       stop() {
         engine.stopRenderLoop();

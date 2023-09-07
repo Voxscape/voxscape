@@ -5,6 +5,8 @@ import { getDefaultPalette } from '../../parser/chunk-reader';
 import { buildTriangulatedMesh } from '../../mesh-builder/triangulation';
 import { greedyBuild } from '../../mesh-builder/babylonjs/mesh-builder-greedy';
 import { buildBabylonMeshProgressive } from '../../mesh-builder/babylonjs/mesh-builder-progressive';
+import { ArcRotateCamera, Scene } from '@babylonjs/core';
+import * as VoxTypes from '../../types/vox-types';
 
 export async function renderModelAlt(ctx: BabylonContext, voxFile: ParsedVoxFile, modelIndex: number): Promise<void> {
   if (!voxFile.palette) {
@@ -57,7 +59,8 @@ export async function renderModelV0(
 }
 
 export async function renderModel(
-  ctx: BabylonContext,
+  scene: Scene,
+  camera: ArcRotateCamera,
   voxFile: ParsedVoxFile,
   modelIndex: number,
   shouldStop?: () => boolean,
@@ -67,12 +70,17 @@ export async function renderModel(
     console.warn('no palette found, fallback to use default');
   }
   // new mesh builder
-  const mesh = greedyBuild(model, voxFile.palette ?? getDefaultPalette(), `model-${modelIndex}`, ctx.scene, {
+  const mesh = greedyBuild(model, voxFile.palette ?? getDefaultPalette(), `model-${modelIndex}`, scene, {
     shouldStop,
   });
 
-  ctx.camera.setRadius(
-    0.5 * Math.min(model.size.x, model.size.y, model.size.z),
-    1.5 * Math.max(model.size.x, model.size.y, model.size.z),
-  );
+  resetCameraForModel(camera, model);
+}
+
+export function resetCameraForModel(camera: ArcRotateCamera, forModel: VoxTypes.VoxelModel) {
+  const lower = 0.5 * Math.min(forModel.size.x, forModel.size.y, forModel.size.z);
+  const upper = 1.5 * Math.max(forModel.size.x, forModel.size.y, forModel.size.z);
+  camera.lowerRadiusLimit = lower;
+  camera.upperRadiusLimit = upper;
+  camera.radius = (lower + upper) / 2;
 }
