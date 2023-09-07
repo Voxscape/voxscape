@@ -6,7 +6,7 @@ cd $(dirname "$0")
 # $2: local filename
 fetch-models () {
   if [[ ! -f "$2" ]]; then
-    wget "$1" -O "$2" --continue
+    wget "$1" -O "$2"
   fi
   unzip -o "$2"
 }
