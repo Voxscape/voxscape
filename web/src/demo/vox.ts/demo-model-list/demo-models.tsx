@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { VoxFileDigest } from '../../parser/digester';
+import { VoxFileDigest } from '@voxscape/vox.ts/src/parser/digester';
 import style from './demo-model-list.module.scss';
 import clsx from 'clsx';
 import { fetchRefModelIndex } from './ref-models';

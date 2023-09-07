@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ParsedVoxFile } from '../../types/vox-types';
-import { binaryConversion } from '../../util/binary-conversion';
-import { basicParser } from '../../parser/basic-parser';
+import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
+import { binaryConversion } from '@voxscape/vox.ts/src/util/binary-conversion';
+import { basicParser } from '@voxscape/vox.ts/src/parser/basic-parser';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { BabylonModelRenderer } from './babylon-model-renderer';
 

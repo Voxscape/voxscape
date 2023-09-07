@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { ParsedVoxFile } from '../../types/vox-types';
+import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import clsx from 'clsx';
-import { useBabylonContext, useBabylonInspector } from '../../babylon-react/babylon-context';
-import { createRefAxes } from '../../babylon/create-ref-axes';
+import { useBabylonContext, useBabylonInspector } from '@voxscape/vox.ts/src/babylon-react/babylon-context';
+import { createRefAxes } from '@voxscape/vox.ts/src/babylon/create-ref-axes';
 import { renderModel } from './render-vox-model';
 
 export const BabylonModelRenderer: React.FC<{

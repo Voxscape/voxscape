@@ -1,12 +1,12 @@
-import { ParsedVoxFile } from '../../types/vox-types';
+import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
 import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
-import { getDefaultPalette } from '../../parser/chunk-reader';
-import { buildTriangulatedMesh } from '../../mesh-builder/triangulation';
-import { greedyBuild } from '../../mesh-builder/babylonjs/mesh-builder-greedy';
-import { buildBabylonMeshProgressive } from '../../mesh-builder/babylonjs/mesh-builder-progressive';
+import { getDefaultPalette } from '@voxscape/vox.ts/src/parser/chunk-reader';
+import { buildTriangulatedMesh } from '@voxscape/vox.ts/src/mesh-builder/triangulation';
+import { greedyBuild } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-greedy';
+import { buildBabylonMeshProgressive } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-progressive';
 import { ArcRotateCamera, Scene } from '@babylonjs/core';
-import * as VoxTypes from '../../types/vox-types';
-import { BabylonContext } from '../../babylon-react/babylon-context';
+import * as VoxTypes from '@voxscape/vox.ts/src/types/vox-types';
+import { BabylonContext } from '@voxscape/vox.ts/src/babylon-react/babylon-context';
 
 export async function renderModelAlt(ctx: BabylonContext, voxFile: ParsedVoxFile, modelIndex: number): Promise<void> {
   if (!voxFile.palette) {
