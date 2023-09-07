@@ -1,4 +1,7 @@
-name: Build web image
+name: Check and Build
+
+concurrency:
+  cancel-in-progress: true
 
 on:
   push:
@@ -12,19 +15,52 @@ defaults:
     working-directory: .
 
 jobs:
+  check-vox-ts:
+    name: Check vox.ts
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: 'yarn.lock'
+      - run: yarn
+      - run: yarn lint
+        working-directory: ./packages/vox.ts/
+      - run: yarn typecheck
+        working-directory: ./packages/vox.ts/
+
+  check-web:
+    name: Check vox.ts
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: 'yarn.lock'
+      - run: yarn
+      - run: yarn lint
+        working-directory: ./web/
+      - run: yarn typecheck
+        working-directory: ./web/
+
   build-image:
-    name: Build and push docker image
+    name: Build docker image
     # github ubuntu image contains https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2204-README.md
     runs-on: ubuntu-22.04
+    needs: [check-vox-ts, check-web]
 
     permissions:
       contents: read
       packages: write
 
     steps:
-      # mostly taken from https://github.com/marketplace/actions/build-and-push-docker-images
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
+      # mostly taken from https://github.com/marketplace/actions/build-and-push-docker-images
       - name: Docker meta
         id: docker_meta
         uses: docker/metadata-action@v4
@@ -54,4 +90,3 @@ jobs:
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
-
