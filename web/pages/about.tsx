@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { Layout } from '../src/components/layout/layout';
+import { Layout } from '../src/layout/layout';
 
 export default (): ReactElement => (
   <Layout>

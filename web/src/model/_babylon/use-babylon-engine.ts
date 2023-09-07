@@ -3,9 +3,9 @@ import { Deferred } from '@jokester/ts-commonutil/lib/concurrency/deferred';
 import { RefObject, useEffect } from 'react';
 import { useSingleton } from 'foxact/use-singleton';
 import { useKeyGenerator } from '../../hooks/use-key-generator';
-import { createDefaultEngine } from '@voxscape/vox.ts/src/demo/babylon/babylon-context';
 import { useAsyncEffect2 } from '../../hooks/use-async-effect2';
 import { createDebugLogger } from '../../../shared/logger';
+import { createDefaultEngine } from '@voxscape/vox.ts/src/babylon/factory';
 
 const logger = createDebugLogger(__filename);
 

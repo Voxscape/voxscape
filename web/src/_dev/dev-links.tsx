@@ -1,20 +1,8 @@
-import { isDevBuild } from '../../src/config/build-config';
-import { FC, PropsWithChildren, useEffect, useLayoutEffect, useState } from 'react';
+import { FC } from 'react';
 import Link from 'next/link';
 import { useFps } from '@jokester/ts-commonutil/lib/react/hook/use-fps';
+
 const devLinks = ['/users', '/models'];
-
-export function OnlyInDev(props: PropsWithChildren) {
-  const [render, setRender] = useState(false);
-
-  useLayoutEffect(() => {
-    if (isDevBuild) {
-      setRender(true);
-    }
-  }, []);
-
-  return render ? props.children : null;
-}
 
 export function FpsMeter() {
   const fps = useFps(60);
@@ -38,5 +26,3 @@ export const DevLinks: FC = () => {
     </div>
   );
 };
-
-export default DevLinks;

@@ -4,7 +4,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Button } from '@chakra-ui/react';
 import { getServerSession, Session } from 'next-auth';
 import { nextAuthOptions } from '../../server/next_auth';
-import { Layout } from '../../src/components/layout/layout';
+import { Layout } from '../../src/layout/layout';
 
 const Page: NextPage<{ session?: Session }> = (props) => {
   const signInGoogle = useCallback(() => signIn('google', {}), []);

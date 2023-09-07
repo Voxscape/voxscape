@@ -1,7 +1,6 @@
 import React, { Component, createRef, useRef } from 'react';
-import { BabylonSceneView, SceneManager } from '../model/babylon-scene-view';
-import { useModalApi } from '../modal/modal-context';
-import { createGltfScene, createMaskTapeScene, loadCupModel } from '../mrk-system/scene-builders';
+import { BabylonSceneView, SceneManager } from '../_experiments/babylon-scene-view';
+import { useModalApi } from '../components/modal/modal-context';
 import { Button, chakra } from '@chakra-ui/react';
 
 export const BabylonGltfSandbox: React.FC<{}> = () => {
@@ -14,7 +13,7 @@ export const BabylonGltfSandbox: React.FC<{}> = () => {
     const f = fileInputRef.current.files?.[0];
     if (f && sceneManagerRef.current) {
       const sceneManager = sceneManagerRef.current;
-      const index = await sceneManager.addScene(`scene-${++loadCount.current}`, createGltfScene(f));
+      const index = await sceneManager.addScene(`scene-${++loadCount.current}`, null!);
       await sceneManager.switchScene(index);
       await sceneManager.toggleInspector(true);
     }

@@ -1,7 +1,7 @@
-import { BabylonContext, useBabylonContext } from '@voxscape/vox.ts/src/demo/babylon/babylon-context';
 import React, { useImperativeHandle, useRef } from 'react';
 import type { Scene } from '@babylonjs/core';
 import { Engine, SceneLoader } from '@babylonjs/core';
+import { BabylonContext, useBabylonContext } from '@voxscape/vox.ts/src/babylon-react/babylon-context';
 
 enum SceneManagerState {
   created = 0,
@@ -63,7 +63,7 @@ export class SceneManager {
       this.currentScene = sceneIndex;
       if (newScene.activeCamera) {
         newScene.activeCamera?.attachControl(this.canvas);
-        this.ctx.engine.start(newScene);
+        this.ctx.engine.start();
       }
     }
   }

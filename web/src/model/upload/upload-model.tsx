@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalHandle } from '../modal/modal-context';
+import { ModalHandle } from '../../components/modal/modal-context';
 
 interface UploadResult {
   url: string;

@@ -47,7 +47,7 @@ export function startRunLoop(engine: Engine, scene: Scene) {
     throw new Error(`other rendering loop(s) already running`);
   }
   engine.runRenderLoop(() => {
-    console.debug('rendering frame');
+    // console.debug('rendering frame');
     scene.render();
   });
 }

@@ -1,10 +1,10 @@
-import { Engine } from '@babylonjs/core';
+import { Engine, Scene } from '@babylonjs/core';
 import { createDebugLogger } from '../../../shared/logger';
 import {
-  createDefaultScene,
   createDefaultLight,
   createArcRotateCamera,
   startRunLoop,
+  createDefaultScene,
 } from '@voxscape/vox.ts/src/babylon/factory';
 import { createRefAxes } from '@voxscape/vox.ts/src/babylon/create-ref-axes';
 
@@ -19,7 +19,7 @@ export abstract class BabylonSceneHandle {
   constructor(
     private readonly engine: Engine,
     private readonly canvas: HTMLCanvasElement,
-    readonly scene = createDefaultScene(engine),
+    protected readonly scene: Scene = createDefaultScene(engine),
   ) {
     logger(`VoxSceneHandler: created`, this.canvas, this.engine, this.scene);
   }
@@ -59,19 +59,22 @@ export abstract class BabylonSceneHandle {
     }
   }
 
-  async toggleInspector(enabled: boolean) {
+  async toggleInspector(enabled: boolean, inspectorRoot?: HTMLElement) {
     await Promise.all([import('@babylonjs/core/Debug/debugLayer'), import('@babylonjs/inspector')]);
     if (this.#disposed) {
       return;
     }
     if (enabled) {
-      await this.scene.debugLayer.show({ globalRoot: this.canvas.parentElement! });
+      await this.scene.debugLayer.show({
+        globalRoot: inspectorRoot ?? this.canvas.parentElement!,
+      });
     } else {
       this.scene.debugLayer.hide();
     }
   }
 
   onCanvasResize() {
+    logger('onCanvasResize()');
     this.engine.resize();
   }
 

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Layout } from '../src/components/layout/layout';
+import { Layout } from '../src/layout/layout';
 import { Button } from '@chakra-ui/react';
 
 const NotFoundPage = () => {

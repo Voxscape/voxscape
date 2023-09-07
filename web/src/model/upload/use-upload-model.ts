@@ -1,6 +1,6 @@
 import { useBlocking } from '../../hooks/use-blocking';
 import { useTrpcClient } from '../../config/trpc';
-import { useModalApi } from '../modal/modal-context';
+import { useModalApi } from '../../components/modal/modal-context';
 
 export function useModelUpload() {
   const api = useTrpcClient();

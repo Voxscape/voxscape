@@ -1,4 +1,4 @@
-import { Layout } from '../../src/components/layout/layout';
+import { Layout } from '../../src/layout/layout';
 import { useTrpcClient } from '../../src/config/trpc';
 import { Spinner } from '@chakra-ui/react';
 

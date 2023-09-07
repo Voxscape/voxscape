@@ -2,7 +2,8 @@ import React from 'react';
 import { chakra } from '@chakra-ui/react';
 import { LayoutHeader, LayoutHeaderButtons } from './header';
 import { LayoutFooter } from './footer';
-import { DevLinks, FpsMeter, OnlyInDev } from '../../../pages/dev/dev-links';
+import { OnlyInDev } from '../_dev/only-in-dev';
+import { DevLinks, FpsMeter } from '../_dev/dev-links';
 
 export const Layout: React.FC<React.PropsWithChildren> = (props) => {
   return (

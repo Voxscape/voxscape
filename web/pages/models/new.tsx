@@ -1,10 +1,10 @@
-import { Layout } from '../../src/components/layout/layout';
+import { Layout } from '../../src/layout/layout';
 import { useState } from 'react';
 import { BlockingContextProvider } from '../../src/hooks/use-blocking';
 import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
 import { useKeyGenerator } from '../../src/hooks/use-key-generator';
-import { ModelFilePreview } from '../../src/components/vox-viewer/model-file-preview';
-import { ModelFilePicker } from '../../src/components/vox-viewer/model-file-picker';
+import { ModelFilePicker } from '../../src/model/model-file-picker';
+import { ModelViewer } from '../../src/model/vox/model-viewer';
 
 function CreateModelPageContent() {
   const [modelFile, setModelFile] = useState<null | ParsedVoxFile>(null);
@@ -13,7 +13,7 @@ function CreateModelPageContent() {
   return (
     <div>
       {modelFile ? (
-        <ModelFilePreview key={flipCount} voxFile={modelFile} onReset={() => setModelFile(null)} />
+        <ModelViewer key={flipCount} voxFile={modelFile} onReset={() => setModelFile(null)} />
       ) : (
         <ModelFilePicker key={flipCount} onModelRead={setModelFile} />
       )}

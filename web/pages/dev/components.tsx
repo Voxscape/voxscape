@@ -1,5 +1,5 @@
-import { ChakraDemo } from '../../src/components/dev/chakra-demo';
-import { LayoutHeader } from '../../src/components/layout/header';
+import { ChakraDemo } from '../../src/_dev/chakra-demo';
+import { LayoutHeader } from '../../src/layout/header';
 
 const ComponentsDemoPage = () => {
   return (

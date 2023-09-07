@@ -1,7 +1,7 @@
 import type React from 'react';
 import { FaIcon } from '@jokester/ts-commonutil/lib/react/component/font-awesome';
 import { signIn, signOut } from 'next-auth/react';
-import { ModalHandle, useModalApi } from '../../modal/modal-context';
+import { ModalHandle, useModalApi } from '../../components/modal/modal-context';
 import styles from './header_button.module.scss';
 import { Button } from '@chakra-ui/react';
 import {

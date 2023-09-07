@@ -23,7 +23,7 @@ import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { useFps } from '@jokester/ts-commonutil/lib/react/hook/use-fps';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { createDebugLogger } from '../../../shared/logger';
+import { createDebugLogger } from '../../shared/logger';
 const logger = createDebugLogger(__filename);
 
 function init(canvas: HTMLCanvasElement) {

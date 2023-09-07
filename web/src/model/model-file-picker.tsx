@@ -1,7 +1,7 @@
 import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
-import { useModalApi } from '../modal/modal-context';
+import { useModalApi } from '../components/modal/modal-context';
 import { Input, useToast } from '@chakra-ui/react';
-import { useBlocking } from '../../hooks/use-blocking';
+import { useBlocking } from '../hooks/use-blocking';
 import { ChangeEvent, useState } from 'react';
 import { readBlob } from '@jokester/ts-commonutil/lib/binary-conversion/web';
 import { basicParser } from '@voxscape/vox.ts/src/parser/basic-parser';
