@@ -1,6 +1,6 @@
 import React from 'react';
 import Document, { Html, Main, NextScript, Head } from 'next/document';
-import { cssLinks } from '../src/demo/components/default-meta';
+import { cssLinks } from '../src/components/meta/external-css';
 
 const defaultStyleSheets = [
   cssLinks.tailwind,

@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { ParsedVoxFile } from '../../types/vox-types';
-import { useBabylonContext, useBabylonInspector } from './babylon-context';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
-import { createRefAxes } from './create-ref-axes';
-import { renderModel, renderModelV0 } from './render-vox-model';
 import clsx from 'clsx';
+import { useBabylonContext, useBabylonInspector } from '../../babylon-react/babylon-context';
+import { createRefAxes } from '../../babylon/create-ref-axes';
+import { renderModel } from './render-vox-model';
 
 export const BabylonModelRenderer: React.FC<{
   onReset?(): void;
@@ -27,8 +27,7 @@ export const BabylonModelRenderer: React.FC<{
 
       if (typeof modelIndex === 'number' && modelFile?.models[modelIndex]) {
         // renderModel(babylonCtx, modelIndex, modelFile, () => !mounted.current);
-        const start = props.builder === 'v0' ? renderModelV0 : renderModel;
-        start(babylonCtx, modelFile, modelIndex, () => !mounted.current);
+        await renderModel(babylonCtx.scene, babylonCtx.camera.instance, modelFile, modelIndex, () => !mounted.current);
       } else {
         console.warn('no model to render, rendering playground');
       }

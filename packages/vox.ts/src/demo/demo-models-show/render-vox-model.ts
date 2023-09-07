@@ -1,4 +1,3 @@
-import { BabylonContext } from './babylon-context';
 import { ParsedVoxFile } from '../../types/vox-types';
 import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 import { getDefaultPalette } from '../../parser/chunk-reader';
@@ -7,6 +6,7 @@ import { greedyBuild } from '../../mesh-builder/babylonjs/mesh-builder-greedy';
 import { buildBabylonMeshProgressive } from '../../mesh-builder/babylonjs/mesh-builder-progressive';
 import { ArcRotateCamera, Scene } from '@babylonjs/core';
 import * as VoxTypes from '../../types/vox-types';
+import { BabylonContext } from '../../babylon-react/babylon-context';
 
 export async function renderModelAlt(ctx: BabylonContext, voxFile: ParsedVoxFile, modelIndex: number): Promise<void> {
   if (!voxFile.palette) {
