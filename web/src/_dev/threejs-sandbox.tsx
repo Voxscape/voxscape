@@ -148,14 +148,7 @@ export function ThreejsSandbox(): React.ReactElement {
   return (
     <div className="relative">
       <span className="absolute top-0 left-0 text-white">FPS: {fps.toFixed(2)}</span>
-      <canvas
-        css={css`
-          outline: 1px dotted red;
-        `}
-        ref={canvasRef}
-        width={800}
-        height={600}
-      />
+      <canvas ref={canvasRef} width={800} height={600} />
     </div>
   );
 }
