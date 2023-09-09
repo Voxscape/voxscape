@@ -56,9 +56,20 @@ jobs:
 
   # build-image:
   #   name: Build docker image
-  #   # needs: [check-vox-ts, check-web]
   #   uses: ./.github/workflows/build-image.yaml
-  build-multiarch-image:
-    # FIXME after everything works, change trigger to push tag
-    name: Build multiarch docker image
-    uses: ./.github/workflows/build-multiarch-image.yaml
+  pretend-merge-image:
+    name: Build docker image (x64)
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: docker/metadata-action@v4
+        id: docker_meta
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=branch,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            type=ref,event=pr
+            type=sha
+      - run: |
+        set -x
+        echo ${{ steps.docker_meta.outputs.tags }}
+        echo ${{ steps.docker_meta.outputs.labels }}
