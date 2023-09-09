@@ -70,6 +70,6 @@ jobs:
             type=ref,event=pr
             type=sha
       - run: |
-        set -x
-        echo ${{ steps.docker_meta.outputs.tags }}
-        echo ${{ steps.docker_meta.outputs.labels }}
+          set -x
+          echo ${{ steps.docker_meta.outputs.tags }}
+          echo ${{ steps.docker_meta.outputs.labels }}
