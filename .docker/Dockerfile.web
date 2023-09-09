@@ -12,17 +12,17 @@ RUN \
     --mount=type=cache,target=/home/node/.yarn,sharing=locked,uid=1000,gid=1000 \
     --mount=type=cache,target=/home/node/.cache,sharing=locked,uid=1000,gid=1000 \
     --mount=type=cache,target=/opt/voxscape/.yarn/cache,sharing=locked,uid=1000,gid=1000 \
-    --mount=type=cache,target=/opt/voxscape/web/.next/cache,sharing=locked,uid=1000,gid=1000 \
     set -uex && \
     cd /opt/voxscape/web && \
     yarn --version && \
     yarn config get cacheFolder && \
-    yarn && \
-    yarn prisma generate && \
-    yarn build && \
-    yarn workspaces focus --production
+    yarn && yarn prisma generate && \
+    mkdir -pv .next # required to make .next writable WTF
 
-# RUN \
-    # set -uex && \
-    # find /opt/voxscape/web/.next/cache && \
-    # cd /opt/voxscape/web && yarn build
+RUN \
+    --mount=type=cache,target=/opt/voxscape/web/.next/cache,sharing=locked,uid=1000,gid=1000 \
+    set -uex && \
+    find /opt/voxscape/web/.next/cache && \
+    cd /opt/voxscape/web && yarn build
+
+# TODO: we can reduce image by adding a new stage, copying only run time deps
