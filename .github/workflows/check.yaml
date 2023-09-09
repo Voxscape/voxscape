@@ -52,7 +52,5 @@ jobs:
 
   build-image:
     name: Build docker image
-    # github ubuntu image contains https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2204-README.md
-    runs-on: ubuntu-22.04
     needs: [check-vox-ts, check-web]
     uses: ./.github/workflows/build-image.yaml
