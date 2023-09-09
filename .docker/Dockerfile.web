@@ -16,10 +16,10 @@ RUN \
     cd /opt/voxscape/web && \
     yarn --version && \
     yarn config get cacheFolder && \
-    yarn && yarn prisma generate
+    yarn && yarn prisma generate && mkdir -pv .next
 
 RUN \
     --mount=type=cache,target=/opt/voxscape/web/.next/cache,sharing=locked,uid=1000,gid=1000 \
     set -uex && \
-    # find /opt/voxscape/web/.next/cache && \
+    find /opt/voxscape/web/.next/cache && \
     cd /opt/voxscape/web && yarn build
