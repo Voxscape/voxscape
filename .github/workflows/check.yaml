@@ -7,7 +7,8 @@ concurrency:
 on:
   push:
     branches:
-      - main
+    - master
+    - develop
   pull_request: {} # NOTE: worktree would be a temporal merge commit
 
 defaults:
