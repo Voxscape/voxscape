@@ -9,12 +9,12 @@ USER node
 COPY . /opt/voxscape
 
 RUN \
-    --mount=type=cache,target=/home/node/.yarn \
-    --mount=type=cache,target=/home/node/.cache \
+    --mount=type=cache,target=/home/node/.yarn,sharing=locked,uid=1000,gid=1000 \
+    --mount=type=cache,target=/home/node/.cache,sharing=locked,uid=1000,gid=1000 \
     set -uex && \
     cd /opt/voxscape/web && yarn --version && yarn && yarn prisma generate && yarn build
 
 RUN \
-    --mount=type=cache,target=/home/node/.yarn \
+    --mount=type=cache,target=/home/node/.yarn,sharing=locked,uid=1000,gid=1000 \
     set -uex && \
     cd /opt/voxscape/web && yarn build
