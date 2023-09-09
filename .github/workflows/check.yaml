@@ -1,6 +1,9 @@
 name: Check
 
 concurrency:
+  tags:
+  - "*"
+
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
@@ -54,3 +57,7 @@ jobs:
     name: Build docker image
     needs: [check-vox-ts, check-web]
     uses: ./.github/workflows/build-image.yaml
+  build-multiarch-image:
+    name: Build docker image
+    needs: [check-vox-ts, check-web]
+    uses: ./.github/workflows/build-multiarch-image.yaml
