@@ -54,11 +54,11 @@ jobs:
         working-directory: ./web/
     # TODO: a stepto test server
 
-  # build-image:
-  #   name: Build docker image
-  #   needs: [check-vox-ts, check-web]
-  #   uses: ./.github/workflows/build-image.yaml
-  build-multiarch-image:
-    # FIXME after everything works, change trigger to push tag
-    name: Build multiarch docker image
-    uses: ./.github/workflows/build-multiarch-image.yaml
+  build-image:
+    name: Build docker image
+    # needs: [check-vox-ts, check-web]
+    uses: ./.github/workflows/build-image.yaml
+  # build-multiarch-image:
+  #   # FIXME after everything works, change trigger to push tag
+  #   name: Build multiarch docker image
+  #   uses: ./.github/workflows/build-multiarch-image.yaml
