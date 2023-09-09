@@ -19,7 +19,7 @@ jobs:
   #   uses: ./.github/workflows/build-image.yaml
   build-x64-image:
     name: Build docker image (x64)
-    uses: .github/workflows/build-x64-image.yaml
+    uses: ./.github/workflows/build-x64-image.yaml
   # build-arm64-image:
   #   name: Build docker image (x64)
     # uses: .github/workflows/build-arm64-image.yaml
