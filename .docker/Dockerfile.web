@@ -6,7 +6,7 @@ RUN npm i -g publicaddr && which publicaddr
 # uid=1000 gid=1000
 USER node
 
-COPY . /opt/voxscape
+COPY --chown=node:node . /opt/voxscape
 
 RUN \
     --mount=type=cache,target=/home/node/.yarn,sharing=locked,uid=1000,gid=1000 \
