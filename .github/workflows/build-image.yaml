@@ -1,9 +1,7 @@
 name: Build preview docker images (x64 only)
 
 on:
-  workflow_call:
-    inputs: {}
-    # secrets: {}
+  workflow_call: {}
 
 defaults:
   run:
