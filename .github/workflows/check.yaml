@@ -1,0 +1,64 @@
+name: Check
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+    - master
+    - develop
+  pull_request: {} # NOTE: worktree would be a temporal merge commit
+
+defaults:
+  run:
+    shell: bash
+    working-directory: .
+
+jobs:
+  check-vox-ts:
+    name: Check vox.ts
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: 'yarn.lock'
+      - run: yarn
+      - run: yarn lint
+        working-directory: ./packages/vox.ts/
+      - run: yarn typecheck
+        working-directory: ./packages/vox.ts/
+
+  check-web:
+    name: Check web
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: 'yarn.lock'
+      - run: yarn
+      - run: yarn prisma generate
+        working-directory: ./web/
+      - run: yarn lint
+        working-directory: ./web/
+      - run: yarn typecheck
+        working-directory: ./web/
+      - run: yarn build
+        working-directory: ./web/
+    # TODO: a stepto test server
+
+  build-image:
+    name: Build docker image
+    # needs: [check-vox-ts, check-web]
+    uses: ./.github/workflows/build-image.yaml
+  # build-multiarch-image:
+  #   # FIXME after everything works, change trigger to push tag
+  #   name: Build multiarch docker image
+  #   uses: ./.github/workflows/build-multiarch-image.yaml

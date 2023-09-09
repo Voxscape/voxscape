@@ -1,7 +1,28 @@
 # have to use node16 before prisma fixes https://github.com/prisma/prisma/issues/10649
 FROM node:16-bullseye-slim
 
-COPY . /opt/voxscape
+RUN npm i -g publicaddr && which publicaddr
 
-RUN set -uex && npm i -g publicaddr && which publicaddr && \
-        cd /opt/voxscape/web && yarn --version && yarn && yarn prisma generate && yarn build
+# uid=1000 gid=1000
+USER node
+
+COPY --chown=node:node . /opt/voxscape
+
+RUN \
+    --mount=type=cache,target=/home/node/.yarn,sharing=locked,uid=1000,gid=1000 \
+    --mount=type=cache,target=/home/node/.cache,sharing=locked,uid=1000,gid=1000 \
+    --mount=type=cache,target=/opt/voxscape/.yarn/cache,sharing=locked,uid=1000,gid=1000 \
+    set -uex && \
+    cd /opt/voxscape/web && \
+    yarn --version && \
+    yarn config get cacheFolder && \
+    yarn && yarn prisma generate && \
+    mkdir -pv .next # required to make .next writable WTF
+
+RUN \
+    --mount=type=cache,target=/opt/voxscape/web/.next/cache,sharing=locked,uid=1000,gid=1000 \
+    set -uex && \
+    find /opt/voxscape/web/.next/cache && \
+    cd /opt/voxscape/web && yarn build
+
+# TODO: we can reduce image by adding a new stage, copying only run time deps
