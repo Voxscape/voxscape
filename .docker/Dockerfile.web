@@ -3,7 +3,8 @@ FROM node:16-bullseye-slim
 
 RUN npm i -g publicaddr && which publicaddr
 
-USER node # uid=1000 gid=1000
+# uid=1000 gid=1000
+USER node
 
 COPY . /opt/voxscape
 
