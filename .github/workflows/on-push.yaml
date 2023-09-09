@@ -15,5 +15,5 @@ jobs:
   check-code:
     uses: ./.github/workflows/check-code.yaml
   build-image:
-    # needs: [check-code] # TODO: revert this
+    needs: [check-code]
     uses: ./.github/workflows/build-image.yaml
