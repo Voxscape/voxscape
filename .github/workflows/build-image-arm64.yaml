@@ -9,8 +9,8 @@ defaults:
     working-directory: .
 
 jobs:
-  build-image-x64:
-    name: Build docker image (x64)
+  build-image:
+    name: Build docker image
     runs-on: self-hosted
 
     permissions:
