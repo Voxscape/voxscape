@@ -1,15 +1,7 @@
-name: Check
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+name: Check code
 
 on:
-  push:
-    branches:
-    - master
-    - develop
-  pull_request: {} # NOTE: worktree would be a temporal merge commit
+  workflow_call: {}
 
 defaults:
   run:
@@ -54,11 +46,3 @@ jobs:
         working-directory: ./web/
     # TODO: a stepto test server
 
-  build-image:
-    name: Build docker image
-    # needs: [check-vox-ts, check-web]
-    uses: ./.github/workflows/build-image.yaml
-  # build-multiarch-image:
-  #   # FIXME after everything works, change trigger to push tag
-  #   name: Build multiarch docker image
-  #   uses: ./.github/workflows/build-multiarch-image.yaml
