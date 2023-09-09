@@ -35,9 +35,10 @@ jobs:
         with:
           context: .
           file: ./.docker/Dockerfile.web
-          # platforms: linux/amd64
           platforms: linux/amd64
           push: true
           provenance: false
           sbom: false
-          tags: ${{ env.image_name }}:${{ env.image_tag }}-x64
+          tags: ghcr.io/${{ env.image_name }}:${{ env.image_tag }}-x64
+          cache-from: type=gha,scope=voxscape-site-x64
+          cache-to: type=gha,mode=max,scope=voxscape-site-x64
