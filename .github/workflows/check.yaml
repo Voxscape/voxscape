@@ -1,9 +1,6 @@
 name: Check
 
 concurrency:
-  tags:
-  - "*"
-
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
