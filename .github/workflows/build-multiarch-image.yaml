@@ -1,9 +1,11 @@
 name: Build release multiarch images (x64 / arm64)
 
 on:
+  workflow_call:
+    inputs: {}
+    # secrets: {}
   tags:
   - "*"
-  workflow_call: {}
 
 defaults:
   run:

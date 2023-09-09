@@ -56,6 +56,6 @@ jobs:
     needs: [check-vox-ts, check-web]
     uses: ./.github/workflows/build-image.yaml
   build-multiarch-image:
-    name: Build docker image
+    name: Build multiarch docker image
     needs: [check-vox-ts, check-web]
     uses: ./.github/workflows/build-multiarch-image.yaml
