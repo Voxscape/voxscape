@@ -12,7 +12,7 @@ defaults:
 
 jobs:
   build-image-x64:
-    name: Build docker image
+    name: Build docker image (x64)
     runs-on: ubuntu-22.04
 
     permissions:
@@ -45,7 +45,7 @@ jobs:
             ghcr.io/${{ github.event.repository.full_name }}:${{ steps.create_temp_image_tag.outputs.tag }}-amd64
 
   build-image-arm64:
-    name: Build docker image
+    name: Build docker image (arm64)
     runs-on: self-hosted
 
     permissions:
