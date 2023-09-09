@@ -13,12 +13,11 @@ on:
 
 jobs:
   check-code:
-    users: ./.github/workflows/check-code.yaml
+    uses: ./.github/workflows/check-code.yaml
   # build-image:
   #   name: Build docker image
   #   uses: ./.github/workflows/build-image.yaml
   build-x64-image:
-    name: Build docker image (x64)
     uses: ./.github/workflows/build-x64-image.yaml
   # build-arm64-image:
   #   name: Build docker image (x64)
