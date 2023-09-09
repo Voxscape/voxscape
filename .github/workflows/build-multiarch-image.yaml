@@ -1,9 +1,8 @@
 name: Build release multiarch images (x64 / arm64)
 
 on:
-  workflow_call:
-    inputs: {}
-    # secrets: {}
+  # do not allow PR directly: see https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#hardening-for-self-hosted-runners
+  workflow_call: {}
   push:
     tags:
     - "*"
