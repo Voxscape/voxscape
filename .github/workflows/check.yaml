@@ -1,0 +1,57 @@
+name: Check
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+  pull_request: {} # NOTE: worktree would be a temporal merge commit
+
+defaults:
+  run:
+    shell: bash
+    working-directory: .
+
+jobs:
+  check-vox-ts:
+    name: Check vox.ts
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: 'yarn.lock'
+      - run: yarn
+      - run: yarn lint
+        working-directory: ./packages/vox.ts/
+      - run: yarn typecheck
+        working-directory: ./packages/vox.ts/
+
+  check-web:
+    name: Check web
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: 'yarn.lock'
+      - run: yarn
+      - run: yarn prisma generate
+        working-directory: ./web/
+      - run: yarn lint
+        working-directory: ./web/
+      - run: yarn typecheck
+        working-directory: ./web/
+
+  build-image:
+    name: Build docker image
+    # github ubuntu image contains https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2204-README.md
+    runs-on: ubuntu-22.04
+    needs: [check-vox-ts, check-web]
