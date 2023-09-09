@@ -11,56 +11,26 @@ on:
     - develop
   pull_request: {} # NOTE: worktree would be a temporal merge commit
 
-defaults:
-  run:
-    shell: bash
-    working-directory: .
-
 jobs:
-  check-vox-ts:
-    name: Check vox.ts
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: yarn
-          cache-dependency-path: 'yarn.lock'
-      - run: yarn
-      - run: yarn lint
-        working-directory: ./packages/vox.ts/
-      - run: yarn typecheck
-        working-directory: ./packages/vox.ts/
-
-  check-web:
-    name: Check web
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: yarn
-          cache-dependency-path: 'yarn.lock'
-      - run: yarn
-      - run: yarn prisma generate
-        working-directory: ./web/
-      - run: yarn lint
-        working-directory: ./web/
-      - run: yarn typecheck
-        working-directory: ./web/
-      - run: yarn build
-        working-directory: ./web/
-    # TODO: a stepto test server
-
+  check-code:
+    users: ./.github/workflows/check-code.yaml
   # build-image:
   #   name: Build docker image
   #   uses: ./.github/workflows/build-image.yaml
-  pretend-merge-image:
+  build-x64-image:
     name: Build docker image (x64)
+    uses: .github/workflows/build-x64-image.yaml
+  # build-arm64-image:
+  #   name: Build docker image (x64)
+    # uses: .github/workflows/build-arm64-image.yaml
+  build-image:
+    needs: [build-x64-image]
     runs-on: ubuntu-22.04
     steps:
+      - name: create temp image metadata
+        run: |
+          echo "image_name=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+          echo "image_tag=${GITHUB_SHA::9}" >> $GITHUB_ENV
       - uses: docker/metadata-action@v4
         id: docker_meta
         with:
@@ -71,8 +41,11 @@ jobs:
             type=sha
       - run: |
           set -x
-          for i in $IMAGE_TAGS; do echo $i; done
-          for l in $IMAGE_LABELS; do echo $l; done
+          for i in $IMAGE_TAGS; do
+            docker manifest create $i \
+              ghcr.io/${{ env.image_name }}:${{ env.image_tag }}-x64
+            docker manifest push $i
+          done
         env:
           IMAGE_TAGS: ${{ steps.docker_meta.outputs.tags }}
-          IMAGE_LABELS: ${{ steps.docker_meta.outputs.labels }}
+          # IMAGE_LABELS: ${{ steps.docker_meta.outputs.labels }}
