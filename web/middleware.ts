@@ -1,7 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, NextMiddleware, NextFetchEvent } from 'next/server';
+import { logHttpRequest } from './server/request_logger';
 
 const setXRobotsTagHeader = process.env.DISABLE_X_ROBOTS_TAG !== 'YES';
-export function middleware(req: NextRequest): NextResponse {
+
+export function middleware(req: NextRequest, ev: NextFetchEvent): NextResponse {
+  logHttpRequest(req, ev);
   const resHeaders = new Headers();
 
   if (setXRobotsTagHeader) {

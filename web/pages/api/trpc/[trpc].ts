@@ -5,10 +5,11 @@ import { TRPCError } from '@trpc/server';
 import { createTrpcReqContext } from '../../../server/api/common/session.middleware';
 import { createDebugLogger } from '../../../shared/logger';
 import { ClientBad } from '../../../server/api/errors';
+import { withApiRequestLog } from '../../../server/request_logger';
 const logger = createDebugLogger(__filename);
 // export API handler
 // @see https://trpc.io/docs/api-handler
-export default trpcNext.createNextApiHandler({
+const handler = trpcNext.createNextApiHandler({
   router: appRouter,
 
   createContext: (ctx) => createTrpcReqContext(ctx.req, ctx.res),
@@ -42,3 +43,5 @@ export default trpcNext.createNextApiHandler({
     enabled: true,
   },
 });
+
+export default withApiRequestLog(handler);

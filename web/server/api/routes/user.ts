@@ -54,7 +54,7 @@ export const userRouter = t.router({
       return { user: pickSafeFields(user) };
     }),
   getOwnProfile: privateProcedure.query(({ ctx }) => {
-    return ctx.session!.user;
+    return ctx.session.user;
   }),
 });
 
