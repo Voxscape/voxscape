@@ -47,5 +47,5 @@ jobs:
       - run: yarn typecheck
       - run: yarn test:init-db
       - run: yarn test
-      - run: docker-compose -f ../dev/docker-compose.yml down
+      - run: docker compose -f ../dev/docker-compose.yml down
       - run: yarn build
