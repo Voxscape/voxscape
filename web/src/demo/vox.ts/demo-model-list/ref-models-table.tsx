@@ -9,42 +9,37 @@ export const RefModelsTable: FC<{
 }> = (props) => {
   return (
     <TableContainer>
-      <Table variant="simple">
+      <Table variant="simple" className="w-full" style={{ tableLayout: 'fixed' }}>
         <Thead>
           <Tr>
-            <Th>path</Th>
-            <Th>index</Th>
-            <Th>#models</Th>
-            <Th>#voxels</Th>
-            <Th>#warning</Th>
-            <Th>operation</Th>
+            <Th>file</Th>
+            <Th>models</Th>
+            <Th>#warnings</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {props.files.flatMap((f) => {
-            return f.models.map((model, i) => {
-              return (
-                <Tr key={`${f.path}-${i}`}>
-                  <Td>{f.path}</Td>
-                  <Td isNumeric>{i} </Td>
-                  <Td isNumeric>{f.models.length}</Td>
-                  <Td isNumeric>{model.numVoxels}</Td>
-                  <Td isNumeric>{f.warnings.length}</Td>
-                  <Td>
-                    <DemoModelLink entry={f} index={i} />
-                  </Td>
-                </Tr>
-              );
-            });
-          })}
+          {props.files.flatMap((f) => (
+            <Tr key={f.path}>
+              <Td>{f.path}</Td>
+              <Td className="space-y-4 space-x-2">
+                {f.models.map((model, i) => (
+                  <>
+                    <DemoModelLink entry={f} index={i}>
+                      Model #{i}
+                    </DemoModelLink>
+                    {(i + 1) % 4 === 0 && <br />}
+                  </>
+                ))}
+              </Td>
+              <Td>{f.warnings.length}</Td>
+            </Tr>
+          ))}
         </Tbody>
         <Tfoot>
           <Tr>
-            <Th>path</Th>
-            <Th>#models</Th>
-            <Th>#bytes</Th>
-            <Th>#warning</Th>
-            <Th>operation</Th>
+            <Th>file</Th>
+            <Th>models</Th>
+            <Th>#warnings</Th>
           </Tr>
         </Tfoot>
       </Table>
