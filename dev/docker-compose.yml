@@ -1,6 +1,6 @@
-version: '3.3'
+# version: '3.3'
 
-name: x-voxscape-dev
+name: voxscape-dev
 
 services:
   pgsql:
