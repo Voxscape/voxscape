@@ -73,7 +73,7 @@ export function uint32ToColor(uint32: number): VoxTypes.VoxelColor {
     g: (uint32 >>> 16) & 0xff,
     b: (uint32 >>> 8) & 0xff,
     a: (uint32 >>> 0) & 0xff,
-    _hex: uint32,
+    // _hex: uint32,
   };
 }
 

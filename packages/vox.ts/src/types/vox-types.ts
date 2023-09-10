@@ -4,7 +4,7 @@ export interface VoxelColor {
   readonly g: number;
   readonly b: number;
   readonly a: number;
-  readonly _hex: number;
+  // readonly _hex: number;
 }
 
 export interface Voxel {

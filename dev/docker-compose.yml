@@ -1,5 +1,7 @@
-version: '3'
-name: nuthatch-dev
+# NOTE this file does not with docker-compose in GHA. try `docker compose` instead
+version: '3.3'
+
+name: voxscape-dev
 
 services:
   pgsql:

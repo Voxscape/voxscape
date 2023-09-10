@@ -24,10 +24,15 @@ jobs:
         working-directory: ./packages/vox.ts/
       - run: yarn typecheck
         working-directory: ./packages/vox.ts/
+      - run: yarn test
+        working-directory: ./packages/vox.ts/
 
   check-web:
     name: Check web
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./web/
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -35,14 +40,12 @@ jobs:
           node-version: 18
           cache: yarn
           cache-dependency-path: 'yarn.lock'
+      - run: docker compose -f ../dev/docker-compose.yml up -d
       - run: yarn
       - run: yarn prisma generate
-        working-directory: ./web/
       - run: yarn lint
-        working-directory: ./web/
       - run: yarn typecheck
-        working-directory: ./web/
+      - run: yarn test:init-db
+      - run: yarn test
+      - run: docker compose -f ../dev/docker-compose.yml down
       - run: yarn build
-        working-directory: ./web/
-    # TODO: a stepto test server
-
