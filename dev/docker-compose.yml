@@ -1,5 +1,5 @@
-version: '3'
-name: nuthatch-dev
+version: '3.3'
+name: voxscape-dev
 
 services:
   pgsql:
