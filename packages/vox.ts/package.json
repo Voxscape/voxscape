@@ -14,7 +14,7 @@
     "lint:fix": "eslint '@(src|pages)/**/*.@(ts|js|tsx|jsx)' --fix"
   },
   "dependencies": {
-    "@jokester/ts-commonutil": "^0.4.1",
+    "@jokester/ts-commonutil": "^0.4.2",
     "ndarray": "^1.0.19",
     "voxel-triangulation": "^1.3.6",
     "zeros": "^1.0.0"

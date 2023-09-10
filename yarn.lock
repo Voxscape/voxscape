@@ -2395,12 +2395,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jokester/ts-commonutil@npm:^0.4.1":
-  version: 0.4.1
-  resolution: "@jokester/ts-commonutil@npm:0.4.1"
+"@jokester/ts-commonutil@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "@jokester/ts-commonutil@npm:0.4.2"
   peerDependencies:
     tslib: ^2.4.0
-  checksum: 016683175280773341a303f05001adc0b25812a1a4cb59d34632994aaabe4041efae345577d92e7308d14c55dbf6fecc9c6334fbfb0e1c4efd64616436591f2f
+  checksum: 16012a81d4ebaf40a1d258e8a8b1812d064767582d76e8a52700840bafbbb450cca8e0b1ac07cd8b168c10427545de8a5b09f00e19fcdb71c91aca696d4aa318
   languageName: node
   linkType: hard
 
@@ -3717,7 +3717,7 @@ __metadata:
     "@babylonjs/post-processes": ^5.40.0
     "@babylonjs/procedural-textures": ^5.40.0
     "@babylonjs/serializers": ^5.40.0
-    "@jokester/ts-commonutil": ^0.4.1
+    "@jokester/ts-commonutil": ^0.4.2
     "@types/debug": ^4.1.7
     "@types/lodash-es": ^4.17.6
     "@types/ndarray": ^1.0.11
@@ -3759,7 +3759,7 @@ __metadata:
     "@emotion/styled": ^11.11
     "@faker-js/faker": ^8.0.2
     "@google-cloud/storage": ^6.9.4
-    "@jokester/ts-commonutil": ^0.4.1
+    "@jokester/ts-commonutil": ^0.4.2
     "@mantine/core": ^6.0.19
     "@mantine/dropzone": ^6.0.19
     "@mantine/hooks": ^6.0.19
@@ -3807,6 +3807,7 @@ __metadata:
     tailwindcss: ^3.2.4
     three: ^0.150.1
     tslib: ^2
+    typescript: "*"
     use-constant: ^1.1.1
     zod: ^3.21
   languageName: unknown
