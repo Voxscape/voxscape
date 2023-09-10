@@ -21,6 +21,9 @@ function buildNdArray(f: Vox.VoxelModel): ndarray.NdArray {
   return xyzc.transpose(1, 2, 0);
 }
 
+/**
+ * FIXME: should get this right
+ */
 describe.skip('ndarray', () => {
   it('builds an ndarray from a voxel model', () => {
     const xyzc = buildNdArray(demoModel);

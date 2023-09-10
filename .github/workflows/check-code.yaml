@@ -24,6 +24,8 @@ jobs:
         working-directory: ./packages/vox.ts/
       - run: yarn typecheck
         working-directory: ./packages/vox.ts/
+      - run: yarn test
+        working-directory: ./packages/vox.ts/
 
   check-web:
     name: Check web
