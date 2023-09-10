@@ -43,6 +43,7 @@ export const userRouter = t.router({
     .query(async ({ input, ctx }) => {
       logger('input / session', input, ctx.session);
       logger('session.user', ctx.session?.user.id);
+      logger('reqId', ctx.reqId);
       const user = await prisma.user.findUnique({
         where: {
           id: input.userId,
