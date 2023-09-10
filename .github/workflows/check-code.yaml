@@ -30,6 +30,9 @@ jobs:
   check-web:
     name: Check web
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./web/
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -39,12 +42,9 @@ jobs:
           cache-dependency-path: 'yarn.lock'
       - run: yarn
       - run: yarn prisma generate
-        working-directory: ./web/
       - run: yarn lint
-        working-directory: ./web/
       - run: yarn typecheck
-        working-directory: ./web/
+      - run: docker-compose -f ../dev/docker-compose.yaml up -d
+      - run: yarn test:init-db
+      - run: yarn test
       - run: yarn build
-        working-directory: ./web/
-    # TODO: a stepto test server
-
