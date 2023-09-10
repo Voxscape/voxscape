@@ -8,6 +8,7 @@ import { createDebugLogger } from '../../../shared/logger';
 const debug = createDebugLogger(__filename);
 
 export interface TrpcReqContext {
+  reqId?: string;
   session?: Session & {
     user: {
       id: string;
@@ -24,6 +25,7 @@ interface AssertedReqContext extends TrpcReqContext {
  */
 export async function createTrpcReqContext(req: NextApiRequest, res: NextApiResponse): Promise<TrpcReqContext> {
   return {
+    reqId: (req as any).reqId,
     session: (await getServerSession(req, res, nextAuthOptions)) || undefined,
   };
 }
