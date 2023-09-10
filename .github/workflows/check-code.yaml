@@ -40,7 +40,7 @@ jobs:
           node-version: 18
           cache: yarn
           cache-dependency-path: 'yarn.lock'
-      - run: docker-compose -f ../dev/docker-compose.yml up -d
+      - run: docker compose -f ../dev/docker-compose.yml up -d
       - run: yarn
       - run: yarn prisma generate
       - run: yarn lint
