@@ -13,7 +13,7 @@ function CreateModelPageContent() {
   return (
     <div>
       {modelFile ? (
-        <ModelViewer key={flipCount} voxFile={modelFile} onReset={() => setModelFile(null)} />
+        <ModelViewer key={flipCount} voxFile={modelFile} onBack={() => setModelFile(null)} />
       ) : (
         <ModelFilePicker key={flipCount} onModelRead={setModelFile} />
       )}

@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
-import { binaryConversion } from '@voxscape/vox.ts/src/util/binary-conversion';
 import { basicParser } from '@voxscape/vox.ts/src/parser/basic-parser';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
-import { BabylonModelRenderer } from './babylon-model-renderer';
+import { ModelViewer } from '../../../model/vox/model-viewer';
 
 export interface ModelPath {
   modelUrl: string;
-  modelIndex: number | string;
 }
 
-function useDemoModel(modelUrl?: string) {
+function useDemoModel(modelUrl?: string): null | ParsedVoxFile {
   const [model, setModel] = useState<null | ParsedVoxFile>(null);
 
   useAsyncEffect(
@@ -25,33 +23,27 @@ function useDemoModel(modelUrl?: string) {
       const assetPath = escaped.replace(/^\/*/, '/');
       const rebuilt = new URL(assetPath, window.location.href);
       console.debug('fetching', { modelUrl, escaped, absolutified: assetPath, rebuilt });
-      const blob = await fetch(rebuilt).then((_) => _.blob());
+      const arrayBuffer = await fetch(rebuilt).then((_) => _.arrayBuffer());
       if (!mounted.current) {
         return;
       }
-      const parsed = basicParser(await binaryConversion.blob.toArrayBuffer(blob));
-      if (!mounted.current) {
-        return;
-      }
+      const parsed = basicParser(arrayBuffer);
       setModel(parsed);
     },
     [modelUrl],
+    true,
   );
   return model;
 }
 
-export const BabylonDemo: React.FC<{ initialPath: ModelPath; builder?: string }> = (props) => {
+export const BabylonDemo: React.FC<{ initialPath: ModelPath }> = (props) => {
   const [modelUrl, setModelUrl] = useState(props.initialPath.modelUrl);
   const model = useDemoModel(modelUrl);
   if (model) {
     return (
       <div className="p-4">
-        <h1 className="mb-2 text-xl">model viewer</h1>
-        <BabylonModelRenderer
-          modelFile={model}
-          modelIndex={Number(props.initialPath?.modelIndex ?? '0')}
-          builder={props.builder}
-        />
+        <h1 className="mb-2 text-xl">model viewer powered by vox.ts and Babylon.js</h1>
+        {model && <ModelViewer voxFile={model} />}
       </div>
     );
   }

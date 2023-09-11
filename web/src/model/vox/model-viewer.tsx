@@ -7,16 +7,16 @@ import { useToggle } from 'react-use';
 
 import { OnlyInDev } from '../../_dev/only-in-dev';
 
-export function ModelViewer(props: { voxFile: ParsedVoxFile; onReset?(): void }) {
+export function ModelViewer(props: { voxFile: ParsedVoxFile; onBack?(): void }) {
   const flipCount = useKeyGenerator(props.voxFile);
   return (
     <div>
-      <RealModelViewer voxFile={props.voxFile} key={flipCount} onReset={props.onReset} />
+      <RealModelViewer voxFile={props.voxFile} key={flipCount} onBack={props.onBack} />
     </div>
   );
 }
 
-function RealModelViewer(props: { voxFile: ParsedVoxFile; onReset?(): void }) {
+function RealModelViewer(props: { voxFile: ParsedVoxFile; onBack?(): void }) {
   const [modelIndex, setModelIndex] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const inspectorRootRef = useRef<HTMLDivElement>(null);
@@ -31,7 +31,7 @@ function RealModelViewer(props: { voxFile: ParsedVoxFile; onReset?(): void }) {
   return (
     <div>
       <div>
-        <Button onClick={props.onReset}>Back</Button>
+        {props.onBack && <Button onClick={props.onBack}>Back</Button>}
         <ModelIndexPicker
           voxFile={props.voxFile}
           onChange={(value) => {

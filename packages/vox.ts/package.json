@@ -39,8 +39,6 @@
     "@types/lodash-es": "^4.17.6",
     "@types/ndarray": "^1.0.11",
     "@types/node": "18",
-    "@types/react": "^18.2",
-    "@types/react-dom": "^18.2",
     "@types/three": "^0.149.0",
     "debug": "^4.3.4",
     "eslint": "*",
