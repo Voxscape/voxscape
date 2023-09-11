@@ -6,9 +6,13 @@ import { greedyBuild } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-bu
 import { buildBabylonMeshProgressive } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-progressive';
 import { ArcRotateCamera, Scene } from '@babylonjs/core';
 import * as VoxTypes from '@voxscape/vox.ts/src/types/vox-types';
-import { BabylonContext } from '@voxscape/vox.ts/src/babylon-react/babylon-context';
 
-export async function renderModelAlt(ctx: BabylonContext, voxFile: ParsedVoxFile, modelIndex: number): Promise<void> {
+export async function renderModelAlt(
+  scene: Scene,
+  camera: ArcRotateCamera,
+  voxFile: ParsedVoxFile,
+  modelIndex: number,
+): Promise<void> {
   if (!voxFile.palette) {
     console.warn('no palette found, fallback to use default');
   }
@@ -16,19 +20,17 @@ export async function renderModelAlt(ctx: BabylonContext, voxFile: ParsedVoxFile
   const model = voxFile.models[modelIndex];
   const palette = voxFile.palette ?? getDefaultPalette();
 
-  const mesh = await buildTriangulatedMesh(model, palette, ctx.scene);
+  const mesh = await buildTriangulatedMesh(model, palette, scene);
 
-  ctx.camera.setRadius(
-    0.5 * Math.min(model.size.x, model.size.y, model.size.z),
-    1.5 * Math.max(model.size.x, model.size.y, model.size.z),
-  );
+  resetCameraForModel(camera, model);
 }
 
 /**
  * @deprecated use {@function renderModel}
  */
 export async function renderModelV0(
-  ctx: BabylonContext,
+  camera: ArcRotateCamera,
+  scene: Scene,
   voxFile: ParsedVoxFile,
   modelIndex: number,
   shouldBreak?: () => boolean,
@@ -42,14 +44,11 @@ export async function renderModelV0(
     model,
     voxFile.palette ?? getDefaultPalette(),
     `model-${modelIndex}`,
-    ctx.scene,
+    scene,
     1000,
   );
 
-  ctx.camera.setRadius(
-    0.5 * Math.min(model.size.x, model.size.y, model.size.z),
-    1.5 * Math.max(model.size.x, model.size.y, model.size.z),
-  );
+  resetCameraForModel(camera, model);
 
   for await (const progress of started) {
     console.debug('progress', progress);

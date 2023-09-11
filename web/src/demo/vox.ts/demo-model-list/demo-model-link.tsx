@@ -1,14 +1,10 @@
 import Link from 'next/link';
 import { RefModelIndexEntry } from './ref-models';
-import { ReactElement } from 'react';
+import { PropsWithChildren, ReactElement } from 'react';
 import { Button } from '@chakra-ui/react';
 
-export function DemoModelLink({
-  entry,
-  index,
-  children,
-}: React.PropsWithChildren<{ entry: RefModelIndexEntry; index: number }>): ReactElement {
-  const href = `/demo/vox.ts/show?file=${encodeURIComponent(entry.path.replaceAll(/^\.\//g, ''))}&modelIndex=${index}`;
+export function DemoModelLink({ entry, children }: PropsWithChildren<{ entry: RefModelIndexEntry }>): ReactElement {
+  const href = `/demo/vox.ts/show?file=${encodeURIComponent(entry.path.replaceAll(/^\.\//g, ''))}`;
 
   return (
     <Link href={href} target="_blank">
