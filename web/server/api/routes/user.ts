@@ -2,24 +2,17 @@ import { t } from '../common/_base';
 import { z } from 'zod';
 import { ClientBad } from '../errors';
 import { createDebugLogger } from '../../../shared/logger';
-import { requireUserLogin } from '../common/session.middleware';
+import { privateProcedure } from '../common/session.middleware';
 import { prisma } from '../../prisma';
-import * as Prisma from '@prisma/client';
+import { pagerParam, pickSafeUser } from '../common/primitive';
 
 const logger = createDebugLogger(__filename);
-
-const privateProcedure = t.procedure.use(requireUserLogin);
-
-export const pagerSchema = z.object({
-  limit: z.number({}).int().min(25).max(200).optional(),
-  offset: z.number().int().optional(),
-});
 
 export const userRouter = t.router({
   list: t.procedure
     .input(
       z.object({
-        pager: pagerSchema.optional(),
+        pager: pagerParam.optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -31,9 +24,10 @@ export const userRouter = t.router({
         },
       });
       return {
-        users: users.map(pickSafeFields),
+        users: users.map(pickSafeUser),
       };
     }),
+
   getById: t.procedure
     .input(
       z.object({
@@ -52,25 +46,9 @@ export const userRouter = t.router({
       if (!user) {
         throw new ClientBad('user not found', 'NOT_FOUND');
       }
-      return { user: pickSafeFields(user) };
+      return { user: pickSafeUser(user) };
     }),
   getOwnProfile: privateProcedure.query(({ ctx }) => {
     return ctx.session.user;
   }),
 });
-
-export interface SafeUser {
-  id: string;
-  name?: string;
-  imageUrl?: string;
-  createdAt: Date;
-}
-
-function pickSafeFields(u: Prisma.User): SafeUser {
-  return {
-    id: u.id,
-    name: u.name ?? undefined,
-    imageUrl: u.image ?? undefined,
-    createdAt: u.createdAt,
-  };
-}

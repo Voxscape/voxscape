@@ -40,3 +40,5 @@ export const requireUserLogin = t.middleware(({ ctx, next }) => {
   debug('session', ctx.session);
   return next({ ctx: ctx as AssertedReqContext });
 });
+
+export const privateProcedure = t.procedure.use(requireUserLogin);

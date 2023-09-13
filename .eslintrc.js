@@ -27,7 +27,7 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 2,
     '@typescript-eslint/no-unused-vars': 0,
     '@typescript-eslint/explicit-member-accessibility': 0,
-    '@typescript-eslint/no-non-null-assertion': 1,
+    '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/ban-ts-comment': 1,
     '@typescript-eslint/ban-types': 1,
     '@typescript-eslint/camelcase': 0,

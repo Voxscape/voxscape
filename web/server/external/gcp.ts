@@ -9,7 +9,7 @@ function getStorage(): Storage {
         credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_CRED),
       });
     } else {
-      // we'd better be running in GCP
+      // we'd better have $GOOGLE_APPLICATION_CREDENTIALS set, or have obtained permissions from SA
       storage ||= new Storage();
     }
     storage.authClient.getClient().then((c) => {
@@ -21,6 +21,13 @@ function getStorage(): Storage {
   return storage;
 }
 
-export function getBucket(name = process.env.GOOGLE_STORAGE_BUCKET!): Bucket {
-  return getStorage().bucket(name);
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const bucketName: string = process.env.GOOGLE_STORAGE_BUCKET!;
+
+export function getBucket(): Bucket {
+  return getStorage().bucket(bucketName);
+}
+
+export function isGcpObjectUrl(url: string): boolean {
+  return url.startsWith(`https://storage.googleapis.com/${bucketName}/`);
 }
