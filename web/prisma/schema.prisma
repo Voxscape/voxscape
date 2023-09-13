@@ -63,6 +63,7 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+// ours
 model VoxFile {
   id          Int      @id @default(autoincrement())
   ownerUserId String
@@ -70,8 +71,6 @@ model VoxFile {
   contentType String
   assetUrl    String
   isPrivate   Boolean  @default(false)
-  // defaultViewId Int
-  // defaultView   VoxelModelView @relation(fields: [defaultViewId], references: [id])
   updatedAt   DateTime @updatedAt
   createdAt   DateTime @default(now())
 
