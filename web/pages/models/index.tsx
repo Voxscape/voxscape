@@ -4,7 +4,7 @@ import { Spinner } from '@chakra-ui/react';
 
 function ModelListPageContent() {
   const client = useTrpcClient();
-  const models = client.hook.models.recent.useQuery();
+  const models = client.hook.models.vox.recent.useQuery();
 
   if (!models.data?.models) {
     return <Spinner />;

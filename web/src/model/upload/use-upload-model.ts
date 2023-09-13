@@ -10,7 +10,11 @@ export function useModelUpload() {
 
   const uploadModel = inBlocking(async (f: File) => {
     try {
-      const uploadUrl = await api.$.models.requestUpload.mutate({ filename: f.name, contentType: f.type });
+      const uploadUrl = await api.$.models.requestUpload.mutate({
+        filename: f.name,
+        size: f.size,
+        contentType: f.type,
+      });
 
       const uploaded = await fetch(uploadUrl.uploadUrl, {
         method: 'PUT',

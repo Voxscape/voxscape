@@ -1,12 +1,10 @@
 import { t } from './common/_base';
 import { userRouter } from './routes/user';
-import { modelsRouter } from './routes/model/vox';
+import { modelRouter } from './routes/model';
 
 export const appRouter = t.router({
   user: userRouter,
-  models: t.router({
-    vox: modelsRouter,
-  }),
+  models: modelRouter,
 });
 
 // Export type router type signature,

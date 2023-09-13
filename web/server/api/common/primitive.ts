@@ -15,6 +15,8 @@ const safeUser = z.object({
   createdAt: z.date(),
 });
 
+export type SafeUser = z.infer<typeof safeUser>;
+
 export function pickSafeUser(u: Prisma.User): z.infer<typeof safeUser> {
   return safeUser.parse(u);
 }
