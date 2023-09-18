@@ -10,8 +10,8 @@ import clsx from 'clsx';
 
 export default function UserIndexPage(): ReactElement {
   const session = useSession();
-  const trpcClient = useTrpcHooks();
-  const users = trpcClient.hook.user.list.useQuery({});
+  const trpcHooks = useTrpcHooks();
+  const users = trpcHooks.user.list.useQuery({});
 
   const content =
     users.data &&

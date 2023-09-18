@@ -1,19 +1,15 @@
 import { FC, useEffect } from 'react';
 import { useTrpcHooks } from '../../src/config/trpc';
-import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { createDebugLogger } from '../../shared/logger';
 
 const logger = createDebugLogger(__filename);
 
 const ProfilePage: FC = () => {
-  const trpcClient = useTrpcHooks();
-  useAsyncEffect(async (running) => {
-    if (!running.current) return;
-    const f = await trpcClient.$.user.getOwnProfile.query().then(
-      (u) => logger('user', u),
-      (e) => logger('error', e),
-    );
-  }, []);
+  const trpcHooks = useTrpcHooks();
+  const self = trpcHooks.user.getOwnProfile.useQuery();
+  useEffect(() => {
+    logger('self', self);
+  }, [self]);
   return <div>TODO</div>;
 };
 
