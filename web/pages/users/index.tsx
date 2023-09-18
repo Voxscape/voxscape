@@ -1,6 +1,6 @@
 import { Layout } from '../../src/layout/layout';
 import { ReactElement } from 'react';
-import { trpcReact, useTrpcClient } from '../../src/config/trpc';
+import { trpcReact, useTrpcHooks } from '../../src/config/trpc';
 import Link from 'next/link';
 import { datetimeFormatter } from '../../shared/date-formatter';
 import { buildSsrHandler } from '../../server/ssr';
@@ -10,7 +10,7 @@ import clsx from 'clsx';
 
 export default function UserIndexPage(): ReactElement {
   const session = useSession();
-  const trpcClient = useTrpcClient();
+  const trpcClient = useTrpcHooks();
   const users = trpcClient.hook.user.list.useQuery({});
 
   const content =

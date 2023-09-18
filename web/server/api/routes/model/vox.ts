@@ -25,6 +25,10 @@ const mutateModelRequest = z.object({
   isPrivate: z.oboolean(),
 });
 
+const findByUserQuery = z.object({
+  userId: z.string(),
+});
+
 const searchModelQuery = z.object({
   query: z.string(),
 });
@@ -50,6 +54,6 @@ export const voxRouter = t.router({
       },
     });
 
-    return [saved];
+    return { file: saved };
   }),
 });

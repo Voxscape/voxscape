@@ -1,34 +1,39 @@
-import { useBlocking } from '../../hooks/use-blocking';
-import { useTrpcClient } from '../../config/trpc';
-import { useModalApi } from '../../components/modal/modal-context';
+import { trpcClient } from '../../config/trpc';
+import { matchModelContentType } from '../../../shared/const';
 
-export function useModelUpload() {
-  const api = useTrpcClient();
-  const modal = useModalApi();
+export async function uploadVoxModel(f: File) {
+  const contentType = matchModelContentType(f.name);
+  if (!contentType) {
+    throw new Error(`Unsupported file type: ${f.name}`);
+  }
 
-  const [blocking, inBlocking] = useBlocking();
-
-  const uploadModel = inBlocking(async (f: File) => {
-    try {
-      const uploadUrl = await api.$.models.requestUpload.mutate({
-        filename: f.name,
-        size: f.size,
-        contentType: f.type,
-      });
-
-      const uploaded = await fetch(uploadUrl.uploadUrl, {
-        method: 'PUT',
-        body: f,
-        headers: {
-          'Content-Disposition': encodeURIComponent(f.name),
-        },
-      });
-      if (!uploaded.ok) {
-        throw new Error(uploaded.statusText);
-      }
-      await modal.alert('uploaded', uploadUrl.publicUrl);
-    } catch (e: any) {
-      await modal.alert(`???`, e.message);
-    }
+  const uploadCred = await trpcClient.models.requestUpload.mutate({
+    filename: f.name,
+    size: f.size,
+    contentType,
   });
+
+  const uploaded = await fetch(uploadCred.uploadUrl, {
+    method: 'PUT',
+    body: f,
+    headers: {
+      'content-type': contentType,
+      'content-disposition': encodeURIComponent(f.name),
+    },
+  });
+  if (!uploaded.ok) {
+    throw new Error(`Failed to upload: ${uploaded.statusText}`);
+  }
+
+  return { contentType, publicUrl: uploadCred.publicUrl };
+}
+
+export async function createVoxModel(publicUrl: string, contentType: string, isPrivate: boolean) {
+  const saved = await trpcClient.models.vox.create.mutate({
+    assetUrl: publicUrl,
+    contentType,
+    isPrivate,
+  });
+
+  return saved;
 }

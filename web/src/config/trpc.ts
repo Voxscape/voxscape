@@ -31,16 +31,11 @@ export const trpcReactClient = trpcReact.createClient({
   transformer: superjson,
 });
 
-const trpcImperativeClient = createTRPCProxyClient<AppRouter>({
+export const trpcClient = createTRPCProxyClient<AppRouter>({
   links,
   transformer: superjson,
 });
 
-export const trpcClient = {
-  hook: trpcReact,
-  $: trpcImperativeClient,
-} as const;
-
-export function useTrpcClient(): typeof trpcClient {
-  return trpcClient;
+export function useTrpcHooks(): typeof trpcReact {
+  return trpcReact;
 }

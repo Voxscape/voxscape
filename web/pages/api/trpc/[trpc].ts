@@ -30,8 +30,9 @@ const handler = trpcNext.createNextApiHandler({
 
   onError({ error, type, path, input, ctx, req }) {
     if (error.cause instanceof ZodError) {
+      logger('trpc error', error.cause, path, input, ctx);
       // we could rewrite error code / message here
-      throw new TRPCError({ message: `zod error`, code: 'BAD_REQUEST' });
+      throw new TRPCError({ message: error.cause.name, code: 'BAD_REQUEST' });
     } else if (error instanceof ClientBad) {
       logger('client bad', path, input, ctx);
     } else {

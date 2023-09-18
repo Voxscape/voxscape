@@ -30,7 +30,7 @@ export class VoxSceneHandle extends BabylonSceneHandle {
     mesh: Mesh;
     stopped: Promise<void>;
   } {
-    let running = true;
+    const running = true;
     const { stop, stopped } = greedyBuild(model, palette, rootMesh, this.scene);
     return {
       stop,

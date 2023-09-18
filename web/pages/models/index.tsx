@@ -1,10 +1,10 @@
 import { Layout } from '../../src/layout/layout';
-import { useTrpcClient } from '../../src/config/trpc';
+import { useTrpcHooks } from '../../src/config/trpc';
 import { Spinner } from '@chakra-ui/react';
 
 function ModelListPageContent() {
-  const client = useTrpcClient();
-  const models = client.hook.models.vox.recent.useQuery();
+  const trpcHooks = useTrpcHooks();
+  const models = trpcHooks.models.vox.recent.useQuery();
 
   if (!models.data?.models) {
     return <Spinner />;

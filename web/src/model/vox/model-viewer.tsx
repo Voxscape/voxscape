@@ -10,14 +10,13 @@ import { ViewerConfig, ViewerTarget } from './use-vox-scene-handle';
 
 const logger = createDebugLogger(__filename);
 
-export function ModelViewer(props: { voxFile: ParsedVoxFile; onBack?(): void }) {
+export function ModelViewer(props: { voxFile: ParsedVoxFile }) {
   const [viewerTarget, setViewerTarget] = useState<null | ViewerTarget>(null);
   const [viewerConfig, setViewerConfig] = useState<null | ViewerConfig>(null);
 
   return (
     <div>
       <div>
-        {props.onBack && <Button onClick={props.onBack}>Back</Button>}
         <ViewerTargetPicker voxFile={props.voxFile} onChange={setViewerTarget} />
         <ViewerConfigPicker onInput={setViewerConfig} />
         <div>{viewerTarget && viewerConfig && <ModelCanvas target={viewerTarget} config={viewerConfig} />}</div>
