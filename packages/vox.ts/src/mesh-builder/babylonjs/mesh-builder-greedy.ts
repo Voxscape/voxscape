@@ -11,16 +11,14 @@ import { buildBabylonColor3 } from './colors';
 export function greedyBuild(
   model: Vox.VoxelModel,
   palette: Vox.VoxelPalette,
-  meshName: string,
+  root: Mesh,
   scene: Scene,
   options?: {
     flipXZ?: boolean;
     createFrame?: boolean;
-    shouldStop?: () => boolean;
   },
-): Mesh {
-  const root = new Mesh(meshName, scene);
-
+): { stop(): void; stopped: Promise<void> } {
+  let running = true;
   if (options?.createFrame ?? false) {
     const frameMesh = createModelFrameMesh(model.size, scene, root);
   }
@@ -30,17 +28,21 @@ export function greedyBuild(
     root.rotationQuaternion = normalize.rotation;
     root.scaling = normalize.scale;
   }
-  startGreedyBuildMesh(model, palette, meshName, root, scene, options?.shouldStop).then((broke) => {
+  const stopped = startGreedyBuildMesh(model, palette, root, scene, () => !running).then((broke) => {
     console.debug('finished', broke);
   });
 
-  return root;
+  return {
+    stopped,
+    stop() {
+      running = false;
+    },
+  };
 }
 
 async function startGreedyBuildMesh(
   model: Vox.VoxelModel,
   palette: Vox.VoxelPalette,
-  meshName: string,
   root: Mesh,
   scene: Scene,
   shouldStop?: () => boolean,

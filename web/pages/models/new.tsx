@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { BlockingContextProvider } from '../../src/hooks/use-blocking';
 import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
 import { useKeyGenerator } from '../../src/hooks/use-key-generator';
-import { ModelFilePicker } from '../../src/model/model-file-picker';
+import { ModelFilePicker } from '../../src/model/upload/model-file-picker';
 import { ModelViewer } from '../../src/model/vox/model-viewer';
 
 function CreateModelPageContent() {
