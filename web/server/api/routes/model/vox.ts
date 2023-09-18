@@ -5,6 +5,8 @@ import { privateProcedure } from '../../common/session.middleware';
 import { t } from '../../common/_base';
 import { mimeTypes } from '../../../../shared/const';
 import { pagerParam } from '../../common/primitive';
+import { decomposeUserAssetUrl } from '../../../external/gcp';
+import { ClientBad } from '../../errors';
 
 const logger = createDebugLogger(__filename);
 
@@ -45,6 +47,10 @@ export const voxRouter = t.router({
   }),
 
   create: privateProcedure.input(createModelRequest).mutation(async ({ input, ctx }) => {
+    const f = decomposeUserAssetUrl(input.assetUrl);
+    if (!(ctx.session.user.id && ctx.session.user.id === f?.userId)) {
+      throw new ClientBad(`invalid assetUrl`, 'FORBIDDEN');
+    }
     const saved = await prisma.voxFile.create({
       data: {
         contentType: input.contentType,

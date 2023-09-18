@@ -16,7 +16,6 @@ function CreateModelPageContent() {
   const [blocking, withBlocking] = useBlocking();
   const modalApi = useModalApi();
   const router = useRouter();
-  const onUploadSucceeded = () => {};
 
   const startUpload = withBlocking(async () => {
     if (!value) return;
@@ -25,7 +24,7 @@ function CreateModelPageContent() {
       const saved = await createVoxModel(uploaded.publicUrl, uploaded.contentType, false);
       await modalApi.alert('Upload succeeded', `Model ID: ${saved.file.id}`);
 
-      router.push(`/models/${saved.file.id}`);
+      await router.push(`/models/vox/${saved.file.id}`);
     } catch (e: any) {
       await modalApi.alert('Upload failed', e?.message ?? '');
     }
