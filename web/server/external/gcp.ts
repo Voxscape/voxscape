@@ -30,14 +30,15 @@ export function composeUserAssetPath(userId: string, path: string): string {
   return `u-${userId}/${path}`;
 }
 
-export function decomposeUserAssetUrl(url: string): null | { userId: string; path: string } {
+export function decomposeUserAssetUrl(url: string): null | { userId: string; path: string; objectKey: string } {
   if (!isGcpObjectUrl(url)) {
     return null;
   }
-  const path = new URL(url).pathname;
-  const [bucket, userId, ...rest] = path.split('/').filter(Boolean);
+  const pathname = new URL(url).pathname;
+  const [bucket, userId, ...rest] = pathname.split('/').filter(Boolean);
   if (/^u-.+$/.test(userId)) {
     return {
+      objectKey: [userId, ...rest].join('/'),
       userId: userId.slice(2),
       path: rest.join('/'),
     };

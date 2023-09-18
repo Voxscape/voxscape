@@ -1,7 +1,6 @@
 import { privateProcedure } from '../../common/session.middleware';
 import { composeUserAssetPath, getBucket } from '../../../external/gcp';
 import { uploadModelAssetRequest } from './vox';
-import { z } from 'zod';
 
 export const requestUpload = privateProcedure.input(uploadModelAssetRequest).mutation(async ({ input, ctx }) => {
   const pathInBucket = composeUserAssetPath(ctx.session.user.id, `models/${Date.now()}-${input.filename}`);
