@@ -10,7 +10,7 @@ const safeUser = z.object({
   id: z.ostring(),
   name: z.ostring(),
   // no email
-  emailVerified: z.oboolean(),
+  emailVerified: z.union([z.oboolean(), z.null()]).transform((v) => v ?? false),
   image: z.ostring(),
   createdAt: z.date(),
 });
