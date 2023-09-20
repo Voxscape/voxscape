@@ -1,15 +1,14 @@
 import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
-import { useModalApi } from '../components/modal/modal-context';
-import { Input, useToast } from '@chakra-ui/react';
-import { useBlocking } from '../hooks/use-blocking';
-import { ChangeEvent, useState } from 'react';
+import { useModalApi } from '../../components/modal/modal-context';
+import { useToast } from '@chakra-ui/react';
+import { useBlocking } from '../../hooks/use-blocking';
 import { readBlob } from '@jokester/ts-commonutil/lib/binary-conversion/web';
 import { basicParser } from '@voxscape/vox.ts/src/parser/basic-parser';
 import { FileInput } from '@mantine/core';
 import { IconFileUpload } from '@tabler/icons-react';
 import { wait } from '@jokester/ts-commonutil/lib/concurrency/timing';
 
-export function ModelFilePicker(props: { onModelRead?(voxFile: ParsedVoxFile): void }) {
+export function ModelFilePicker(props: { onModelRead?(voxFile: ParsedVoxFile, raw: File): void }) {
   const modal = useModalApi();
   const toast = useToast();
   const [blocking, inBlocking] = useBlocking();
@@ -43,7 +42,7 @@ export function ModelFilePicker(props: { onModelRead?(voxFile: ParsedVoxFile): v
       status: 'success',
     });
 
-    props.onModelRead?.(parsed);
+    props.onModelRead?.(parsed, f);
   });
   return (
     <FileInput

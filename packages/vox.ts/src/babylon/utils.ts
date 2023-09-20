@@ -6,5 +6,5 @@ export function resetCameraForModel(camera: ArcRotateCamera, forModel: VoxTypes.
   const upper = 1.5 * Math.max(forModel.size.x, forModel.size.y, forModel.size.z);
   camera.lowerRadiusLimit = lower;
   camera.upperRadiusLimit = upper;
-  camera.radius = (lower + upper) / 2;
+  camera.radius = upper;
 }

@@ -3,6 +3,7 @@ import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
 import { basicParser } from '@voxscape/vox.ts/src/parser/basic-parser';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { ModelViewer } from '../../../model/vox/model-viewer';
+import { FpsMeter } from '../../../_dev/dev-links';
 
 export interface ModelPath {
   modelUrl: string;
@@ -42,6 +43,7 @@ export const BabylonDemo: React.FC<{ initialPath: ModelPath }> = (props) => {
   if (model) {
     return (
       <div className="p-4">
+        <FpsMeter className="inline" />
         <h1 className="mb-2 text-xl">model viewer powered by vox.ts and Babylon.js</h1>
         {model && <ModelViewer voxFile={model} />}
       </div>

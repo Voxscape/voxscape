@@ -41,18 +41,17 @@ model Session {
 
 // next-auth
 model User {
-  id            String           @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?          @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   // ours
-  models        VoxelModel[]
-  modelViews    VoxelModelView[]
-  updatedAt     DateTime         @updatedAt
-  createdAt     DateTime         @default(now())
+  voxFiles      VoxFile[]
+  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime  @default(now())
 }
 
 // next-auth
@@ -64,34 +63,16 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model VoxelModel {
-  id          Int              @id @default(autoincrement())
+// ours
+model VoxFile {
+  id          Int      @id @default(autoincrement())
   ownerUserId String
-  ownerUser   User             @relation(fields: [ownerUserId], references: [id])
+  ownerUser   User     @relation(fields: [ownerUserId], references: [id])
   contentType String
   assetUrl    String
-  isPrivate Boolean @default(false)
-  modelViews  VoxelModelView[]
-  // defaultViewId Int
-  // defaultView   VoxelModelView @relation(fields: [defaultViewId], references: [id])
-  updatedAt   DateTime         @updatedAt
-  createdAt   DateTime         @default(now())
+  isPrivate   Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
 
-  @@index([ownerUserId])
-}
-
-model VoxelModelView {
-  id              Int        @id @default(autoincrement())
-  modelId         Int
-  model           VoxelModel @relation(fields: [modelId], references: [id])
-  ownerUserId     String
-  ownerUser       User       @relation(fields: [ownerUserId], references: [id])
-  previewImageUrl String
-  isDefault       Boolean    @default(false)
-  perspective     Json
-  updatedAt       DateTime   @updatedAt
-  createdAt       DateTime   @default(now())
-
-  @@index([modelId])
   @@index([ownerUserId])
 }

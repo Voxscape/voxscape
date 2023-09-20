@@ -1,10 +1,10 @@
-import { Engine, Scene } from '@babylonjs/core';
+import { ArcRotateCamera, Engine, Mesh, Scene } from '@babylonjs/core';
 import { createDebugLogger } from '../../../shared/logger';
 import {
-  createDefaultLight,
   createArcRotateCamera,
-  startRunLoop,
+  createDefaultLight,
   createDefaultScene,
+  startRunLoop,
 } from '@voxscape/vox.ts/src/babylon/factory';
 import { createRefAxes } from '@voxscape/vox.ts/src/babylon/create-ref-axes';
 
@@ -15,6 +15,7 @@ const logger = createDebugLogger(__filename);
  */
 export abstract class BabylonSceneHandle {
   #disposed = false;
+  readonly defaultCamera: ArcRotateCamera;
 
   constructor(
     private readonly engine: Engine,
@@ -22,10 +23,11 @@ export abstract class BabylonSceneHandle {
     protected readonly scene: Scene = createDefaultScene(engine),
   ) {
     logger(`VoxSceneHandler: created`, this.canvas, this.engine, this.scene);
+    this.defaultCamera = this.createArcRotateCamera();
   }
 
-  createRefAxes(size = 10) {
-    const refMesh = createRefAxes(size, this.scene);
+  protected createRefAxes(size = 10): Mesh {
+    return createRefAxes(size, this.scene);
   }
 
   createArcRotateCamera(use = true) {
@@ -60,7 +62,7 @@ export abstract class BabylonSceneHandle {
   }
 
   async toggleInspector(enabled: boolean, inspectorRoot?: HTMLElement) {
-    await Promise.all([import('@babylonjs/core/Debug/debugLayer'), import('@babylonjs/inspector')]);
+    await loadBabylonInspectorDeps();
     if (this.#disposed) {
       return;
     }
@@ -87,4 +89,8 @@ export abstract class BabylonSceneHandle {
     logger('stopRenderLoop()');
     this.engine.stopRenderLoop();
   }
+}
+
+export async function loadBabylonInspectorDeps() {
+  await Promise.all([import('@babylonjs/core/Debug/debugLayer'), import('@babylonjs/inspector')]);
 }

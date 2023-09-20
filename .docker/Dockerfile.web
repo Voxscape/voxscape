@@ -1,5 +1,4 @@
-# have to use node16 before prisma fixes https://github.com/prisma/prisma/issues/10649
-FROM node:16-bullseye-slim
+FROM node:18-bullseye-slim
 
 RUN npm i -g publicaddr && which publicaddr
 

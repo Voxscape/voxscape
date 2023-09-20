@@ -4,9 +4,9 @@ import { useFps } from '@jokester/ts-commonutil/lib/react/hook/use-fps';
 
 const devLinks = ['/users', '/models', '/demo/vox.ts'];
 
-export function FpsMeter() {
+export function FpsMeter(props: { className?: string }) {
   const fps = useFps(60);
-  return <div className="p-4 absolute right-0 bottom-0">{fps.toFixed(0)}FPS</div>;
+  return <div className={props.className ?? 'p-4 absolute right-0 bottom-0'}>{fps.toFixed(0)}FPS</div>;
 }
 
 export const DevLinks: FC = () => {

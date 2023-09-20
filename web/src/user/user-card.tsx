@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import type { SafeUser } from '../../server/api/routes/user';
+import type { SafeUser } from '../../server/api/common/primitive';
 
 export const UserCard: FC<{ user: SafeUser }> = (props) => {
   return (
