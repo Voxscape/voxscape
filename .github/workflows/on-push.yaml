@@ -10,6 +10,9 @@ on:
     - master
     - develop
   pull_request: {} # NOTE: worktree would be a temporal merge commit
+    # paths: # NOTE: no idea how to use changed files to skip build-image step
+    # - .docker
+    # - .github/workflows
 
 jobs:
   check-code:
