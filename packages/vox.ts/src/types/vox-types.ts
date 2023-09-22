@@ -27,6 +27,10 @@ export interface VoxelModel {
   readonly voxels: readonly Voxel[];
 }
 
+export interface VoxelGroup {
+  readonly voxels: readonly Voxel[];
+}
+
 export enum VoxelMaterialType {
   diffuse = 0,
   metal = 1,
