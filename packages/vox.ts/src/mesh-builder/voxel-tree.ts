@@ -50,10 +50,10 @@ class VoxelTree {
   }
 
   get voxels(): readonly Voxel[] {
-    return this.#voxels.slice(this.offset, this.offset + this.size)
+    return this.#voxels.slice(this.offset, this.offset + this.size);
   }
   get isLeaf(): boolean {
-    return !this.leftChild && !this.rightChild
+    return !this.leftChild && !this.rightChild;
   }
 }
 
