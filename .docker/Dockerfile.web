@@ -1,6 +1,6 @@
-FROM node:18-bullseye-slim
+################ stage 0
 
-RUN npm i -g publicaddr && which publicaddr
+FROM node:18-bullseye-slim
 
 # uid=1000 gid=1000
 USER node
@@ -25,4 +25,12 @@ RUN \
     cd /opt/voxscape/web && yarn build && \
     cd /opt/voxscape && yarn workspaces focus --production
 
-# TODO: we can reduce image by adding a new stage, copying only run time deps
+################ stage 1
+
+FROM node:18-bullseye-slim
+
+RUN npm i -g publicaddr && which publicaddr
+
+USER node
+
+COPY --from=0 --chown=node:node . /opt/voxscape
