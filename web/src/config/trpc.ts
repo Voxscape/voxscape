@@ -10,7 +10,7 @@ function getBaseUrl() {
     // browser should use relative path
     return '';
   }
-  return 'http://undefined.internal:3000/api_base_url_not_set_for_ssr';
+  return 'not-http://undefined.internal/api_base_url_not_set_for_server_code';
 }
 
 export const trpcReact = createTRPCReact<AppRouter>({});
