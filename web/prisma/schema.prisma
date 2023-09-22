@@ -67,14 +67,17 @@ model VerificationToken {
 
 // ours
 model VoxFile {
-  id          Int      @id @default(autoincrement())
-  ownerUserId String
-  ownerUser   User     @relation(fields: [ownerUserId], references: [id])
-  contentType String
-  assetUrl    String
-  isPrivate   Boolean  @default(false)
-  updatedAt   DateTime @updatedAt
-  createdAt   DateTime @default(now())
+  id           String   @id @default(dbgenerated("encode(gen_random_bytes(16),'hex')"))
+  ownerUserId  String
+  ownerUser    User     @relation(fields: [ownerUserId], references: [id])
+  contentType  String
+  assetUrl     String
+  title        String?  @db.VarBit(255)
+  origFilename String   @default("unnamed.vox") @db.VarChar(255)
+  desc         String   @default("") @db.VarChar(10000)
+  isPrivate    Boolean  @default(false)
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
 
   @@index([ownerUserId])
 }
