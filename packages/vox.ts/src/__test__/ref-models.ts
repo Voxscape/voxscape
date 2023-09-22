@@ -13,6 +13,7 @@ export const chrFoxVox = readVox('chr_fox.vox');
  */
 export const monu8Vox = readVox('monu8.vox');
 
+export const monu0Vox = readVox('monu0.vox');
 /**
  * taken from https://github.com/ephtracy/voxel-model/tree/master/vox/monument
  * ANIM ?

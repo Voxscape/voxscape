@@ -1,3 +1,4 @@
+import { off } from 'process';
 import { ParsedVoxFile, VoxelModel, Voxel, VoxelGroup } from '../types/vox-types';
 
 type Axis = 'x' | 'y' | 'z';
@@ -12,31 +13,47 @@ const MIN_THRESHOLD = 8; // making voxelTree.voxels.length < 8*8*8 voxels
 
 // 3-kdtree
 class VoxelTree {
-  readonly voxels?: readonly Voxel[];
-  readonly left?: VoxelTree;
-  readonly right?: VoxelTree;
+  #voxels: readonly Voxel[];
+  readonly leftChild?: VoxelTree;
+  readonly rightChild?: VoxelTree;
 
   constructor(
-    voxels: readonly Voxel[],
+    voxels: Voxel[],
     readonly threshold: number,
     readonly axis: Axis,
     readonly depth: number,
+    readonly offset: number,
+    readonly size: number,
   ) {
+    const sortedVoxels = voxels.slice(offset, offset + size).sort((v1, v2) => v1[axis] - v2[axis]);
+    for (let i = 0; i < size; i++) {
+      // must not use splice() here. splice() will stack overflow with large `size`
+      voxels[offset + i] = sortedVoxels[i];
+    }
+
+    this.#voxels = voxels;
+
     if (threshold > MIN_THRESHOLD) {
       const nextAxis = nextAxisLoop[axis];
       const nextThreshold = nextAxis === 'x' ? threshold / 2 : threshold;
 
-      const [leftVoxels, rightVoxels] = splitVoxels(voxels, threshold, axis);
+      const leftSize = sortedVoxels.filter((v) => v[axis] < threshold).length;
+      const rightSize = size - leftSize;
 
-      if (leftVoxels.length) {
-        this.left = new VoxelTree(leftVoxels, nextThreshold, nextAxis, 1 + depth);
+      if (leftSize) {
+        this.leftChild = new VoxelTree(voxels, nextThreshold, nextAxis, 1 + depth, offset, leftSize);
       }
-      if (rightVoxels.length) {
-        this.right = new VoxelTree(rightVoxels, nextThreshold, nextAxis, 1 + depth);
+      if (rightSize) {
+        this.rightChild = new VoxelTree(voxels, nextThreshold, nextAxis, 1 + depth, offset + leftSize, rightSize);
       }
-    } else {
-      this.voxels = voxels
     }
+  }
+
+  get voxels(): readonly Voxel[] {
+    return this.#voxels.slice(this.offset, this.offset + this.size)
+  }
+  get isLeaf(): boolean {
+    return !this.leftChild && !this.rightChild
   }
 }
 
@@ -46,18 +63,5 @@ export function buildVoxelTree(voxelModel: VoxelModel): VoxelTree {
 
   const initialThreshold = 2 ** (nextPower2 - 1);
 
-  return new VoxelTree(voxelModel.voxels, initialThreshold, 'x', 0);
-}
-
-function splitVoxels(voxels: readonly Voxel[], threshold: number, axis: 'x' | 'y' | 'z'): [Voxel[], Voxel[]] {
-  const p1: Voxel[] = [];
-  const p2: Voxel[] = [];
-  voxels.forEach((v) => {
-    if (v[axis] < threshold) {
-      p1.push(v);
-    } else {
-      p2.push(v);
-    }
-  });
-  return [p1, p2];
+  return new VoxelTree(voxelModel.voxels.slice(), initialThreshold, 'x', 0, 0, voxelModel.voxels.length);
 }
