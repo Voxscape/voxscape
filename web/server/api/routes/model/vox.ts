@@ -46,6 +46,14 @@ export const voxRouter = t.router({
     return [];
   }),
 
+  get: t.procedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
+    const model = await prisma.voxFile.findUnique({ where: { id: input.id }, include: { ownerUser: true } });
+    if (!model) {
+      throw new ClientBad(`model not found`, 'NOT_FOUND');
+    }
+    return model;
+  }),
+
   create: privateProcedure.input(createModelRequest).mutation(async ({ input, ctx }) => {
     const f = decomposeUserAssetUrl(input.assetUrl);
     if (!(ctx.session.user.id && ctx.session.user.id === f?.userId)) {
