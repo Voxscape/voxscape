@@ -3820,7 +3820,6 @@ __metadata:
     ts-pattern: ^5.0.5
     tslib: ^2
     typescript: "*"
-    use-constant: ^1.1.1
     zod: ^3.22
   languageName: unknown
   linkType: soft
@@ -10484,15 +10483,6 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: f771cbadfdc91e03b7ab9eb32d0fc0cc647755711801bf507e891ad38c4bbc5f02b2509acadf9c965ec9c5f2f642fd33bdfdfb17b0873c4ad0a9b1f5e5e724bf
-  languageName: node
-  linkType: hard
-
-"use-constant@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "use-constant@npm:1.1.1"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: cbff28ec85e10a17adc889482752006cf49e7d2f8c38cce7bcab82b42b5c31b0e42a07310995d140265956aa5f7c641edc1111a8647d01980a822760df2648dc
   languageName: node
   linkType: hard
 
