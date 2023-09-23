@@ -23,13 +23,13 @@ RUN \
     set -uex && \
     find /opt/voxscape/web/.next/cache && \
     cd /opt/voxscape/web && yarn build && \
-    cd /opt/voxscape && yarn workspaces focus --production
+    cd /opt/voxscape && yarn workspaces focus --production && yarn workspaces focus @voxscape/web --production
 
 ################ stage 1
 
 FROM node:18-bullseye-slim
 
-RUN npm i -g publicaddr && which publicaddr
+RUN npm i -g publicaddr@0.4.3 && which publicaddr
 
 USER node
 
