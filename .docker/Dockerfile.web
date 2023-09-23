@@ -1,6 +1,6 @@
 ################ stage 0
 
-FROM node:18-bullseye-slim
+FROM node:18-bookworm-slim
 
 # uid=1000 gid=1000
 USER node
@@ -22,12 +22,17 @@ RUN \
     --mount=type=cache,target=/opt/voxscape/web/.next/cache,sharing=locked,uid=1000,gid=1000 \
     set -uex && \
     find /opt/voxscape/web/.next/cache && \
-    cd /opt/voxscape/web && yarn build && \
+    cd /opt/voxscape/web && yarn build
+
+RUN \
+    --mount=type=cache,target=/home/node/.yarn,sharing=locked,uid=1000,gid=1000 \
+    --mount=type=cache,target=/home/node/.cache,sharing=locked,uid=1000,gid=1000 \
+    --mount=type=cache,target=/opt/voxscape/.yarn/cache,sharing=locked,uid=1000,gid=1000 \
     cd /opt/voxscape && yarn workspaces focus --production && yarn workspaces focus @voxscape/web --production
 
 ################ stage 1
 
-FROM node:18-bullseye-slim
+FROM node:18-bookworm-slim
 
 RUN npm i -g publicaddr@0.4.3 && which publicaddr
 
