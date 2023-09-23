@@ -33,4 +33,4 @@ RUN npm i -g publicaddr && which publicaddr
 
 USER node
 
-COPY --from=0 --chown=node:node . /opt/voxscape
+COPY --from=0 --chown=node:node /opt/voxscape /opt/voxscape
