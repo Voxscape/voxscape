@@ -1,6 +1,10 @@
+# vim: ft=Dockerfile
 ################ stage 0
 
 FROM node:18-bookworm-slim
+
+# bookworm doesn't have openssl installed now.
+RUN apt-get update && apt-get install openssl
 
 # uid=1000 gid=1000
 USER node
@@ -33,6 +37,9 @@ RUN \
 ################ stage 1
 
 FROM node:18-bookworm-slim
+
+# bookworm doesn't have openssl installed now.
+RUN apt-get update && apt-get install openssl && apt-get clean
 
 RUN npm i -g publicaddr@0.4.3 && which publicaddr
 
