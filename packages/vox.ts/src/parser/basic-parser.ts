@@ -5,7 +5,11 @@ import { readMatt, readRgba, readXyzi, uint32ToColor } from './chunk-reader';
 /**
  * parser for "basic" vox format
  */
-export function basicParser(bytes: ArrayBuffer, flipYZ = false, enableExtension = false): VoxTypes.ParsedVoxFile {
+export function basicParser(
+  bytes: ArrayBuffer,
+  /** @deprecated prefer to swap yz in mesh builder */ flipYZ = false,
+  enableExtension = false,
+): VoxTypes.ParsedVoxFile {
   const l = new RiffLense(bytes);
 
   if (l.asciiAt(0, 4) !== 'VOX ') throw new Error(`expected 'VOX ' at offset=0`);
