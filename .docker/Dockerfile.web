@@ -4,7 +4,7 @@
 FROM node:18-bookworm-slim
 
 # bookworm doesn't have openssl installed now.
-RUN apt-get update && apt-get install openssl
+RUN apt-get update && apt-get install -y openssl
 
 # uid=1000 gid=1000
 USER node
@@ -39,7 +39,7 @@ RUN \
 FROM node:18-bookworm-slim
 
 # bookworm doesn't have openssl installed now.
-RUN apt-get update && apt-get install openssl && apt-get clean
+RUN apt-get update && apt-get install -y openssl && apt-get clean
 
 RUN npm i -g publicaddr@0.4.3 && which publicaddr
 
