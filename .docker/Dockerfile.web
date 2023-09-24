@@ -1,6 +1,10 @@
+# vim: ft=Dockerfile
 ################ stage 0
 
-FROM node:18-bullseye-slim
+FROM node:18-bookworm-slim
+
+# bookworm doesn't have openssl installed now.
+RUN apt-get update && apt-get install -y openssl
 
 # uid=1000 gid=1000
 USER node
@@ -22,15 +26,23 @@ RUN \
     --mount=type=cache,target=/opt/voxscape/web/.next/cache,sharing=locked,uid=1000,gid=1000 \
     set -uex && \
     find /opt/voxscape/web/.next/cache && \
-    cd /opt/voxscape/web && yarn build && \
-    cd /opt/voxscape && yarn workspaces focus --production
+    cd /opt/voxscape/web && yarn build
+
+RUN \
+    --mount=type=cache,target=/home/node/.yarn,sharing=locked,uid=1000,gid=1000 \
+    --mount=type=cache,target=/home/node/.cache,sharing=locked,uid=1000,gid=1000 \
+    --mount=type=cache,target=/opt/voxscape/.yarn/cache,sharing=locked,uid=1000,gid=1000 \
+    cd /opt/voxscape/web && yarn workspaces focus @voxscape/web --production && yarn prisma generate
 
 ################ stage 1
 
-FROM node:18-bullseye-slim
+FROM node:18-bookworm-slim
 
-RUN npm i -g publicaddr && which publicaddr
+# bookworm doesn't have openssl installed now.
+RUN apt-get update && apt-get install -y openssl && apt-get clean
+
+RUN npm i -g publicaddr@0.4.3 && which publicaddr
 
 USER node
 
-COPY --from=0 --chown=node:node . /opt/voxscape
+COPY --from=0 --chown=node:node /opt/voxscape /opt/voxscape

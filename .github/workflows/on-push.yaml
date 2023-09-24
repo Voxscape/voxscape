@@ -19,4 +19,5 @@ jobs:
     uses: ./.github/workflows/check-code.yaml
   build-image:
     needs: [check-code]
+    if: github.event_name == 'push'
     uses: ./.github/workflows/build-image.yaml

@@ -49,23 +49,27 @@ export function createModelFrameMesh(
   return frame;
 }
 
-export function createNormalizationTransformMatrix(size: VoxTypes.VoxelModelSize): Matrix {
+function createNormalizationTransformMatrix(size: VoxTypes.VoxelModelSize): Matrix {
   /**
    * a transform that swaps y/z and places model center at origin
    */
   return Matrix.FromValues(
+    // row0
     1,
     0,
     0,
-    0, //
+    0,
+    // row1
     0,
     0,
     1,
-    0, //
+    0,
+    // row2
     0,
     1,
     0,
-    0, //
+    0,
+    // row3
     -(size.x + 1) / 2, // translation-x
     -(size.z + 1) / 2,
     -(size.y + 1) / 2,
@@ -85,7 +89,7 @@ export function createNormalizationTransform(size: VoxTypes.VoxelModelSize): {
   const translation = new Vector3();
 
   m.decompose(scale, rotation, translation);
-  console.log('decomposed', scale, rotation, translation);
+  console.debug('decomposed', scale, rotation, translation);
 
   return {
     scale,

@@ -2,7 +2,7 @@ import * as Vox from '../../types/vox-types';
 import { Scene } from '@babylonjs/core/scene';
 import { Mesh, VertexData } from '@babylonjs/core/Meshes';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
-import { createModelFrameMesh, createNormalizationTransform } from './mesh-helpers';
+import { createNormalizationTransform } from './mesh-helpers';
 import { Material } from '@babylonjs/core';
 import { StandardMaterial } from '@babylonjs/core/Materials';
 import { buildVertexIndex, extractSurfacesGreedy, FacetSpec } from '../greedy';
@@ -14,15 +14,11 @@ export function greedyBuild(
   root: Mesh,
   scene: Scene,
   options?: {
-    flipXZ?: boolean;
-    createFrame?: boolean;
+    swapYz?: boolean;
   },
 ): { stop(): void; stopped: Promise<void> } {
   let running = true;
-  if (options?.createFrame ?? false) {
-    const frameMesh = createModelFrameMesh(model.size, scene, root);
-  }
-  if (options?.flipXZ ?? true) {
+  if (options?.swapYz ?? true) {
     const normalize = createNormalizationTransform(model.size);
     root.position = normalize.translation;
     root.rotationQuaternion = normalize.rotation;
