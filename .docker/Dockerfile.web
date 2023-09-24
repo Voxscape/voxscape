@@ -28,7 +28,7 @@ RUN \
     --mount=type=cache,target=/home/node/.yarn,sharing=locked,uid=1000,gid=1000 \
     --mount=type=cache,target=/home/node/.cache,sharing=locked,uid=1000,gid=1000 \
     --mount=type=cache,target=/opt/voxscape/.yarn/cache,sharing=locked,uid=1000,gid=1000 \
-    cd /opt/voxscape && yarn workspaces focus --production && yarn workspaces focus @voxscape/web --production
+    cd /opt/voxscape/web && yarn workspaces focus @voxscape/web --production && yarn prisma generate
 
 ################ stage 1
 
