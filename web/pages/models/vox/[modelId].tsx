@@ -4,6 +4,9 @@ import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import { trpcClient, useTrpcHooks } from '../../../src/config/trpc';
 import { useVoxFile } from '../../../src/model/vox/use-vox-file';
+import React from 'react';
+import { DefaultMeta } from '../../../src/components/meta/default-meta';
+import { ModelViewer } from '../../../src/model/vox/model-viewer';
 
 const logger = createDebugLogger(__filename);
 
@@ -13,14 +16,24 @@ function VoxModelPageContent(props: { modelId: string }) {
   const modelFile = useVoxFile(model.data?.assetUrl);
   logger(props.modelId, model?.data, modelFile?.data);
 
-  return <div>Model ID: {props.modelId}</div>;
+  return (
+    <div>
+      Model ID: {props.modelId}
+      <div>{modelFile?.data && <ModelViewer voxFile={modelFile.data} />}</div>
+    </div>
+  );
 }
 interface PageProps {
   modelId: string;
 }
 
 export default function VoxModelPage(props: PageProps) {
-  return <Layout>{props.modelId && <VoxModelPageContent modelId={props.modelId} />}</Layout>;
+  return (
+    <Layout>
+      <DefaultMeta title={`Model ${props.modelId}`} />
+      {props.modelId && <VoxModelPageContent modelId={props.modelId} />}
+    </Layout>
+  );
 }
 
 /**
