@@ -2085,6 +2085,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hookform/resolvers@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "@hookform/resolvers@npm:3.3.1"
+  peerDependencies:
+    react-hook-form: ^7.0.0
+  checksum: 1ddc250a8d6769fb11b03110b586677b03463276dda1cdfd0225ab94f46d422868f74b01bef85f785010cc3d836f0669d6b6c0ed752cae532d2badf3537b1e72
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.11":
   version: 0.11.11
   resolution: "@humanwhocodes/config-array@npm:0.11.11"
@@ -3769,6 +3778,7 @@ __metadata:
     "@emotion/styled": ^11.11
     "@faker-js/faker": ^8.0.2
     "@google-cloud/storage": ^7.1.0
+    "@hookform/resolvers": ^3.3.1
     "@jokester/ts-commonutil": ^0.4.2
     "@mantine/core": ^6.0.20
     "@mantine/dropzone": ^6.0.20
@@ -3810,6 +3820,7 @@ __metadata:
     prisma: ^5.3.0
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-hook-form: ^7.46.2
     react-use: ^17.4.0
     rxjs: ^7.8.1
     sass: ^1.66.1
@@ -9012,6 +9023,15 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 93473a6f0a249487e0f1609ccfe94312ce86265d7bca01f6825c061e15fcc13c78d6adb0555f8d9e7fa1cba3e23958f3ca4d4148c7bea828843c909feb5e10f1
+  languageName: node
+  linkType: hard
+
+"react-hook-form@npm:^7.46.2":
+  version: 7.46.2
+  resolution: "react-hook-form@npm:7.46.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18
+  checksum: 5ad2b478337fed3ab1a7bee79844d89a85485626fb1afd4acba54e28adb8f6663d37efefa9000b6ddb33f7de23b765bfac9a1d12e10c63e71463317a307134cf
   languageName: node
   linkType: hard
 

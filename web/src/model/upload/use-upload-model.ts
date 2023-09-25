@@ -27,13 +27,3 @@ export async function uploadVoxModel(f: File) {
 
   return { contentType, publicUrl: uploadCred.publicUrl };
 }
-
-export async function createVoxModel(publicUrl: string, contentType: string, isPrivate: boolean) {
-  const saved = await trpcClient.models.vox.create.mutate({
-    assetUrl: publicUrl,
-    contentType,
-    isPrivate,
-  });
-
-  return saved;
-}

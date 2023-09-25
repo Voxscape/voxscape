@@ -3,10 +3,10 @@ import { createDebugLogger } from '../../../../shared/logger';
 import { prisma } from '../../../prisma';
 import { privateProcedure } from '../../common/session.middleware';
 import { t } from '../../common/_base';
-import { mimeTypes } from '../../../../shared/const';
 import { pagerParam } from '../../common/primitive';
 import { decomposeUserAssetUrl, getBucket } from '../../../external/gcp';
 import { ClientBad } from '../../errors';
+import { createModelRequest } from '../../../../shared/api-schemas';
 
 const logger = createDebugLogger(__filename);
 
@@ -14,12 +14,6 @@ export const uploadModelAssetRequest = z.object({
   filename: z.string(),
   size: z.number(),
   contentType: z.string(),
-});
-
-const createModelRequest = z.object({
-  contentType: z.string().and(z.enum([mimeTypes.vox])),
-  assetUrl: z.string().url(),
-  isPrivate: z.boolean(),
 });
 
 const mutateModelRequest = z.object({
@@ -63,6 +57,9 @@ export const voxRouter = t.router({
 
     const saved = await prisma.voxFile.create({
       data: {
+        title: input.title,
+        origFilename: input.origFilename,
+        desc: input.desc,
         contentType: input.contentType,
         ownerUserId: ctx.session.user.id,
         assetUrl: input.assetUrl,

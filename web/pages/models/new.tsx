@@ -6,22 +6,33 @@ import { useKeyGenerator } from '../../src/hooks/use-key-generator';
 import { ModelFilePicker } from '../../src/model/upload/model-file-picker';
 import { ModelViewer } from '../../src/model/vox/model-viewer';
 import { Button } from '@chakra-ui/react';
-import { createVoxModel, uploadVoxModel } from '../../src/model/upload/use-upload-model';
+import { uploadVoxModel } from '../../src/model/upload/use-upload-model';
 import { useModalApi } from '../../src/components/modal/modal-context';
 import { useRouter } from 'next/router';
+import { trpcClient } from '../../src/config/trpc';
+import { ModelMetaForm, ModelMetaFormValue } from '../../src/model/upload/model-meta-field';
 
 function CreateModelPageContent() {
-  const [value, setValue] = useState<null | { f: File; parsed: ParsedVoxFile }>(null);
-  const flipCount = useKeyGenerator(value);
+  const [file, setFile] = useState<null | { f: File; parsed: ParsedVoxFile }>(null);
+  const flipCount = useKeyGenerator(file);
   const [blocking, withBlocking] = useBlocking();
   const modalApi = useModalApi();
   const router = useRouter();
 
+  const [formValue, setFormValue] = useState<ModelMetaFormValue>();
+
   const startUpload = withBlocking(async () => {
-    if (!value) return;
+    if (!(file && formValue)) return;
     try {
-      const uploaded = await uploadVoxModel(value.f);
-      const saved = await createVoxModel(uploaded.publicUrl, uploaded.contentType, false);
+      const uploaded = await uploadVoxModel(file.f);
+      const saved = await trpcClient.models.vox.create.mutate({
+        title: formValue.title,
+        desc: formValue.desc,
+        isPrivate: formValue.isPrivate,
+        origFilename: file.f.name,
+        assetUrl: uploaded.publicUrl,
+        contentType: uploaded.contentType,
+      });
       await modalApi.alert('Upload succeeded', `Model ID: ${saved.file.id}`);
 
       await router.push(`/models/vox/${saved.file.id}`);
@@ -32,22 +43,24 @@ function CreateModelPageContent() {
 
   return (
     <div>
-      {value ? (
+      {file ? (
         <>
           <div className="flex justify-between">
-            <Button disabled={blocking} onClick={() => setValue(null)}>
+            <Button disabled={blocking} onClick={() => setFile(null)}>
               Reset
             </Button>
-            <Button color="primary" onClick={startUpload} disabled={!value || blocking}>
+            <Button color="primary" onClick={startUpload} disabled={blocking || !(file && formValue)}>
               Upload
             </Button>
           </div>
+          <ModelMetaForm onChange={setFormValue} />
           <div className="mt-4">
-            <ModelViewer key={flipCount} voxFile={value.parsed} />
+            <h2>Preview:</h2>
+            <ModelViewer key={flipCount} voxFile={file.parsed} />
           </div>
         </>
       ) : (
-        <ModelFilePicker key={flipCount} onModelRead={(parsed, f) => setValue({ f, parsed })} />
+        <ModelFilePicker key={flipCount} onModelRead={(parsed, f) => setFile({ f, parsed })} />
       )}
     </div>
   );
