@@ -59,9 +59,7 @@ export const voxRouter = t.router({
     if (!(ctx.session.user.id && ctx.session.user.id === f?.userId)) {
       throw new ClientBad(`invalid assetUrl`, 'FORBIDDEN');
     }
-    await getBucket()
-      .file(f?.objectKey)
-      .makePublic();
+    await getBucket().file(f.objectKey).makePublic();
 
     const saved = await prisma.voxFile.create({
       data: {

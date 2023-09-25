@@ -1,59 +1,42 @@
-import { NextPage, NextPageContext } from 'next';
+import { NextPage } from 'next';
 import { trpcReact } from '../../src/config/trpc';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { TRPCClientError } from '@trpc/client';
 import { Layout } from '../../src/layout/layout';
 import { PageMeta } from '../../src/components/meta/page-meta';
-import { signOut, useSession } from 'next-auth/react';
-import { Button } from '@chakra-ui/react';
-import { IconLogout } from '@tabler/icons-react';
-import { userRouter } from '../../server/api/routes/user';
+import { createDebugLogger } from '../../shared/logger';
+import { UserCard } from '../../src/user/user-card';
+import { UserModelList } from '../../src/user/user-model-list';
+import { UserSettings } from '../../src/user/user-setting';
+
+const logger = createDebugLogger(__filename);
 
 function UserDetailContent(props: { userId: string }) {
-  const userQuery = trpcReact.user.getById.useQuery({ userId: props.userId });
-
-  console.debug('userQuery', userQuery.isLoading, userQuery.status, userQuery.data, userQuery.error);
+  const user = trpcReact.user.getById.useQuery({ userId: props.userId });
 
   useEffect(() => {
-    if (userQuery.error instanceof TRPCClientError) {
-      console.error('userQuery.error.message', userQuery.error.message);
-      console.debug('userQuery.error', userQuery.error);
+    if (user.error instanceof TRPCClientError) {
+      logger('user.error.message', user.error.message);
+      logger('user.error', user.error);
     } else {
-      console.debug('userQuery.data', userQuery.data);
+      logger('user.data', user.data);
     }
-  }, [userQuery.error]);
+  }, [user.error]);
 
   return (
     <>
       <PageMeta title="User" />
-      <div className="whitespace-pre-line break-inside-auto font-mono">{JSON.stringify(userQuery.data, null, 2)}</div>
+      {user.data && (
+        <>
+          <div>
+            <UserCard user={user.data.user} />
+          </div>
+          <UserModelList user={user.data.user} voxModels={user.data.recentModels} />
+        </>
+      )}
     </>
   );
-}
-
-function UserSelfContent(props: { userId: string }) {
-  const session = useSession();
-  const router = useRouter();
-  if (session.status === 'authenticated' && session.data.user?.id === props.userId) {
-    const onLogout = () => {
-      signOut().then(() => {
-        router.reload();
-      });
-    };
-    return (
-      <div>
-        <div className="my-4">TODO: settings</div>
-        <div className="my-4">
-          LOGOUT:
-          <Button onClick={onLogout}>
-            <IconLogout />
-          </Button>
-        </div>
-      </div>
-    );
-  }
-  return null;
 }
 
 const UserDetailPage: NextPage = (props) => {
@@ -64,7 +47,7 @@ const UserDetailPage: NextPage = (props) => {
     return (
       <Layout key={userId}>
         <UserDetailContent userId={userId} />
-        <UserSelfContent userId={userId} />
+        <UserSettings userId={userId} />
       </Layout>
     );
   }

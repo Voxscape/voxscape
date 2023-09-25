@@ -1,4 +1,5 @@
 import { createTRPCProxyClient, httpBatchLink, httpLink } from '@trpc/client';
+import type { inferRouterOutputs } from '@trpc/server';
 import type { AppRouter } from '../../server/api';
 import { createTRPCReact } from '@trpc/react-query';
 import { inBrowser } from './build-config';
@@ -39,3 +40,5 @@ export const trpcClient = createTRPCProxyClient<AppRouter>({
 export function useTrpcHooks(): typeof trpcReact {
   return trpcReact;
 }
+
+export type TrpcResponseType = inferRouterOutputs<AppRouter>;
