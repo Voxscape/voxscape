@@ -43,10 +43,25 @@ export const userRouter = t.router({
           id: input.userId,
         },
       });
+      const recentModels = prisma.voxFile.findMany({
+        select: {
+          id: true,
+          title: true,
+          desc: true,
+          createdAt: true,
+        },
+        where: { ownerUserId: input.userId },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        take: 20,
+      });
+
       if (!user) {
         throw new ClientBad('user not found', 'NOT_FOUND');
       }
-      return { user: pickSafeUser(user) };
+
+      return { user: pickSafeUser(user), recentModels: await recentModels };
     }),
   getOwnProfile: privateProcedure.query(({ ctx }) => {
     return ctx.session.user;

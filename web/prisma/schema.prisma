@@ -72,7 +72,7 @@ model VoxFile {
   ownerUser    User     @relation(fields: [ownerUserId], references: [id])
   contentType  String
   assetUrl     String
-  title        String?  @db.VarBit(255)
+  title        String?  @db.VarChar(255)
   origFilename String   @default("unnamed.vox") @db.VarChar(255)
   desc         String   @default("") @db.VarChar(10000)
   isPrivate    Boolean  @default(false)

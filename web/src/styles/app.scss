@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background: pink;
+  //background: pink;
 }
 
 #sceneExplorer,
@@ -15,7 +15,9 @@ body {
 @font-face {
   font-display: block;
   font-family: 'Public Pixel';
-  src: url('PublicPixel-z84yD.woff2') format('woff2'), url('PublicPixel-z84yD.woff') format('woff');
+  src:
+    url('PublicPixel-z84yD.woff2') format('woff2'),
+    url('PublicPixel-z84yD.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,7 +25,9 @@ body {
 @font-face {
   // from https://transfonter.org/
   font-family: 'x12y16pxLineLinker';
-  src: url('subset-x12y16pxLineLinker.woff2') format('woff2'), url('subset-x12y16pxLineLinker.woff') format('woff');
+  src:
+    url('subset-x12y16pxLineLinker.woff2') format('woff2'),
+    url('subset-x12y16pxLineLinker.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: block;
