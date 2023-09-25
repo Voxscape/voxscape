@@ -19,6 +19,15 @@
     "lint:fix": "next lint --fix -d ."
   },
   "dependencies": {
+    "@babylonjs/core": "^5.40.0",
+    "@babylonjs/gui": "^5.40.0",
+    "@babylonjs/gui-editor": "^5.40.0",
+    "@babylonjs/inspector": "^5.40.0",
+    "@babylonjs/loaders": "^5.40.0",
+    "@babylonjs/materials": "^5.40.0",
+    "@babylonjs/post-processes": "^5.40.0",
+    "@babylonjs/procedural-textures": "^5.40.0",
+    "@babylonjs/serializers": "^5.40.0",
     "@chakra-ui/react": "^2.8",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11",
@@ -61,15 +70,6 @@
     "zod": "^3.22"
   },
   "devDependencies": {
-    "@babylonjs/core": "^5.40.0",
-    "@babylonjs/gui": "^5.40.0",
-    "@babylonjs/gui-editor": "^5.40.0",
-    "@babylonjs/inspector": "^5.40.0",
-    "@babylonjs/loaders": "^5.40.0",
-    "@babylonjs/materials": "^5.40.0",
-    "@babylonjs/post-processes": "^5.40.0",
-    "@babylonjs/procedural-textures": "^5.40.0",
-    "@babylonjs/serializers": "^5.40.0",
     "@faker-js/faker": "^8.0.2",
     "@next/bundle-analyzer": "^13",
     "@next/eslint-plugin-next": "^13.4.19",
