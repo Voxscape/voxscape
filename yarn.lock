@@ -2119,6 +2119,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@iconify-icon/react@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "@iconify-icon/react@npm:1.0.8"
+  dependencies:
+    iconify-icon: ^1.0.8
+  peerDependencies:
+    react: ">=16"
+  checksum: ee6f120b76055b0897e730355aa583661dcdaa049572ae3096b5e490e403c3d742613ef4bf638265b3c835b6e5039085e7c1f0640f21cce7fcd5293d86948da1
+  languageName: node
+  linkType: hard
+
+"@iconify/types@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@iconify/types@npm:2.0.0"
+  checksum: 029f58542c160e9d4a746869cf2e475b603424d3adf3994c5cc8d0406c47e6e04a3b898b2707840c1c5b9bd5563a1660a34b110d89fce43923baca5222f4e597
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -3779,6 +3797,7 @@ __metadata:
     "@faker-js/faker": ^8.0.2
     "@google-cloud/storage": ^7.1.0
     "@hookform/resolvers": ^3.3.1
+    "@iconify-icon/react": ^1.0.8
     "@jokester/ts-commonutil": ^0.4.2
     "@mantine/core": ^6.0.20
     "@mantine/dropzone": ^6.0.20
@@ -6444,6 +6463,15 @@ __metadata:
   version: 1.0.4
   resolution: "hyphenate-style-name@npm:1.0.4"
   checksum: 4f5bf4b055089754924babebaa23c17845937bcca6aee95d5d015f8fa1e6814279002bd6a9e541e3fac2cd02519fc76305396727066c57c8e21a7e73e7a12137
+  languageName: node
+  linkType: hard
+
+"iconify-icon@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "iconify-icon@npm:1.0.8"
+  dependencies:
+    "@iconify/types": ^2.0.0
+  checksum: 40bb2087032957d4821c9a17cdcc8a1af1018292b2dde636ee2c1f4af60410da23f77b0a9e99ecaf9154b1fef7a6b33f454079a8e66a7187556faee1a489ce3b
   languageName: node
   linkType: hard
 
