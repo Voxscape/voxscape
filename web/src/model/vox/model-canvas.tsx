@@ -1,3 +1,4 @@
+'use client';
 import { MutableRefObject, PropsWithChildren, PropsWithoutRef, ReactElement, useEffect, useRef } from 'react';
 import styles from './model-canvas.module.scss';
 import { BabylonEngineProvider } from '../_babylon/use-babylon-engine';

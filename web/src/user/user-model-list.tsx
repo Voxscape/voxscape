@@ -1,29 +1,13 @@
 import Link from 'next/link';
 import { SafeUser } from '../../server/api/common/primitive';
 import { TrpcResponseType } from '../config/trpc';
+import { ModelList } from '../model/list/model-list';
 
-export function UserModelList(props: {
-  user: SafeUser;
-  voxModels: TrpcResponseType['user']['getById']['recentModels'];
-}) {
+export function UserModelList(props: { voxModels: TrpcResponseType['user']['getById']['recentModels'] }) {
   return (
     <div>
-      <div>Recent models from {props.user.name ?? '(name unset)'}</div>
-      <ol>
-        {props.voxModels.map((model) => (
-          <li key={model.id}>
-            <Link href={`/models/vox/${model.id}`}>
-              <div className="inline-block h-32 w-48 border mx-1 my-1 p-2">
-                {model.id} / {model.title}
-                <hr />
-                {model.desc}
-                <hr />
-                {model.createdAt.toISOString()}
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ol>
+      <h5 className="text-center mt-4">Recent models</h5>
+      <ModelList voxModels={props.voxModels} />
     </div>
   );
 }

@@ -47,7 +47,6 @@ const UserDetailPage: NextPage = (props) => {
     return (
       <Layout key={userId}>
         <UserDetailContent userId={userId} />
-        <UserSettings userId={userId} />
       </Layout>
     );
   }
