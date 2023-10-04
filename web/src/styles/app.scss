@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import '@radix-ui/themes/styles.css';
+
 body {
   //background: pink;
   overflow-y: scroll;
