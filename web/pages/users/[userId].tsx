@@ -7,8 +7,8 @@ import { Layout } from '../../src/layout/layout';
 import { PageMeta } from '../../src/components/meta/page-meta';
 import { createDebugLogger } from '../../shared/logger';
 import { UserCard } from '../../src/user/user-card';
-import { UserModelList } from '../../src/user/user-model-list';
-import { UserSettings } from '../../src/user/user-setting';
+import { UserModelListHeader } from '../../src/user/user-model-list';
+import { ModelList } from '../../src/model/list/model-list';
 
 const logger = createDebugLogger(__filename);
 
@@ -29,10 +29,13 @@ function UserDetailContent(props: { userId: string }) {
       <PageMeta title="User" />
       {user.data && (
         <>
-          <div>
-            <UserCard user={user.data.user} />
-          </div>
-          <UserModelList user={user.data.user} voxModels={user.data.recentModels} />
+          <section className="flex">
+            <UserCard user={user.data.user} className="mx-auto" />
+          </section>
+          <section>
+            <UserModelListHeader />
+            <ModelList voxModels={user.data.recentModels} />
+          </section>
         </>
       )}
     </>
@@ -47,7 +50,6 @@ const UserDetailPage: NextPage = (props) => {
     return (
       <Layout key={userId}>
         <UserDetailContent userId={userId} />
-        <UserSettings userId={userId} />
       </Layout>
     );
   }

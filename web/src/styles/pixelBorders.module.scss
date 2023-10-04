@@ -1,0 +1,6 @@
+@import '../node_modules/pixel-borders/src/styles/pixel-borders/pixel-borders-mixins';
+
+// taken from https://github.com/NigelOToole/pixel-borders/blob/master/src/styles/pixel-borders/_pixel-borders.scss
+.pixelBoxLight {
+  @include pixel-box($corner-size: 1, $border-size: 4px, $background-color: #fff);
+}

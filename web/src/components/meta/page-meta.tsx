@@ -2,8 +2,9 @@ import React from 'react';
 import Head from 'next/head';
 
 interface PageMetaProps {
-  title?: string;
+  title?: null | string;
   fullTitle?: string;
+  desc?: null | string;
   ogp?: OgpProps;
 }
 

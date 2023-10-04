@@ -3,18 +3,12 @@ import { createDebugLogger } from '../../../../shared/logger';
 import { prisma } from '../../../prisma';
 import { privateProcedure } from '../../common/session.middleware';
 import { t } from '../../common/_base';
-import { pagerParam } from '../../common/primitive';
+import { pagerParam, pickSafeUser } from '../../common/primitive';
 import { decomposeUserAssetUrl, getBucket } from '../../../external/gcp';
 import { ClientBad } from '../../errors';
 import { createModelRequest } from '../../../../shared/api-schemas';
 
 const logger = createDebugLogger(__filename);
-
-export const uploadModelAssetRequest = z.object({
-  filename: z.string(),
-  size: z.number(),
-  contentType: z.string(),
-});
 
 const mutateModelRequest = z.object({
   assetUrl: z.ostring(),
@@ -45,7 +39,7 @@ export const voxRouter = t.router({
     if (!model) {
       throw new ClientBad(`model not found`, 'NOT_FOUND');
     }
-    return model;
+    return { ...model, ownerUser: pickSafeUser(model.ownerUser) };
   }),
 
   create: privateProcedure.input(createModelRequest).mutation(async ({ input, ctx }) => {

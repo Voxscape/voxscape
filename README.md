@@ -1,3 +1,3 @@
-# nuthatch
+# Voxscape
 
-A service to 
+A website to view and share voxel models.

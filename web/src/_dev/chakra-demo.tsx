@@ -1,8 +1,31 @@
-import { chakra } from '@chakra-ui/react';
+import { Button, chakra, useModal } from '@chakra-ui/react';
+import { useModalApi } from '../components/modal/modal-context';
+import clsx from 'clsx';
+import { pixelBorders, pixelFonts } from '../styles/pixelBorders';
+
+function Buttons() {
+  const modalApi = useModalApi();
+  return (
+    <>
+      <h1>Buttons</h1>
+      <div>
+        <Button
+          className={clsx(pixelBorders.box.light, pixelFonts.base)}
+          onClick={() => modalApi.alert('alert', 'content')}
+        >
+          Open Modal
+        </Button>
+      </div>
+    </>
+  );
+}
 
 export const ChakraDemo: React.FC = () => {
   return (
     <div>
+      <>
+        <Buttons />
+      </>
       <h1>Responsive</h1>
       <chakra.div marginX="auto" backgroundColor={['teal.50', 'red.50', 'yellow.50', 'blue.50', 'red.500', 'blue.500']}>
         dddddddd

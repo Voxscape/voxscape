@@ -1,5 +1,4 @@
 import { ParsedVoxFile } from '@voxscape/vox.ts/src/types/vox-types';
-import { Button } from '@chakra-ui/react';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { useCounter, useToggle } from 'react-use';
 
@@ -7,6 +6,8 @@ import { OnlyInDev } from '../../_dev/only-in-dev';
 import { createDebugLogger } from '../../../shared/logger';
 import { ModelCanvas } from './model-canvas';
 import { ViewerConfig, ViewerTarget } from './use-vox-scene-handle';
+import { Select, Button } from '@radix-ui/themes';
+import { IconBug } from '@tabler/icons-react';
 
 const logger = createDebugLogger(__filename);
 
@@ -16,16 +17,47 @@ export function ModelViewer(props: { voxFile: ParsedVoxFile }) {
 
   return (
     <div>
-      <div>
-        <ViewerTargetPicker voxFile={props.voxFile} onChange={setViewerTarget} />
-        <ViewerConfigPicker onInput={setViewerConfig} />
-        <div>{viewerTarget && viewerConfig && <ModelCanvas target={viewerTarget} config={viewerConfig} />}</div>
+      <div>{viewerTarget && viewerConfig && <ModelCanvas target={viewerTarget} config={viewerConfig} />}</div>
+      <div className="flex justify-between mt-2 px-1 md:px-0">
+        <div>
+          {props.voxFile.models.length < 1 ? (
+            <ViewerTargetButtonPicker voxFile={props.voxFile} onChange={setViewerTarget} />
+          ) : (
+            <ViewerTargetSelectPicker voxFile={props.voxFile} onChange={setViewerTarget} />
+          )}
+        </div>
+        <div>
+          <ViewerConfigPicker onInput={setViewerConfig} />
+        </div>
       </div>
     </div>
   );
 }
 
-function ViewerTargetPicker(props: { voxFile: ParsedVoxFile; onChange(value: ViewerTarget): void }) {
+function ViewerTargetSelectPicker(props: { voxFile: ParsedVoxFile; onChange(value: ViewerTarget): void }) {
+  const [modelIndex, setModelIndex] = useCounter(0, props.voxFile.models.length - 1);
+  useEffect(() => {
+    props.onChange({ file: props.voxFile, modelIndex });
+  }, [props.voxFile, modelIndex]);
+  return (
+    <Select.Root defaultValue="0" onValueChange={(value) => setModelIndex.set(+value)}>
+      <Select.Trigger />
+      <Select.Content>
+        <Select.Group>
+          <Select.Label>Models</Select.Label>
+
+          {props.voxFile.models.map((model, index) => (
+            <Select.Item key={index} value={String(index)}>
+              Model {index + 1}
+            </Select.Item>
+          ))}
+        </Select.Group>
+      </Select.Content>
+    </Select.Root>
+  );
+}
+
+function ViewerTargetButtonPicker(props: { voxFile: ParsedVoxFile; onChange(value: ViewerTarget): void }) {
   const [modelIndex, setModelIndex] = useCounter(0, props.voxFile.models.length - 1);
   useEffect(() => {
     props.onChange({ file: props.voxFile, modelIndex });
@@ -33,7 +65,7 @@ function ViewerTargetPicker(props: { voxFile: ParsedVoxFile; onChange(value: Vie
   return props.voxFile.models.map((model, index) => {
     return (
       <Button
-        type="button"
+        variant="outline"
         onClick={() => setModelIndex.set(index)}
         key={index}
         title={`${model.voxels.length} voxels`}
@@ -47,7 +79,7 @@ function ViewerTargetPicker(props: { voxFile: ParsedVoxFile; onChange(value: Vie
 function ViewerConfigPicker(props: { onInput(value: ViewerConfig): void }) {
   const [enableInspector, toggleInspector] = useToggle(false);
   const [enableLight, toggleLight] = useToggle(true);
-  const [showAxes, toggleAxes] = useToggle(true);
+  const [showAxes, toggleAxes] = useToggle(false);
   useEffect(() => {
     props.onInput({
       enableInspector,
@@ -57,12 +89,18 @@ function ViewerConfigPicker(props: { onInput(value: ViewerConfig): void }) {
   }, [enableLight, showAxes, enableInspector]);
 
   return (
-    <>
-      <Button onClick={toggleLight}>{enableLight ? 'disable' : 'enable'} light</Button>
-      <Button onClick={toggleAxes}>{showAxes ? 'hide' : 'show'} ref axes</Button>
+    <div className="space-x-1">
+      <Button variant="outline" onClick={toggleLight}>
+        {enableLight ? 'disable' : 'enable'} light
+      </Button>
+      <Button variant="outline" onClick={toggleAxes}>
+        {showAxes ? 'hide' : 'show'} ref axes
+      </Button>
       <OnlyInDev>
-        <Button onClick={toggleInspector}>{enableInspector ? 'disable' : 'enable'} inspector</Button>
+        <Button onClick={toggleInspector}>
+          <IconBug />
+        </Button>
       </OnlyInDev>
-    </>
+    </div>
   );
 }
