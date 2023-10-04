@@ -47,7 +47,9 @@ function ViewerTargetSelectPicker(props: { voxFile: ParsedVoxFile; onChange(valu
           <Select.Label>Models</Select.Label>
 
           {props.voxFile.models.map((model, index) => (
-            <Select.Item value={String(index)}>Model {index + 1}</Select.Item>
+            <Select.Item key={index} value={String(index)}>
+              Model {index + 1}
+            </Select.Item>
           ))}
         </Select.Group>
       </Select.Content>
