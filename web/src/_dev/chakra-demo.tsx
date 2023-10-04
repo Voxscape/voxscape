@@ -1,5 +1,7 @@
 import { Button, chakra, useModal } from '@chakra-ui/react';
 import { useModalApi } from '../components/modal/modal-context';
+import clsx from 'clsx';
+import { pixelBorders, pixelFonts } from '../styles/pixelBorders';
 
 function Buttons() {
   const modalApi = useModalApi();
@@ -7,7 +9,12 @@ function Buttons() {
     <>
       <h1>Buttons</h1>
       <div>
-        <Button onClick={() => modalApi.alert('alert', 'content')}>Open Modal</Button>
+        <Button
+          className={clsx(pixelBorders.box.light, pixelFonts.base)}
+          onClick={() => modalApi.alert('alert', 'content')}
+        >
+          Open Modal
+        </Button>
       </div>
     </>
   );

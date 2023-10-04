@@ -3609,6 +3609,7 @@ __metadata:
     next: <14
     next-auth: ^4.23.1
     pg: ^8.11.3
+    pixel-borders: ^1.1.4
     postcss: ^8.4.29
     prisma: ^5.3.0
     react: ^18.2.0
@@ -8480,6 +8481,13 @@ __metadata:
   version: 4.0.6
   resolution: "pirates@npm:4.0.6"
   checksum: 46a65fefaf19c6f57460388a5af9ab81e3d7fd0e7bc44ca59d753cb5c4d0df97c6c6e583674869762101836d68675f027d60f841c105d72734df9dfca97cbcc6
+  languageName: node
+  linkType: hard
+
+"pixel-borders@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "pixel-borders@npm:1.1.4"
+  checksum: 0fb4c5c062124628f4cb463492a591336b54e2056bf1d10a1a2bdd931e8dfde3eb1474f03b5c79613839ee8d04b6c02ad489a9570ee84e5a73052a6b6f7033ac
   languageName: node
   linkType: hard
 

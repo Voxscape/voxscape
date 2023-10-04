@@ -1,13 +1,6 @@
-import Link from 'next/link';
-import { SafeUser } from '../../server/api/common/primitive';
-import { TrpcResponseType } from '../config/trpc';
-import { ModelList } from '../model/list/model-list';
+import { pixelFonts } from '../styles/pixelBorders';
+import clsx from 'clsx';
 
-export function UserModelList(props: { voxModels: TrpcResponseType['user']['getById']['recentModels'] }) {
-  return (
-    <div>
-      <h5 className="text-center mt-4">Recent models</h5>
-      <ModelList voxModels={props.voxModels} />
-    </div>
-  );
+export function UserModelListHeader() {
+  return <h5 className={clsx('text-center mt-4 text-xl', pixelFonts.base)}>Recent works</h5>;
 }
