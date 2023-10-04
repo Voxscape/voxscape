@@ -3,8 +3,11 @@ import { composeUserAssetPath, getBucket } from '../../../external/gcp';
 import { z } from 'zod';
 import { t } from '../../common/_base';
 
-const uploadAssetRequest = z.object({
-  filename: z.string(),
+export const uploadAssetRequest = z.object({
+  filename: z
+    .string({})
+    .trim()
+    .regex(/^[a-zA-Z0-9-_%.]+$/, 'Invalid filename'),
   size: z.number(),
   contentType: z.string(),
 });
