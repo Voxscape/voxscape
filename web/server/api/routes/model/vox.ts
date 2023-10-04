@@ -10,12 +10,6 @@ import { createModelRequest } from '../../../../shared/api-schemas';
 
 const logger = createDebugLogger(__filename);
 
-export const uploadModelAssetRequest = z.object({
-  filename: z.string(),
-  size: z.number(),
-  contentType: z.string(),
-});
-
 const mutateModelRequest = z.object({
   assetUrl: z.ostring(),
   isPrivate: z.oboolean(),

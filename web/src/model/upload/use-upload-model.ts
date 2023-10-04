@@ -7,7 +7,7 @@ export async function uploadVoxModel(f: File) {
     throw new Error(`Unsupported file type: ${f.name}`);
   }
 
-  const uploadCred = await trpcClient.models.requestUpload.mutate({
+  const uploadCred = await trpcClient.upload.model.mutate({
     filename: f.name,
     size: f.size,
     contentType,
