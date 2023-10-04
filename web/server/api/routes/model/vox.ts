@@ -3,7 +3,7 @@ import { createDebugLogger } from '../../../../shared/logger';
 import { prisma } from '../../../prisma';
 import { privateProcedure } from '../../common/session.middleware';
 import { t } from '../../common/_base';
-import { pagerParam } from '../../common/primitive';
+import { pagerParam, pickSafeUser } from '../../common/primitive';
 import { decomposeUserAssetUrl, getBucket } from '../../../external/gcp';
 import { ClientBad } from '../../errors';
 import { createModelRequest } from '../../../../shared/api-schemas';
@@ -45,7 +45,7 @@ export const voxRouter = t.router({
     if (!model) {
       throw new ClientBad(`model not found`, 'NOT_FOUND');
     }
-    return model;
+    return { ...model, ownerUser: pickSafeUser(model.ownerUser) };
   }),
 
   create: privateProcedure.input(createModelRequest).mutation(async ({ input, ctx }) => {

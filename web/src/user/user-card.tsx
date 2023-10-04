@@ -20,3 +20,17 @@ export const UserCard: FC<{ user: SafeUser; className?: string }> = (props) => {
     </div>
   );
 };
+
+export function UserNameplate(props: { user: SafeUser; size?: 'sm' | 'xs'; className?: string }) {
+  const size = props.size ?? 'sm';
+  return (
+    <div className={clsx(pixelBorders.box.light, props.className, 'inline-flex')}>
+      <img
+        alt="avatar"
+        src={props.user.image}
+        className={clsx({ 'h-16 w-16': size === 'sm', 'h-12 w-12': size === 'xs' }, 'flex-0')}
+      />
+      <div className={clsx('text-lg', pixelFonts.base, 'px-2')}>{props.user.name}</div>
+    </div>
+  );
+}

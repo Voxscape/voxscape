@@ -8,6 +8,9 @@ import React from 'react';
 import { ModelViewer } from '../../../src/model/vox/model-viewer';
 import { PageMeta } from '../../../src/components/meta/page-meta';
 import { useRenderTrpcQuery } from '../../../src/hooks/render-trpc-response';
+import { UserCard, UserNameplate } from '../../../src/user/user-card';
+import Link from 'next/link';
+import { pixelBorders, pixelFonts } from '../../../src/styles/pixelBorders';
 
 const logger = createDebugLogger(__filename);
 
@@ -17,7 +20,7 @@ function VoxModelPageContent(props: { modelId: string }) {
   const modelFile = useVoxFile(model.data?.assetUrl);
   logger(props.modelId, model?.data, modelFile?.data);
 
-  const modelView = useRenderTrpcQuery(model, (m) => (
+  const modelMetaView = useRenderTrpcQuery(model, (m) => (
     <>
       {m.title}
       <br />
@@ -26,11 +29,21 @@ function VoxModelPageContent(props: { modelId: string }) {
       {m.origFilename}
     </>
   ));
+
+  const ownerUserView = useRenderTrpcQuery(model, (m) => (
+    <div className="text-right">
+      <span className={pixelFonts.base}>Uploaded by</span>
+      <Link href={`/users/${m.ownerUser.id}`} className="ml-2">
+        <UserNameplate user={m.ownerUser} size="xs" />
+      </Link>
+    </div>
+  ));
+
   return (
     <div>
-      <div>{modelView}</div>
-      <div className="my-2" />
       <div>{modelFile?.data && <ModelViewer voxFile={modelFile.data} />}</div>
+      <hr className={'my-4'} />
+      <div>{ownerUserView}</div>
     </div>
   );
 }
