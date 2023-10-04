@@ -47,7 +47,7 @@ function ViewerTargetPicker(props: { voxFile: ParsedVoxFile; onChange(value: Vie
 function ViewerConfigPicker(props: { onInput(value: ViewerConfig): void }) {
   const [enableInspector, toggleInspector] = useToggle(false);
   const [enableLight, toggleLight] = useToggle(true);
-  const [showAxes, toggleAxes] = useToggle(true);
+  const [showAxes, toggleAxes] = useToggle(false);
   useEffect(() => {
     props.onInput({
       enableInspector,
