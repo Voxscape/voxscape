@@ -29,6 +29,7 @@ function VoxModelPageContent(props: { modelId: string }) {
       {m.origFilename}
     </>
   ));
+  const pageMetaView = useRenderTrpcQuery(model, (m) => <PageMeta title={m.title} desc={m.desc} />);
 
   const ownerUserView = useRenderTrpcQuery(model, (m) => (
     <div className="text-right">
@@ -41,6 +42,7 @@ function VoxModelPageContent(props: { modelId: string }) {
 
   return (
     <div>
+      {pageMetaView}
       <div>{modelFile?.data && <ModelViewer voxFile={modelFile.data} />}</div>
       <hr className={'my-4'} />
       <div>{ownerUserView}</div>
