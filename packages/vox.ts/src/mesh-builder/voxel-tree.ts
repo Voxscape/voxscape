@@ -8,8 +8,6 @@ const nextAxisLoop = {
   z: 'x',
 } as const;
 
-const MIN_SPAN_LENGTH = 8 ** 3; // stop splitting when span length (#voxels) is less than this
-
 /**
  * a 3D region in space,
  * a node in octree,
@@ -123,17 +121,18 @@ class VoxelTree {
     readonly mapping: VoxelSpan,
     readonly axis: Axis,
     readonly depth: number,
+    minSpanLength: number,
   ) {
     this.#voxels = voxels;
 
     const [leftSpan, rightSpan] = splitSpan(voxels, mapping, axis);
     const nextAxis = nextAxisLoop[axis];
 
-    if (leftSpan.length > MIN_SPAN_LENGTH) {
-      this.leftChild = new VoxelTree(voxels, leftSpan, nextAxis, 1 + depth);
+    if (leftSpan.length > minSpanLength) {
+      this.leftChild = new VoxelTree(voxels, leftSpan, nextAxis, 1 + depth, minSpanLength);
     }
-    if (rightSpan.length > MIN_SPAN_LENGTH) {
-      this.rightChild = new VoxelTree(voxels, rightSpan, nextAxis, 1 + depth);
+    if (rightSpan.length > minSpanLength) {
+      this.rightChild = new VoxelTree(voxels, rightSpan, nextAxis, 1 + depth, minSpanLength);
     }
   }
 
@@ -145,7 +144,7 @@ class VoxelTree {
   }
 }
 
-export function buildVoxelTree(voxelModel: VoxelModel): VoxelTree {
+export function buildVoxelTree(voxelModel: VoxelModel, minSpanLength = 4 ** 3): VoxelTree {
   const maxDimension = Math.max(voxelModel.size.x, voxelModel.size.y, voxelModel.size.z);
   const nextPower2 = 2 ** Math.ceil(Math.log2(maxDimension));
 
@@ -160,5 +159,5 @@ export function buildVoxelTree(voxelModel: VoxelModel): VoxelTree {
     zMax: nextPower2,
   };
 
-  return new VoxelTree(voxelModel.voxels.slice(), initialSpan, 'x', 0);
+  return new VoxelTree(voxelModel.voxels.slice(), initialSpan, 'x', 0, minSpanLength);
 }
