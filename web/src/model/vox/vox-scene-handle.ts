@@ -2,7 +2,7 @@ import { createDebugLogger } from '../../../shared/logger';
 import type * as VoxTypes from '@voxscape/vox.ts/src/types/vox-types';
 import { greedyBuild } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-greedy';
 import { BabylonSceneHandle } from '../_babylon/babylon-scene-handle';
-import { Mesh } from '@babylonjs/core';
+import { ISimplificationSettings, Mesh } from '@babylonjs/core';
 
 const logger = createDebugLogger(__filename);
 
@@ -14,8 +14,12 @@ export class VoxSceneHandle extends BabylonSceneHandle {
     return this.createRefAxes(1.2 * Math.max(model.size.x, model.size.y, model.size.z));
   }
 
-  createModelRootMesh(key: string | number): Mesh {
-    return new Mesh(`model-root-${key}`, this.scene);
+  createModelRootMesh(key: string | number, addToScene = true): Mesh {
+    return new Mesh(`model-root-${key}`, addToScene ? this.scene : undefined);
+  }
+
+  addMesh(m: Mesh) {
+    this.scene.addMesh(m);
   }
 
   loadModel(
@@ -24,17 +28,39 @@ export class VoxSceneHandle extends BabylonSceneHandle {
     rootMesh: Mesh,
     options?: {
       impl?: 'greedy';
+      simiplify?: ISimplificationSettings[];
     },
   ): {
-    stop(): void;
-    mesh: Mesh;
-    stopped: Promise<void>;
+    abortController: AbortController;
+    loaded: Promise<{ interrupted: boolean; mesh?: Mesh }>;
   } {
-    const { stop, stopped } = greedyBuild(model, palette, rootMesh, this.scene);
+    const abortController = new AbortController();
+    const { stopped } = greedyBuild(model, palette, rootMesh, this.scene, { abortSignal: abortController.signal });
+
+    const loaded = stopped.then(async (interrupted) => {
+      if (interrupted) {
+        return { interrupted };
+      }
+
+      if (options?.simiplify) {
+        await new Promise<void>((f) =>
+          rootMesh.simplify([], true, undefined, (mesh, submeshIndex) => {
+            logger(`mesh simplified`, mesh, submeshIndex);
+            // TODO: see if this is called only once
+            f();
+          }),
+        );
+      }
+
+      return {
+        interrupted: false,
+        mesh: rootMesh,
+      };
+    });
+
     return {
-      stop,
-      stopped,
-      mesh: rootMesh,
+      abortController,
+      loaded,
     };
   }
 }

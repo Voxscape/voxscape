@@ -14,28 +14,31 @@ export function greedyBuild(
   root: Mesh,
   scene: Scene,
   options?: {
+    abortSignal?: AbortSignal;
     swapYz?: boolean;
   },
-): { stop(): void; stopped: Promise<void> } {
-  let running = true;
+): { stopped: Promise<boolean> } {
   if (options?.swapYz ?? true) {
     const normalize = createNormalizationTransform(model.size);
     root.position = normalize.translation;
     root.rotationQuaternion = normalize.rotation;
     root.scaling = normalize.scale;
   }
-  const stopped = startGreedyBuildMesh(model, palette, root, scene, () => !running).then((broke) => {
-    console.debug('finished', broke);
-  });
+  const stopped = startGreedyBuildMesh(model, palette, root, scene, () => !!options?.abortSignal?.aborted).then(
+    (interrupted) => {
+      console.debug('greedyBuild(): interrupted', interrupted);
+      return interrupted;
+    },
+  );
 
   return {
     stopped,
-    stop() {
-      running = false;
-    },
   };
 }
 
+/**
+ * @return prematurely stopped
+ */
 async function startGreedyBuildMesh(
   model: Vox.VoxelModel,
   palette: Vox.VoxelPalette,

@@ -45,18 +45,18 @@ export function useRenderVox(target: ViewerTarget, sceneHandle: null | VoxSceneH
       }
       const model = target.file.models[target.modelIndex];
       const palette = target.file.palette ?? getDefaultPalette();
-      const root = sceneHandle.createModelRootMesh(`vox-model-${target.modelIndex}-${Date.now()}`);
-      const started = sceneHandle.loadModel(model, palette, root);
-      resetCameraForModel(sceneHandle.defaultCamera, model);
+      const root = sceneHandle.createModelRootMesh(`vox-model-${target.modelIndex}-${Date.now()}`, false);
+      const loadModelEffect = sceneHandle.loadModel(model, palette, root);
+      released.then(() => loadModelEffect.abortController.abort(new Error(`useRenderVox(): released`)));
 
-      const modelLoaded = await Promise.race([started.stopped.then(() => true), released]);
+      const modelLoaded = await Promise.race([loadModelEffect.loaded, released]);
       logger(modelLoaded, sceneHandle);
-      if (modelLoaded) {
+      if (modelLoaded?.mesh) {
+        sceneHandle.addMesh(modelLoaded.mesh);
+        resetCameraForModel(sceneHandle.defaultCamera, model);
         sceneHandle.startRenderLoop();
         await released;
         sceneHandle.stopRenderLoop();
-      } else {
-        started.stop();
       }
     },
     [sceneHandle],

@@ -89,7 +89,7 @@ export function createNormalizationTransform(size: VoxTypes.VoxelModelSize): {
   const translation = new Vector3();
 
   m.decompose(scale, rotation, translation);
-  console.debug('decomposed', scale, rotation, translation);
+  // console.debug('decomposed', scale, rotation, translation);
 
   return {
     scale,
