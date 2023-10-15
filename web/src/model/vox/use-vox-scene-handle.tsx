@@ -4,7 +4,7 @@ import type * as VoxTypes from '@voxscape/vox.ts/src/types/vox-types';
 import { resetCameraForModel } from '@voxscape/vox.ts/src/babylon/utils';
 import { VoxSceneHandle } from './vox-scene-handle';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
-import { Engine, Scene } from '@babylonjs/core';
+import { Engine, Mesh, Scene } from '@babylonjs/core';
 import { useSyncResource } from '../../hooks/use-sync-resource';
 import { getDefaultPalette } from '@voxscape/vox.ts/src/parser/chunk-reader';
 import { createDebugLogger } from '../../../shared/logger';
@@ -45,16 +45,24 @@ export function useRenderVox(target: ViewerTarget, sceneHandle: null | VoxSceneH
       }
       const model = target.file.models[target.modelIndex];
       const palette = target.file.palette ?? getDefaultPalette();
-      const root = sceneHandle.createModelRootMesh(`vox-model-${target.modelIndex}-${Date.now()}`, false);
+      const root = sceneHandle.createModelRootMesh(`vox-model-${target.modelIndex}-${Date.now()}`, true);
       const loadModelEffect = sceneHandle.loadModel(model, palette, root);
       released.then(() => loadModelEffect.abortController.abort(new Error(`useRenderVox(): released`)));
 
       const modelLoaded = await Promise.race([loadModelEffect.loaded, released]);
-      logger(modelLoaded, sceneHandle);
+      logger('modelLoaded', modelLoaded, sceneHandle);
       if (modelLoaded?.mesh) {
-        sceneHandle.addMesh(modelLoaded.mesh);
+        // sceneHandle.addMesh(modelLoaded.mesh);
         resetCameraForModel(sceneHandle.defaultCamera, model);
         sceneHandle.startRenderLoop();
+
+        sceneHandle.simplifyModel(modelLoaded.mesh, {
+          simplify: [
+            { distance: 50, quality: 0.6 },
+            { distance: 100, quality: 0.3 },
+            { distance: 10, quality: 0.9 },
+          ],
+        });
         await released;
         sceneHandle.stopRenderLoop();
       }

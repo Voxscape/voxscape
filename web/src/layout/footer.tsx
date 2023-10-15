@@ -9,6 +9,7 @@ export function LayoutFooter(): ReactElement {
       <Link href="/user_agreement">User Agreement</Link>
       <Link href="/privacy_policy">Privacy Policy</Link>
       <Link href="https://github.com/Voxscape/voxscape">Github</Link>
+      <Link href="/demo/vox.ts">Vox.ts</Link>
     </div>
   );
 }

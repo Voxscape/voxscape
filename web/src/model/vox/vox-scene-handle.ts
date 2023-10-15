@@ -2,7 +2,7 @@ import { createDebugLogger } from '../../../shared/logger';
 import type * as VoxTypes from '@voxscape/vox.ts/src/types/vox-types';
 import { greedyBuild } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-greedy';
 import { BabylonSceneHandle } from '../_babylon/babylon-scene-handle';
-import { ISimplificationSettings, Mesh } from '@babylonjs/core';
+import { ISimplificationSettings, Mesh, SimplificationType } from '@babylonjs/core';
 
 const logger = createDebugLogger(__filename);
 
@@ -22,13 +22,28 @@ export class VoxSceneHandle extends BabylonSceneHandle {
     this.scene.addMesh(m);
   }
 
+  simplifyModel(
+    rootMesh: Mesh,
+    options?: {
+      impl?: 'greedy';
+      simplify?: ISimplificationSettings[];
+    },
+  ) {
+    if (options?.simplify) {
+      rootMesh.simplify(options.simplify!, true, SimplificationType.QUADRATIC, (mesh, submeshIndex) => {
+        logger(`mesh simplified`, mesh, submeshIndex);
+        // TODO: see if this is called only once
+      });
+    }
+  }
+
   loadModel(
     model: VoxTypes.VoxelModel,
     palette: VoxTypes.VoxelPalette,
     rootMesh: Mesh,
     options?: {
       impl?: 'greedy';
-      simiplify?: ISimplificationSettings[];
+      simplify?: ISimplificationSettings[];
     },
   ): {
     abortController: AbortController;
@@ -38,18 +53,10 @@ export class VoxSceneHandle extends BabylonSceneHandle {
     const { stopped } = greedyBuild(model, palette, rootMesh, this.scene, { abortSignal: abortController.signal });
 
     const loaded = stopped.then(async (interrupted) => {
+      logger('greedyBuild() done', rootMesh, interrupted);
+
       if (interrupted) {
         return { interrupted };
-      }
-
-      if (options?.simiplify) {
-        await new Promise<void>((f) =>
-          rootMesh.simplify([], true, undefined, (mesh, submeshIndex) => {
-            logger(`mesh simplified`, mesh, submeshIndex);
-            // TODO: see if this is called only once
-            f();
-          }),
-        );
       }
 
       return {
