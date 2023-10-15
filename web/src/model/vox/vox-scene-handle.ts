@@ -22,7 +22,7 @@ export class VoxSceneHandle extends BabylonSceneHandle {
     this.scene.addMesh(m);
   }
 
-  simplifyModel(
+  async simplifyModel(
     rootMesh: Mesh,
     options?: {
       impl?: 'greedy';
@@ -30,9 +30,17 @@ export class VoxSceneHandle extends BabylonSceneHandle {
     },
   ) {
     if (options?.simplify) {
-      rootMesh.simplify(options.simplify!, true, SimplificationType.QUADRATIC, (mesh, submeshIndex) => {
-        logger(`mesh simplified`, mesh, submeshIndex);
-        // TODO: see if this is called only once
+      await new Promise((f) => rootMesh.optimizeIndices(f));
+      rootMesh.getChildMeshes(true).forEach((child) => {
+        if (!(child instanceof Mesh)) {
+          logger('bypassing mesh', child);
+          return;
+        }
+
+        child.simplify(options.simplify!, true, SimplificationType.QUADRATIC, (mesh, submeshIndex) => {
+          logger(`mesh simplified`, mesh, submeshIndex);
+          // TODO: see if this is called only once
+        });
       });
     }
   }
