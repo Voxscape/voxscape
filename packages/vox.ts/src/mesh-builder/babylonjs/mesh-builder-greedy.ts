@@ -1,4 +1,4 @@
-import * as Vox from '../../types/vox-types';
+import * as VoxTypes from '../../types/vox-types';
 import { Scene } from '@babylonjs/core/scene';
 import { Mesh, VertexData } from '@babylonjs/core/Meshes';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
@@ -9,8 +9,8 @@ import { buildVertexIndex, extractSurfacesGreedy, FacetSpec } from '../greedy';
 import { buildBabylonColor3 } from './colors';
 
 export function greedyBuild(
-  model: Vox.VoxelModel,
-  palette: Vox.VoxelPalette,
+  model: VoxTypes.VoxelModel,
+  palette: VoxTypes.VoxelPalette,
   root: Mesh,
   scene: Scene,
   options?: {
@@ -40,8 +40,8 @@ export function greedyBuild(
  * @return prematurely stopped
  */
 async function startGreedyBuildMesh(
-  model: Vox.VoxelModel,
-  palette: Vox.VoxelPalette,
+  model: VoxTypes.VoxelModel,
+  palette: VoxTypes.VoxelPalette,
   root: Mesh,
   scene: Scene,
   shouldStop?: () => boolean,
@@ -52,13 +52,13 @@ async function startGreedyBuildMesh(
     return material;
   });
 
-  const submeshMapX = new DefaultMap<number, Mesh>((x) => new Mesh(`voxels-${x}`, null, root));
-  const submeshMapXY = new DefaultMap<`voxels-${number}-${number}`, Mesh>((xy) => {
+  const childrenMapX = new DefaultMap<number, Mesh>((x) => new Mesh(`voxels-${x}`, null, root));
+  const childrenMapXY = new DefaultMap<`voxels-${number}-${number}`, Mesh>((xy) => {
     const [x, y] = xy
       .split('-')
       .slice(1)
       .map((s) => parseInt(s, 10));
-    return new Mesh(xy, null, submeshMapX.getOrCreate(x));
+    return new Mesh(xy, null, childrenMapX.getOrCreate(x));
   });
 
   for (const batch of extractSurfacesGreedy(model)) {
@@ -66,7 +66,7 @@ async function startGreedyBuildMesh(
       return true;
     }
     batch.facets.forEach((facet) => {
-      const parent = submeshMapXY.getOrCreate(`voxels-${batch.progress.x}-${batch.progress.y}`);
+      const parent = childrenMapXY.getOrCreate(`voxels-${batch.progress.x}-${batch.progress.y}`);
       const subMesh = buildNoLodMesh(facet);
       // TODO: build lod-available meshes
       subMesh.parent = parent; // this is the way to let subMesh inherit parent's transform
