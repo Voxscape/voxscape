@@ -1,4 +1,4 @@
-import type * as Vox from '../types/vox-types';
+import type * as VoxTypes from '../types/vox-types';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 import { buildXMinus, buildXPlus, buildYMinus, buildYPlus, buildZMinus, buildZPlus } from './greedy-coordinates';
 
@@ -6,7 +6,7 @@ import { buildXMinus, buildXPlus, buildYMinus, buildYPlus, buildZMinus, buildZPl
  *
  */
 export interface FacetSpec {
-  start: Vox.Voxel;
+  start: VoxTypes.Voxel;
   positions: number[];
   // no indexes:
   colorIndex: number;
@@ -20,24 +20,38 @@ interface SurfaceBatch {
   readonly facets: readonly FacetSpec[];
 }
 
-export function splitRow(voxels: Vox.Voxel[]): Vox.Voxel[][] {
-  const segments: Vox.Voxel[][] = [];
+export interface VoxelSegment {
+  colorIndex: number;
+  voxels: VoxTypes.Voxel[];
+}
+
+function getLastVoxel(voxels: readonly VoxTypes.Voxel[]): null | VoxTypes.Voxel {
+  return voxels[voxels.length - 1];
+}
+
+/**
+ * split a row (voxels of same x,y) of voxels into group
+ * @param voxels
+ * @returns segments. Each segment contains consequtive voxels with same color.
+ */
+export function splitRow(voxels: VoxTypes.Voxel[]): VoxelSegment[] {
+  const segments: VoxelSegment[] = [];
 
   for (let i = 0; i < voxels.length; i++) {
     const lastSegment = segments[segments.length - 1];
-    const lastVoxel = lastSegment && lastSegment[lastSegment.length - 1];
+    const lastVoxel = lastSegment && getLastVoxel(lastSegment.voxels);
     if (lastVoxel && lastVoxel.z === voxels[i].z - 1 && lastVoxel.colorIndex === voxels[i].colorIndex) {
-      lastSegment.push(voxels[i]);
+      lastSegment.voxels.push(voxels[i]);
     } else {
-      segments.push([voxels[i]]);
+      segments.push({ colorIndex: voxels[i].colorIndex, voxels: [voxels[i]] });
     }
   }
   return segments;
 }
 
-function buildSegmentSpec(x: number, y: number, segment: Vox.Voxel[]) {
-  const v1 = segment[0]; // of smaller z
-  const v2 = segment[segment.length - 1]; // of larger z
+function buildSegmentSpec(x: number, y: number, segment: VoxelSegment) {
+  const v1 = segment.voxels[0]; // of smaller z
+  const v2 = segment.voxels[segment.voxels.length - 1]; // of larger z
 
   return {
     v1,
@@ -64,7 +78,7 @@ export function buildVertexIndex(positions: number[]): number[] {
  * @param model
  * @param batchSize
  */
-export function* extractSurfacesGreedy(model: Vox.VoxelModel, batchSize = -1): IterableIterator<SurfaceBatch> {
+export function* extractSurfacesGreedy(model: VoxTypes.VoxelModel, batchSize = -1): IterableIterator<SurfaceBatch> {
   const facets: FacetSpec[] = [];
 
   const index = createVoxelIndexFull(model.voxels);
@@ -77,8 +91,8 @@ export function* extractSurfacesGreedy(model: Vox.VoxelModel, batchSize = -1): I
         const coordinaes = buildSegmentSpec(x, y, s);
 
         facets.push({
-          start: s[0],
-          colorIndex: s[0].colorIndex,
+          start: s.voxels[0],
+          colorIndex: s.colorIndex,
           positions: [
             coordinaes.zPlus,
             coordinaes.zMinus,
@@ -103,7 +117,7 @@ export function* extractSurfacesGreedy(model: Vox.VoxelModel, batchSize = -1): I
 }
 
 interface IndexedRow {
-  voxels: Vox.Voxel[];
+  voxels: VoxTypes.Voxel[];
   // set: Set<number>;
 }
 
@@ -112,7 +126,7 @@ interface IndexedRow {
  * @param voxels
  * @return x => y => ROW
  */
-function createVoxelIndexFull(voxels: readonly Vox.Voxel[]): ReadonlyMap<number, ReadonlyMap<number, IndexedRow>> {
+function createVoxelIndexFull(voxels: readonly VoxTypes.Voxel[]): ReadonlyMap<number, ReadonlyMap<number, IndexedRow>> {
   const built = new DefaultMap<number, DefaultMap<number, IndexedRow>>(
     (x) =>
       new DefaultMap((y) => ({
