@@ -49,16 +49,17 @@ export class VoxSceneHandle extends BabylonSceneHandle {
   loadModel2(
     model: VoxTypes.VoxelModel,
     palette: VoxTypes.VoxelPalette,
-    options?: {
-      impl?: 'greedy';
-      simplify?: ISimplificationSettings[];
-    },
   ): {
     abortController: AbortController;
     loaded: Promise<{ interrupted: boolean; mesh: Mesh }>;
   } {
     const abortController = new AbortController();
-    const x = greedyBuildMerged(model, palette, this.scene, `model-merged-${Date.now()}`);
+    const x = greedyBuildMerged(model, palette, this.scene, {
+      simplify: [
+        { quality: 0.9, distance: 25, optimizeMesh: true },
+        { quality: 0.3, distance: 50, optimizeMesh: true },
+      ],
+    });
     return {
       abortController,
       loaded: x.built.then((mesh) => ({ mesh, interrupted: false })),

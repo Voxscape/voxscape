@@ -1,4 +1,4 @@
-import { Material, Mesh, Scene, StandardMaterial, VertexData } from '@babylonjs/core';
+import { ISimplificationSettings, Material, Mesh, Scene, SimplificationType, StandardMaterial, VertexData } from '@babylonjs/core';
 import * as VoxTypes from '../../types/vox-types';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 import {ResourcePool} from '@jokester/ts-commonutil/lib/concurrency/resource-pool'
@@ -10,8 +10,8 @@ export function greedyBuildMerged(
   model: VoxTypes.VoxelModel,
   palette: VoxTypes.VoxelPalette,
   scene: Scene,
-  meshName: string,
   options?: {
+    simplify?: ISimplificationSettings[],
     swapYz?: boolean
     abortSignal?: AbortSignal;
   },
@@ -46,9 +46,15 @@ export function greedyBuildMerged(
 
   return {
     built: Promise.all(submeshesP).then(async submeshes => {
-       const merged = await Mesh.MergeMeshesAsync(submeshes, true, true, undefined, undefined, true)
+       const merged: Mesh = await Mesh.MergeMeshesAsync(submeshes, true, true, undefined, undefined, true)
        if (options?.swapYz ?? true) {
         applySwapYz(model, merged)
+       }
+       if (options?.simplify) {
+        merged.simplify(options.simplify, true, SimplificationType.QUADRATIC, (mesh, submeshIndex) => {
+          console.debug(`simplify done`, submeshIndex)
+        })
+
        }
 
     return merged
