@@ -78,7 +78,10 @@ export function buildVertexIndex(positions: number[]): number[] {
  * @param model
  * @param batchSize
  */
-export function* extractSurfacesGreedy(voxels: readonly VoxTypes.Voxel[], batchSize = -1): IterableIterator<SurfaceBatch> {
+export function* extractSurfacesGreedy(
+  voxels: readonly VoxTypes.Voxel[],
+  batchSize = -1,
+): IterableIterator<SurfaceBatch> {
   const facets: FacetSpec[] = [];
 
   const index = createVoxelIndexFull(voxels);

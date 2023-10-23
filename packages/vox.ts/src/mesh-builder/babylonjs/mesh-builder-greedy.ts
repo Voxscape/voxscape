@@ -9,11 +9,10 @@ import { buildVertexIndex, extractSurfacesGreedy, FacetSpec } from '../greedy';
 import { buildBabylonColor3 } from './colors';
 
 export function applySwapYz(model: VoxTypes.VoxelModel, m: Mesh) {
-
-    const normalize = createNormalizationTransform(model.size);
-    m.position = normalize.translation;
-    m.rotationQuaternion = normalize.rotation;
-    m.scaling = normalize.scale;
+  const normalize = createNormalizationTransform(model.size);
+  m.position = normalize.translation;
+  m.rotationQuaternion = normalize.rotation;
+  m.scaling = normalize.scale;
 }
 
 export function greedyBuild(
@@ -27,7 +26,7 @@ export function greedyBuild(
   },
 ): { stopped: Promise<boolean> } {
   if (options?.swapYz ?? true) {
-    applySwapYz(model, root)
+    applySwapYz(model, root);
   }
   const stopped = startGreedyBuildMesh(model, palette, root, scene, () => !!options?.abortSignal?.aborted).then(
     (interrupted) => {
