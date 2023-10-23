@@ -45,7 +45,7 @@ export function useRenderVox(target: ViewerTarget, sceneHandle: null | VoxSceneH
       }
       const model = target.file.models[target.modelIndex];
       const palette = target.file.palette ?? getDefaultPalette();
-      const loadModelEffect = sceneHandle.loadModel2(model, palette);
+      const loadModelEffect = sceneHandle.loadModel(model, palette);
       released.then(() => loadModelEffect.abortController.abort(new Error(`useRenderVox(): released`)));
 
       const modelLoaded = await Promise.race([loadModelEffect.loaded, released]);
@@ -55,13 +55,6 @@ export function useRenderVox(target: ViewerTarget, sceneHandle: null | VoxSceneH
         resetCameraForModel(sceneHandle.defaultCamera, model);
         sceneHandle.startRenderLoop();
 
-        sceneHandle.simplifyModel(modelLoaded.mesh, {
-          simplify: [
-            { distance: 50, quality: 0.6 },
-            { distance: 100, quality: 0.3 },
-            { distance: 10, quality: 0.9 },
-          ],
-        });
         await released;
         sceneHandle.stopRenderLoop();
       }

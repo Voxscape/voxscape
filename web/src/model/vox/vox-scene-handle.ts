@@ -15,38 +15,7 @@ export class VoxSceneHandle extends BabylonSceneHandle {
     return this.createRefAxes(1.2 * Math.max(model.size.x, model.size.y, model.size.z));
   }
 
-  createModelRootMesh(key: string | number, addToScene = true): Mesh {
-    return new Mesh(`model-root-${key}`, addToScene ? this.scene : undefined);
-  }
-
-  addMesh(m: Mesh) {
-    this.scene.addMesh(m);
-  }
-
-  async simplifyModel(
-    rootMesh: Mesh,
-    options?: {
-      impl?: 'greedy';
-      simplify?: ISimplificationSettings[];
-    },
-  ) {
-    if (options?.simplify) {
-      await new Promise((f) => rootMesh.optimizeIndices(f));
-      rootMesh.getChildMeshes(true).forEach((child) => {
-        if (!(child instanceof Mesh)) {
-          logger('bypassing mesh', child);
-          return;
-        }
-
-        child.simplify(options.simplify!, true, SimplificationType.QUADRATIC, (mesh, submeshIndex) => {
-          logger(`mesh simplified`, mesh, submeshIndex);
-          // TODO: see if this is called only once
-        });
-      });
-    }
-  }
-
-  loadModel2(
+  loadModel(
     model: VoxTypes.VoxelModel,
     palette: VoxTypes.VoxelPalette,
   ): {
@@ -54,25 +23,21 @@ export class VoxSceneHandle extends BabylonSceneHandle {
     loaded: Promise<{ interrupted: boolean; mesh: Mesh }>;
   } {
     const abortController = new AbortController();
-    const x = greedyBuildMerged(model, palette, this.scene, {
-      simplify: [
-        { quality: 0.9, distance: 25, optimizeMesh: true },
-        { quality: 0.3, distance: 50, optimizeMesh: true },
-      ],
-    });
+
+    const buildResult = greedyBuildMerged(model, palette, this.scene, { abortSignal: abortController.signal });
     return {
       abortController,
-      loaded: x.built.then((mesh) => ({ mesh, interrupted: false })),
+      loaded: buildResult.built.then((mesh) => ({ mesh, interrupted: false })),
     };
   }
 
-  loadModel(
+  /** @deprecated this has no mesh merging */
+  loadModelLegacy(
     model: VoxTypes.VoxelModel,
     palette: VoxTypes.VoxelPalette,
     rootMesh: Mesh,
     options?: {
       impl?: 'greedy';
-      simplify?: ISimplificationSettings[];
     },
   ): {
     abortController: AbortController;

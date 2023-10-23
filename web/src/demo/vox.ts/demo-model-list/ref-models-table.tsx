@@ -14,6 +14,7 @@ export const RefModelsTable: FC<{
           <Tr>
             <Th>file</Th>
             <Th>#models</Th>
+            <Th>#voxels</Th>
             <Th>#warnings</Th>
             <Th>link to viewer</Th>
           </Tr>
@@ -23,6 +24,11 @@ export const RefModelsTable: FC<{
             <Tr key={f.path}>
               <Td>{f.path}</Td>
               <Td>{f.models.length}</Td>
+              <Td>
+                {f.models.map((m, modelIndex) => (
+                  <p key={modelIndex}>{m.numVoxels}</p>
+                ))}
+              </Td>
               <Td>{f.warnings.length}</Td>
               <Td className="space-y-4 space-x-2">
                 <DemoModelLink entry={f}>Open in viewer</DemoModelLink>
@@ -34,6 +40,7 @@ export const RefModelsTable: FC<{
           <Tr>
             <Th>file</Th>
             <Th>#models</Th>
+            <Th>#voxels</Th>
             <Th>#warnings</Th>
             <Th>link to viewer</Th>
           </Tr>

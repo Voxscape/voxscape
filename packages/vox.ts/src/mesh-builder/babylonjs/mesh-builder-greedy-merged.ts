@@ -14,19 +14,25 @@ import { buildBabylonColor3 } from './colors';
 import { FacetSpec, buildVertexIndex, extractSurfacesGreedy } from '../greedy';
 import { applySwapYz } from './mesh-builder-greedy';
 
+/**
+ * build multiple primitive mesh for each colorIndex, and merge with
+ * https://doc.babylonjs.com/features/featuresDeepDive/mesh/mergeMeshes
+ * (this largely reduces the need to LoD)
+ */
 export function greedyBuildMerged(
   model: VoxTypes.VoxelModel,
   palette: VoxTypes.VoxelPalette,
   scene: Scene,
   options?: {
+    /**
+     * @deprecated not used
+     */
     simplify?: ISimplificationSettings[];
     swapYz?: boolean;
+    // FIXME: support this
     abortSignal?: AbortSignal;
   },
 ): { built: Promise<Mesh>; stopped?: Promise<boolean> } {
-  // TODO: build multiple mesh for each colorIndex, and merge with
-  // https://doc.babylonjs.com/features/featuresDeepDive/mesh/mergeMeshes
-  // (this should support auto LoD and automatic mesh optimization better)
   const materialMap = new DefaultMap<number, Material>((colorIndex) => {
     const material = new StandardMaterial(`voxel-material-${colorIndex}`, scene);
     material.diffuseColor = buildBabylonColor3(palette[colorIndex]);
@@ -53,9 +59,9 @@ export function greedyBuildMerged(
       if (options?.swapYz ?? true) {
         applySwapYz(model, merged);
       }
-      if (options?.simplify) {
+      if (options?.simplify?.length) {
         merged.simplify(options.simplify, true, SimplificationType.QUADRATIC, (mesh, submeshIndex) => {
-          console.debug(`simplify done`, submeshIndex);
+          console.debug(`simplify done`, mesh, submeshIndex);
         });
       }
 
