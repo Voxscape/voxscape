@@ -1,8 +1,9 @@
 import { createDebugLogger } from '../../../shared/logger';
 import type * as VoxTypes from '@voxscape/vox.ts/src/types/vox-types';
 import { greedyBuild } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-greedy';
+import { greedyBuildMerged } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-greedy-merged';
 import { BabylonSceneHandle } from '../_babylon/babylon-scene-handle';
-import { ISimplificationSettings, Mesh, SimplificationType } from '@babylonjs/core';
+import { ISimplificationSettings, Mesh, Scene, SimplificationType } from '@babylonjs/core';
 
 const logger = createDebugLogger(__filename);
 
@@ -43,6 +44,25 @@ export class VoxSceneHandle extends BabylonSceneHandle {
         });
       });
     }
+  }
+
+  loadModel2(
+    model: VoxTypes.VoxelModel,
+    palette: VoxTypes.VoxelPalette,
+    options?: {
+      impl?: 'greedy';
+      simplify?: ISimplificationSettings[];
+    },
+  ): {
+    abortController: AbortController;
+    loaded: Promise<{ interrupted: boolean; mesh: Mesh }>;
+  } {
+    const abortController = new AbortController();
+    const x = greedyBuildMerged(model, palette, this.scene, `model-merged-${Date.now()}`);
+    return {
+      abortController,
+      loaded: x.built.then((mesh) => ({ mesh, interrupted: false })),
+    };
   }
 
   loadModel(

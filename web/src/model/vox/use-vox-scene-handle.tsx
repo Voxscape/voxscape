@@ -45,8 +45,7 @@ export function useRenderVox(target: ViewerTarget, sceneHandle: null | VoxSceneH
       }
       const model = target.file.models[target.modelIndex];
       const palette = target.file.palette ?? getDefaultPalette();
-      const root = sceneHandle.createModelRootMesh(`vox-model-${target.modelIndex}-${Date.now()}`, true);
-      const loadModelEffect = sceneHandle.loadModel(model, palette, root);
+      const loadModelEffect = sceneHandle.loadModel2(model, palette);
       released.then(() => loadModelEffect.abortController.abort(new Error(`useRenderVox(): released`)));
 
       const modelLoaded = await Promise.race([loadModelEffect.loaded, released]);

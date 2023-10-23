@@ -3,10 +3,18 @@ import { Scene } from '@babylonjs/core/scene';
 import { Mesh, VertexData } from '@babylonjs/core/Meshes';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 import { createNormalizationTransform } from './mesh-helpers';
-import { Material } from '@babylonjs/core';
+import { Material, ModelShape } from '@babylonjs/core';
 import { StandardMaterial } from '@babylonjs/core/Materials';
 import { buildVertexIndex, extractSurfacesGreedy, FacetSpec } from '../greedy';
 import { buildBabylonColor3 } from './colors';
+
+export function applySwapYz(model: VoxTypes.VoxelModel, m: Mesh) {
+
+    const normalize = createNormalizationTransform(model.size);
+    m.position = normalize.translation;
+    m.rotationQuaternion = normalize.rotation;
+    m.scaling = normalize.scale;
+}
 
 export function greedyBuild(
   model: VoxTypes.VoxelModel,
@@ -19,10 +27,7 @@ export function greedyBuild(
   },
 ): { stopped: Promise<boolean> } {
   if (options?.swapYz ?? true) {
-    const normalize = createNormalizationTransform(model.size);
-    root.position = normalize.translation;
-    root.rotationQuaternion = normalize.rotation;
-    root.scaling = normalize.scale;
+    applySwapYz(model, root)
   }
   const stopped = startGreedyBuildMesh(model, palette, root, scene, () => !!options?.abortSignal?.aborted).then(
     (interrupted) => {
@@ -61,7 +66,7 @@ async function startGreedyBuildMesh(
     return new Mesh(xy, null, childrenMapX.getOrCreate(x));
   });
 
-  for (const batch of extractSurfacesGreedy(model)) {
+  for (const batch of extractSurfacesGreedy(model.voxels)) {
     if (shouldStop?.()) {
       return true;
     }
