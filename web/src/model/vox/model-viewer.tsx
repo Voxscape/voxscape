@@ -40,7 +40,11 @@ function ViewerTargetSelectPicker(props: { voxFile: ParsedVoxFile; onChange(valu
     props.onChange({ file: props.voxFile, modelIndex });
   }, [props.voxFile, modelIndex]);
   return (
-    <Select.Root defaultValue="0" onValueChange={(value) => setModelIndex.set(+value)}>
+    <Select.Root
+      disabled={props.voxFile.models.length <= 1}
+      defaultValue="0"
+      onValueChange={(value) => setModelIndex.set(+value)}
+    >
       <Select.Trigger />
       <Select.Content>
         <Select.Group>

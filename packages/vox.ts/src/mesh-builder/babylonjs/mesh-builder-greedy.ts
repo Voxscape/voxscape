@@ -1,44 +1,51 @@
-import * as Vox from '../../types/vox-types';
+import * as VoxTypes from '../../types/vox-types';
 import { Scene } from '@babylonjs/core/scene';
 import { Mesh, VertexData } from '@babylonjs/core/Meshes';
 import { DefaultMap } from '@jokester/ts-commonutil/lib/collection/default-map';
 import { createNormalizationTransform } from './mesh-helpers';
-import { Material } from '@babylonjs/core';
+import { Material, ModelShape } from '@babylonjs/core';
 import { StandardMaterial } from '@babylonjs/core/Materials';
 import { buildVertexIndex, extractSurfacesGreedy, FacetSpec } from '../greedy';
 import { buildBabylonColor3 } from './colors';
 
+export function applySwapYz(model: VoxTypes.VoxelModel, m: Mesh) {
+  const normalize = createNormalizationTransform(model.size);
+  m.position = normalize.translation;
+  m.rotationQuaternion = normalize.rotation;
+  m.scaling = normalize.scale;
+}
+
 export function greedyBuild(
-  model: Vox.VoxelModel,
-  palette: Vox.VoxelPalette,
+  model: VoxTypes.VoxelModel,
+  palette: VoxTypes.VoxelPalette,
   root: Mesh,
   scene: Scene,
   options?: {
+    abortSignal?: AbortSignal;
     swapYz?: boolean;
   },
-): { stop(): void; stopped: Promise<void> } {
-  let running = true;
+): { stopped: Promise<boolean> } {
   if (options?.swapYz ?? true) {
-    const normalize = createNormalizationTransform(model.size);
-    root.position = normalize.translation;
-    root.rotationQuaternion = normalize.rotation;
-    root.scaling = normalize.scale;
+    applySwapYz(model, root);
   }
-  const stopped = startGreedyBuildMesh(model, palette, root, scene, () => !running).then((broke) => {
-    console.debug('finished', broke);
-  });
+  const stopped = startGreedyBuildMesh(model, palette, root, scene, () => !!options?.abortSignal?.aborted).then(
+    (interrupted) => {
+      console.debug('greedyBuild(): interrupted', interrupted);
+      return interrupted;
+    },
+  );
 
   return {
     stopped,
-    stop() {
-      running = false;
-    },
   };
 }
 
+/**
+ * @return prematurely stopped
+ */
 async function startGreedyBuildMesh(
-  model: Vox.VoxelModel,
-  palette: Vox.VoxelPalette,
+  model: VoxTypes.VoxelModel,
+  palette: VoxTypes.VoxelPalette,
   root: Mesh,
   scene: Scene,
   shouldStop?: () => boolean,
@@ -49,21 +56,21 @@ async function startGreedyBuildMesh(
     return material;
   });
 
-  const submeshMapX = new DefaultMap<number, Mesh>((x) => new Mesh(`voxels-${x}`, null, root));
-  const submeshMapXY = new DefaultMap<`voxels-${number}-${number}`, Mesh>((xy) => {
+  const childrenMapX = new DefaultMap<number, Mesh>((x) => new Mesh(`voxels-${x}`, null, root));
+  const childrenMapXY = new DefaultMap<`voxels-${number}-${number}`, Mesh>((xy) => {
     const [x, y] = xy
       .split('-')
       .slice(1)
       .map((s) => parseInt(s, 10));
-    return new Mesh(xy, null, submeshMapX.getOrCreate(x));
+    return new Mesh(xy, null, childrenMapX.getOrCreate(x));
   });
 
-  for (const batch of extractSurfacesGreedy(model)) {
+  for (const batch of extractSurfacesGreedy(model.voxels)) {
     if (shouldStop?.()) {
       return true;
     }
     batch.facets.forEach((facet) => {
-      const parent = submeshMapXY.getOrCreate(`voxels-${batch.progress.x}-${batch.progress.y}`);
+      const parent = childrenMapXY.getOrCreate(`voxels-${batch.progress.x}-${batch.progress.y}`);
       const subMesh = buildNoLodMesh(facet);
       // TODO: build lod-available meshes
       subMesh.parent = parent; // this is the way to let subMesh inherit parent's transform

@@ -1,8 +1,9 @@
 import { createDebugLogger } from '../../../shared/logger';
 import type * as VoxTypes from '@voxscape/vox.ts/src/types/vox-types';
 import { greedyBuild } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-greedy';
+import { greedyBuildMerged } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-greedy-merged';
 import { BabylonSceneHandle } from '../_babylon/babylon-scene-handle';
-import { Mesh } from '@babylonjs/core';
+import { ISimplificationSettings, Mesh, Scene, SimplificationType } from '@babylonjs/core';
 
 const logger = createDebugLogger(__filename);
 
@@ -14,11 +15,24 @@ export class VoxSceneHandle extends BabylonSceneHandle {
     return this.createRefAxes(1.2 * Math.max(model.size.x, model.size.y, model.size.z));
   }
 
-  createModelRootMesh(key: string | number): Mesh {
-    return new Mesh(`model-root-${key}`, this.scene);
+  loadModel(
+    model: VoxTypes.VoxelModel,
+    palette: VoxTypes.VoxelPalette,
+  ): {
+    abortController: AbortController;
+    loaded: Promise<{ interrupted: boolean; mesh: Mesh }>;
+  } {
+    const abortController = new AbortController();
+
+    const buildResult = greedyBuildMerged(model, palette, this.scene, { abortSignal: abortController.signal });
+    return {
+      abortController,
+      loaded: buildResult.built.then((mesh) => ({ mesh, interrupted: false })),
+    };
   }
 
-  loadModel(
+  /** @deprecated this has no mesh merging */
+  loadModelLegacy(
     model: VoxTypes.VoxelModel,
     palette: VoxTypes.VoxelPalette,
     rootMesh: Mesh,
@@ -26,15 +40,28 @@ export class VoxSceneHandle extends BabylonSceneHandle {
       impl?: 'greedy';
     },
   ): {
-    stop(): void;
-    mesh: Mesh;
-    stopped: Promise<void>;
+    abortController: AbortController;
+    loaded: Promise<{ interrupted: boolean; mesh?: Mesh }>;
   } {
-    const { stop, stopped } = greedyBuild(model, palette, rootMesh, this.scene);
+    const abortController = new AbortController();
+    const { stopped } = greedyBuild(model, palette, rootMesh, this.scene, { abortSignal: abortController.signal });
+
+    const loaded = stopped.then(async (interrupted) => {
+      logger('greedyBuild() done', rootMesh, interrupted);
+
+      if (interrupted) {
+        return { interrupted };
+      }
+
+      return {
+        interrupted: false,
+        mesh: rootMesh,
+      };
+    });
+
     return {
-      stop,
-      stopped,
-      mesh: rootMesh,
+      abortController,
+      loaded,
     };
   }
 }

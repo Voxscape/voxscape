@@ -27,7 +27,12 @@ describe('splitRow', () => {
     ];
     const split = greedy.splitRow(beforeSplit);
     expect(split).toHaveLength(1);
-    expect(split).toEqual([beforeSplit]);
+    expect(split).toEqual([
+      {
+        colorIndex: 0,
+        voxels: beforeSplit,
+      },
+    ]);
   });
   it('splits inconsequent', () => {
     const beforeSplit = [
