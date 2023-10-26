@@ -12,6 +12,7 @@ const defaultStyleSheets = [
     rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
   />,
+  <link key="manifest-pwa" rel="manifest" href="/manifest.json" />,
   fontawesomeCss,
   // <link key="font-material-icons" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />,
 ] as const;
