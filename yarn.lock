@@ -2776,6 +2776,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pwabuilder/pwainstall@npm:^1.6.7":
+  version: 1.6.7
+  resolution: "@pwabuilder/pwainstall@npm:1.6.7"
+  dependencies:
+    lit-element: ^2.4.0
+  checksum: 693c50816d8fde40ef204cb6cccbe65d56a66fe400c7bfda87aef99a30d06f904c52d31f1e156ff90467af0b49ee3cde7e167f8c890ddccb084d1026ac4b7728
+  languageName: node
+  linkType: hard
+
 "@radix-ui/colors@npm:^3.0.0":
   version: 3.0.0
   resolution: "@radix-ui/colors@npm:3.0.0"
@@ -4718,6 +4727,7 @@ __metadata:
     "@next/bundle-analyzer": ^13
     "@next/eslint-plugin-next": ^13.4.19
     "@prisma/client": ^5.3.0
+    "@pwabuilder/pwainstall": ^1.6.7
     "@radix-ui/themes": ^2.0.0
     "@tabler/icons-react": ^2.34.0
     "@tanstack/react-query": ^4.35.3
@@ -8572,6 +8582,22 @@ __metadata:
   version: 1.2.4
   resolution: "lines-and-columns@npm:1.2.4"
   checksum: 0c37f9f7fa212b38912b7145e1cd16a5f3cd34d782441c3e6ca653485d326f58b3caccda66efce1c5812bde4961bbde3374fae4b0d11bf1226152337f3894aa5
+  languageName: node
+  linkType: hard
+
+"lit-element@npm:^2.4.0":
+  version: 2.5.1
+  resolution: "lit-element@npm:2.5.1"
+  dependencies:
+    lit-html: ^1.1.1
+  checksum: c4f45d0cc84d49cc9dca2502b5e0bd14289c46a5ee331c21fb0014693541a4824887f8c2c6725310d380d713adecbe31fba1eda6f8aabc14927f524d6527f6c9
+  languageName: node
+  linkType: hard
+
+"lit-html@npm:^1.1.1":
+  version: 1.4.1
+  resolution: "lit-html@npm:1.4.1"
+  checksum: 6e1bb335cd8493700d2f1eaf1e019c2f6bf78ac641bdba5e2ff9f1545430e0fec15c6721ee1c8ca75559e1d52a1d34cdc568da46319681304299d9aff83a6346
   languageName: node
   linkType: hard
 

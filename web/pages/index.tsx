@@ -1,6 +1,11 @@
 import { NextPage } from 'next';
 import { Layout } from '../src/layout/layout';
+import { PwaInstall } from '../src/components/meta/pwa-install';
 const IndexPage: NextPage = (props) => {
-  return <Layout>TODO</Layout>;
+  return (
+    <Layout>
+      <PwaInstall />
+    </Layout>
+  );
 };
 export default IndexPage;
