@@ -41,7 +41,7 @@ const nextConf = {
     return config;
   },
 
-  transpilePackages: ['lodash-es', '@jokester/ts-commonutil'],
+  transpilePackages: ['lodash-es', '@jokester/ts-commonutil', '@pwabuilder/pwainstall'],
 
   compiler: {
     emotion: true,
@@ -52,6 +52,10 @@ const nextConf = {
   },
 
   images: {},
+
+  experimental: {
+    webpackBuildWorker: true,
+  },
 
   productionBrowserSourceMaps: true,
   reactStrictMode: true,
