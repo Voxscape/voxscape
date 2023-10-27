@@ -40,7 +40,7 @@
     "tslib": "^2",
     "typescript": "<5.2"
   },
-  "packageManager": "yarn@3.2.4",
+  "packageManager": "yarn@4.0.0",
   "workspaces": [
     "web",
     "packages/vox.ts"
