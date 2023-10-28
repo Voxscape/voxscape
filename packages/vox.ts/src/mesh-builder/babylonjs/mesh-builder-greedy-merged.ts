@@ -56,6 +56,9 @@ export function greedyBuildMerged(
   return {
     built: Promise.all(submeshesP).then(async (submeshes) => {
       const merged: Mesh = await Mesh.MergeMeshesAsync(submeshes, true, true, undefined, undefined, true);
+      for (const m of materialMap.values()) {
+        m.dispose();
+      }
       if (options?.swapYz ?? true) {
         applySwapYz(model, merged);
       }
