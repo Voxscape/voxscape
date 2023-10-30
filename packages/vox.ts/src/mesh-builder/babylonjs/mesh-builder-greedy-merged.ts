@@ -59,6 +59,7 @@ export function greedyBuildMerged(
       for (const m of materialMap.values()) {
         m.dispose();
       }
+      merged.receiveShadows = true;
       if (options?.swapYz ?? true) {
         applySwapYz(model, merged);
       }

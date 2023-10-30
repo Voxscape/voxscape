@@ -32,9 +32,10 @@ export function createDefaultEngine(canvas: HTMLCanvasElement) {
   });
 }
 
-export function createDefaultLight(scene: Scene) {
+export function createDefaultLight(scene: Scene): HemisphericLight {
   const light = new HemisphericLight('default-light', new Vector3(0, 1, 0), scene);
   light.specular = Color3.Black();
+  light.intensity = 0.4;
   light.groundColor = new Color3(1, 1, 1);
   return light;
 }

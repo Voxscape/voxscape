@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Engine, Mesh, Scene } from '@babylonjs/core';
+import { ArcRotateCamera, Engine, HemisphericLight, Mesh, Scene } from '@babylonjs/core';
 import { createDebugLogger } from '../../../shared/logger';
 import {
   createArcRotateCamera,
@@ -39,7 +39,7 @@ export abstract class BabylonSceneHandle {
     return camera;
   }
 
-  createDefaultLight() {
+  createDefaultLight(): HemisphericLight {
     return createDefaultLight(this.scene);
   }
 
