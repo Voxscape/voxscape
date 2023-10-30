@@ -1,6 +1,8 @@
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
 import { usePromised } from '@jokester/ts-commonutil/lib/react/hook/use-promised';
 import { useState, useMemo } from 'react';
+import { Never } from '@jokester/ts-commonutil/lib/concurrency/timing';
+import { inServer } from '../../config/build-config';
 
 export function PwaInstall3(props: unknown) {
   // @ts-ignore FIXME

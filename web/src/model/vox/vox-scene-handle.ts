@@ -3,7 +3,7 @@ import type * as VoxTypes from '@voxscape/vox.ts/src/types/vox-types';
 import { greedyBuild } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-greedy';
 import { greedyBuildMerged } from '@voxscape/vox.ts/src/mesh-builder/babylonjs/mesh-builder-greedy-merged';
 import { BabylonSceneHandle } from '../_babylon/babylon-scene-handle';
-import { ISimplificationSettings, Mesh, Scene, SimplificationType } from '@babylonjs/core';
+import { Mesh, DirectionalLight, Vector3 } from '@babylonjs/core';
 
 const logger = createDebugLogger(__filename);
 
@@ -13,6 +13,12 @@ const logger = createDebugLogger(__filename);
 export class VoxSceneHandle extends BabylonSceneHandle {
   createModelRefAxes(model: VoxTypes.VoxelModel): Mesh {
     return this.createRefAxes(1.2 * Math.max(model.size.x, model.size.y, model.size.z));
+  }
+
+  createTopLight(model: VoxTypes.VoxelModel): { l1: DirectionalLight; l2: DirectionalLight } {
+    const l1 = new DirectionalLight('l1', new Vector3(-0.3, -1, 0), this.scene);
+    const l2 = new DirectionalLight('l2', new Vector3(0.3, -1, 0), this.scene);
+    return { l1, l2 };
   }
 
   loadModel(

@@ -1,31 +1,56 @@
-import { RefObject, useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import type * as VoxTypes from '@voxscape/vox.ts/src/types/vox-types';
 
 import { resetCameraForModel } from '@voxscape/vox.ts/src/babylon/utils';
 import { VoxSceneHandle } from './vox-scene-handle';
 import { useAsyncEffect } from '@jokester/ts-commonutil/lib/react/hook/use-async-effect';
-import { Engine, Mesh, Scene } from '@babylonjs/core';
+import { DirectionalLight, Engine, HemisphericLight, Mesh, Scene, ShadowGenerator } from '@babylonjs/core';
 import { useSyncResource } from '../../hooks/use-sync-resource';
 import { getDefaultPalette } from '@voxscape/vox.ts/src/parser/chunk-reader';
 import { createDebugLogger } from '../../../shared/logger';
 
 const logger = createDebugLogger(__filename);
 
-export function useRenderAccessories(
+interface LightGroup {
+  ambient: HemisphericLight;
+  l1: DirectionalLight;
+  l1Shadow: ShadowGenerator;
+  l2: DirectionalLight;
+}
+
+function useRenderLight(
+  sceneHandle: null | VoxSceneHandle,
   target: ViewerTarget,
   config: ViewerConfig,
-  sceneHandle: null | VoxSceneHandle,
-): void {
+): null | LightGroup {
+  const [lights, setLights] = useState<null | LightGroup>(null);
   const enableLight = config.enableLight ?? true;
+
   useEffect(() => {
-    if (!(enableLight && sceneHandle)) {
+    if (!(enableLight && sceneHandle && target)) {
       return;
     }
 
-    const light = sceneHandle.createDefaultLight();
-    return () => light.dispose();
-  }, [enableLight, sceneHandle]);
+    const defaultLight = sceneHandle.createDefaultLight();
+    const light = sceneHandle.createTopLight(target.file.models[target.modelIndex]);
+    const shadowGenerator = new ShadowGenerator(1024, light.l1);
+    setLights({
+      ambient: defaultLight,
+      ...light,
+      l1Shadow: shadowGenerator,
+    });
+    return () => {
+      defaultLight.dispose();
+      shadowGenerator.dispose();
+      light.l1.dispose();
+      light.l2.dispose();
+    };
+  }, [enableLight, sceneHandle, target]);
 
+  return lights;
+}
+
+export function useRefAxis(target: ViewerTarget, config: ViewerConfig, sceneHandle: null | VoxSceneHandle): void {
   const showAxes = config.showAxes ?? true;
   useEffect(() => {
     if (!(showAxes && sceneHandle)) {
@@ -37,7 +62,13 @@ export function useRenderAccessories(
   }, [showAxes, sceneHandle]);
 }
 
-export function useRenderVox(target: ViewerTarget, sceneHandle: null | VoxSceneHandle): void {
+export function useRenderVox(
+  target: ViewerTarget,
+  viewerConfig: ViewerConfig,
+  sceneHandle: null | VoxSceneHandle,
+): void {
+  const lights = useRenderLight(sceneHandle, target, viewerConfig);
+  const [mesh, setMesh] = useState<null | Mesh>(null);
   useAsyncEffect(
     async (running, released) => {
       if (!sceneHandle) {
@@ -52,6 +83,7 @@ export function useRenderVox(target: ViewerTarget, sceneHandle: null | VoxSceneH
       logger('modelLoaded', modelLoaded, sceneHandle);
       if (modelLoaded?.mesh) {
         // sceneHandle.addMesh(modelLoaded.mesh);
+        setMesh(modelLoaded.mesh);
         resetCameraForModel(sceneHandle.defaultCamera, model);
         sceneHandle.startRenderLoop();
 
@@ -62,6 +94,19 @@ export function useRenderVox(target: ViewerTarget, sceneHandle: null | VoxSceneH
     [sceneHandle],
     true,
   );
+
+  useEffect(() => {
+    if (!(mesh && lights)) {
+      return;
+    }
+    lights.l1Shadow.getShadowMap()!.renderList!.push(mesh);
+    return () => {
+      const f = lights.l1Shadow.getShadowMap()!.renderList!.indexOf(mesh);
+      if (f >= 0) {
+        lights.l1Shadow.getShadowMap()!.renderList!.splice(f, 1);
+      }
+    };
+  }, [mesh, lights]);
 }
 
 export function useVoxSceneHandle(canvas: HTMLCanvasElement, engine: Engine): null | VoxSceneHandle {

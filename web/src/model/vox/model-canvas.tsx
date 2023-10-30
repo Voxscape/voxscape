@@ -3,13 +3,7 @@ import { MutableRefObject, PropsWithChildren, PropsWithoutRef, ReactElement, use
 import styles from './model-canvas.module.scss';
 import { BabylonEngineProvider } from '../_babylon/use-babylon-engine';
 import { useKeyGenerator } from '../../hooks/use-key-generator';
-import {
-  useRenderAccessories,
-  useRenderVox,
-  useVoxSceneHandle,
-  ViewerConfig,
-  ViewerTarget,
-} from './use-vox-scene-handle';
+import { useRefAxis, useRenderVox, useVoxSceneHandle, ViewerConfig, ViewerTarget } from './use-vox-scene-handle';
 import { Engine } from '@babylonjs/core';
 import { VoxSceneHandle } from './vox-scene-handle';
 import { isDevBuild } from '../../config/build-config';
@@ -65,8 +59,8 @@ function ModelRenderer(props: {
   config: ViewerConfig;
 }): null {
   const sceneHandle = useVoxSceneHandle(props.canvas, props.engine);
-  useRenderVox(props.target, sceneHandle);
-  useRenderAccessories(props.target, props.config, sceneHandle);
+  useRefAxis(props.target, props.config, sceneHandle);
+  useRenderVox(props.target, props.config, sceneHandle);
 
   useEffect(() => {
     props.handleRef.current = sceneHandle ?? undefined;

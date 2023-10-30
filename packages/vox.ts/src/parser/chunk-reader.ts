@@ -88,5 +88,11 @@ export function readString(l: RiffLense, str: Chunk): string {
 }
 
 export function getDefaultPalette(): VoxelPalette {
-  return defaultPaletteBytes.map((byte, index) => uint32ToColor(byte));
+  return defaultPaletteBytes.map((uint32, index) => ({
+    // default palette was in different endianness?
+    a: (uint32 >>> 24) & 0xff,
+    b: (uint32 >>> 16) & 0xff,
+    g: (uint32 >>> 8) & 0xff,
+    r: (uint32 >>> 0) & 0xff,
+  }));
 }
