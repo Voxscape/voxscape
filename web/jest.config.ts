@@ -1,5 +1,5 @@
 import type { Config } from 'jest';
-const nodeModulesToTranspile = ['@babylonjs'];
+const nodeModulesToTranspile = ['@babylonjs', 'superjson'];
 
 export default {
   roots: ['src', 'test', 'server'],
