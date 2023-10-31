@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
-cd $(dirname "$0")
+set -ue
+cd $(dirname "$0")/../../packages/vox.ts
 
-find . -name '*.vox' | xargs ../../packages/vox.ts/bin/voxprobe > index.ndjson 2> index.err
+exec yarn ts-node src/scripts/create-ref-model-index.ts
