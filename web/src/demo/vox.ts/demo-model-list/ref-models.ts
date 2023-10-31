@@ -1,11 +1,14 @@
-import { fromCompare, Ord } from 'fp-ts/lib/Ord';
+import { fromCompare, Ord, ordString } from 'fp-ts/lib/Ord';
 import { Ordering } from 'fp-ts/Ordering';
+import { Ord as stringOrd } from 'fp-ts/string';
 import { sort } from 'fp-ts/Array';
 import { Never } from '@jokester/ts-commonutil/lib/concurrency/timing';
 import { VoxFileDigest } from '@voxscape/vox.ts/src/parser/digester';
 import { inBrowser } from '../../../config/build-config';
 
-export interface RefModelIndexEntry extends VoxFileDigest {}
+export interface RefModelIndexEntry extends VoxFileDigest {
+  downloadPath: string;
+}
 
 async function doFetchRefModelIndex(): Promise<RefModelIndexEntry[]> {
   const res = await fetch('/ref-models/vox/index.ndjson');
@@ -14,7 +17,7 @@ async function doFetchRefModelIndex(): Promise<RefModelIndexEntry[]> {
     .split(/\r\n|\r|\n/)
     .filter((line) => line.trim())
     .map((line) => {
-      return JSON.parse(line) as VoxFileDigest;
+      return JSON.parse(line) as RefModelIndexEntry;
     })
     .filter((d) => d.models.length > 0)
     .map((i) => ({
@@ -22,13 +25,11 @@ async function doFetchRefModelIndex(): Promise<RefModelIndexEntry[]> {
       path: `/ref-models/vox/` + i.path,
     }));
 
-  const ord: Ord<VoxFileDigest> = fromCompare(
-    (a, b) => Math.sign(a.models[0].numVoxels - b.models[0].numVoxels) as Ordering,
-  );
+  const ord: Ord<RefModelIndexEntry> = fromCompare((a, b) => stringOrd.compare(a.path, b.path));
   return sort(ord)(list);
 }
 
-let fetched: Promise<VoxFileDigest[]> | null = null;
+let fetched: Promise<RefModelIndexEntry[]> | null = null;
 
 export async function fetchRefModelIndex(): Promise<RefModelIndexEntry[]> {
   if (!inBrowser) {

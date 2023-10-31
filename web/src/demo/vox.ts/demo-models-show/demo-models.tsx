@@ -22,7 +22,7 @@ function useDemoModel(modelUrl?: string): null | ParsedVoxFile {
       // NOTE must ensure assetPath have exactly 1 leading slash,
       // or new URL(assetPath, location.href) will return a strange URL
       const assetPath = escaped.replace(/^\/*/, '/');
-      const rebuilt = new URL(assetPath, window.location.href);
+      const rebuilt = new URL(`/ref-models/vox/` + assetPath, window.location.href);
       console.debug('fetching', { modelUrl, escaped, absolutified: assetPath, rebuilt });
       const arrayBuffer = await fetch(rebuilt).then((_) => _.arrayBuffer());
       if (!mounted.current) {
