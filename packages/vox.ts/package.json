@@ -35,6 +35,7 @@
     "eslint": "*",
     "jest": "*",
     "three": "^0.150.1",
+    "ts-node": "*",
     "typescript": "*",
     "vox.js": "^1.1.0"
   },
