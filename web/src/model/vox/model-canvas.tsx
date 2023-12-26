@@ -51,6 +51,7 @@ export function ModelCanvas({
     </>
   );
 }
+
 function ModelRenderer(props: {
   canvas: HTMLCanvasElement;
   engine: Engine;

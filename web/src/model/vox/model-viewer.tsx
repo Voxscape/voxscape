@@ -8,6 +8,7 @@ import { ModelCanvas } from './model-canvas';
 import { ViewerConfig, ViewerTarget } from './use-vox-scene-handle';
 import { Select, Button } from '@radix-ui/themes';
 import { IconBug } from '@tabler/icons-react';
+import { useKeyGenerator } from '../../hooks/use-key-generator';
 
 const logger = createDebugLogger(__filename);
 
@@ -15,9 +16,11 @@ export function ModelViewer(props: { voxFile: ParsedVoxFile }) {
   const [viewerTarget, setViewerTarget] = useState<null | ViewerTarget>(null);
   const [viewerConfig, setViewerConfig] = useState<null | ViewerConfig>(null);
 
+  const canvasKey = useKeyGenerator(viewerTarget)
+
   return (
     <div>
-      <div>{viewerTarget && viewerConfig && <ModelCanvas target={viewerTarget} config={viewerConfig} />}</div>
+      <div>{viewerTarget && viewerConfig && <ModelCanvas key={canvasKey} target={viewerTarget} config={viewerConfig} />}</div>
       <div className="flex justify-between mt-2 px-1 md:px-0">
         <div>
           {props.voxFile.models.length < 1 ? (
