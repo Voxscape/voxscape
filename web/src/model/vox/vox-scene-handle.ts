@@ -15,7 +15,7 @@ export class VoxSceneHandle extends BabylonSceneHandle {
     return this.createRefAxes(1.2 * Math.max(model.size.x, model.size.y, model.size.z));
   }
 
-  createTopLight(model: VoxTypes.VoxelModel): { l1: DirectionalLight; l2: DirectionalLight } {
+  createTopLight(model?: VoxTypes.VoxelModel): { l1: DirectionalLight; l2: DirectionalLight } {
     const l1 = new DirectionalLight('l1', new Vector3(-0.3, -1, 0), this.scene);
     const l2 = new DirectionalLight('l2', new Vector3(0.3, -1, 0), this.scene);
     return { l1, l2 };
