@@ -16,11 +16,13 @@ export function ModelViewer(props: { voxFile: ParsedVoxFile }) {
   const [viewerTarget, setViewerTarget] = useState<null | ViewerTarget>(null);
   const [viewerConfig, setViewerConfig] = useState<null | ViewerConfig>(null);
 
-  const canvasKey = useKeyGenerator(viewerTarget)
+  const canvasKey = useKeyGenerator(viewerTarget);
 
   return (
     <div>
-      <div>{viewerTarget && viewerConfig && <ModelCanvas key={canvasKey} target={viewerTarget} config={viewerConfig} />}</div>
+      <div>
+        {viewerTarget && viewerConfig && <ModelCanvas key={canvasKey} target={viewerTarget} config={viewerConfig} />}
+      </div>
       <div className="flex justify-between mt-2 px-1 md:px-0">
         <div>
           <ViewerTargetSelectPicker voxFile={props.voxFile} onChange={setViewerTarget} />
