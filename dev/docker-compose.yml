@@ -22,10 +22,10 @@ services:
       - log_min_error_statement=notice
       - -c
       - log_statement=all
+      # - -c
+      # - log_duration=on
       - -c
-      - log_duration=on
-      - -c
-      - log_error_verbosity=default # terse / default / debug
+      - log_error_verbosity=default # terse / default / verbose
     healthcheck:
       test:
         - CMD

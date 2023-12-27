@@ -26,26 +26,41 @@ function useRenderLight(
   const [lights, setLights] = useState<null | LightGroup>(null);
   const enableLight = config.enableLight ?? true;
 
-  useEffect(() => {
-    if (!(enableLight && sceneHandle && target)) {
-      return;
-    }
+  useAsyncEffect(
+    async (running, released) => {
+      if (!sceneHandle) {
+        return;
+      }
 
-    const defaultLight = sceneHandle.createDefaultLight();
-    const light = sceneHandle.createTopLight(target.file.models[target.modelIndex]);
-    const shadowGenerator = new ShadowGenerator(1024, light.l1);
-    setLights({
-      ambient: defaultLight,
-      ...light,
-      l1Shadow: shadowGenerator,
-    });
-    return () => {
+      const defaultLight = sceneHandle.createDefaultLight();
+      // defaultLight.setEnabled(false)
+      const light = sceneHandle.createTopLight();
+      light.l1.setEnabled(false);
+      light.l2.setEnabled(false);
+      const shadowGenerator = new ShadowGenerator(1024, light.l1);
+      setLights({
+        ambient: defaultLight,
+        ...light,
+        l1Shadow: shadowGenerator,
+      });
+
+      await released;
       defaultLight.dispose();
       shadowGenerator.dispose();
       light.l1.dispose();
       light.l2.dispose();
-    };
-  }, [enableLight, sceneHandle, target]);
+    },
+    [sceneHandle],
+    true,
+  );
+
+  useEffect(() => {
+    if (!lights) {
+      return;
+    }
+    lights.l1.setEnabled(enableLight);
+    lights.l2.setEnabled(enableLight);
+  }, [lights, enableLight]);
 
   return lights;
 }
@@ -96,12 +111,13 @@ export function useRenderVox(
   );
 
   useEffect(() => {
-    if (!(mesh && lights)) {
+    const shadowMap = lights?.l1Shadow.getShadowMap();
+    if (!(mesh && lights && shadowMap?.renderList)) {
       return;
     }
-    lights.l1Shadow.getShadowMap()!.renderList!.push(mesh);
+    shadowMap.renderList!.push(mesh);
     return () => {
-      const f = lights.l1Shadow.getShadowMap()!.renderList!.indexOf(mesh);
+      const f = shadowMap.renderList!.indexOf(mesh);
       if (f >= 0) {
         lights.l1Shadow.getShadowMap()!.renderList!.splice(f, 1);
       }
