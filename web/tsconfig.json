@@ -9,6 +9,7 @@
     "noUnusedLocals": false,
     "noEmit": true,
     "target": "esnext",
+    "noUncheckedIndexedAccess": false,
     "noPropertyAccessFromIndexSignature": false,
     "noUnusedParameters": false,
     "skipLibCheck": true,

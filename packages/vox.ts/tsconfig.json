@@ -8,6 +8,9 @@
     "noEmit": true,
     "target": "esnext",
     "skipLibCheck": true,
+    "noUncheckedIndexedAccess": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUnusedParameters": false,
     "typeRoots": [
       "src/ref-voxjs/types",
       "node_modules/@types",
