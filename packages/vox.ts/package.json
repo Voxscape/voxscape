@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@babylonjs/core": "^6.22",
+    "@tsconfig/strictest": "^2.0.2",
     "@types/debug": "^4.1.7",
     "@types/ndarray": "^1.0.11",
     "@types/node": "18",
