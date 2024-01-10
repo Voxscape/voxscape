@@ -1,13 +1,15 @@
 {
-  "extends": "./tsconfig.base.json",
+  "extends": "../node_modules/@tsconfig/strictest/tsconfig.json",
   "compilerOptions": {
     "isolatedModules": true,
     //    "jsxImportSource": "@emotion/react", // before tsc can recognize over-complicated Chakra types
     "jsx": "preserve",
     "module": "commonjs",
     "moduleResolution": "node",
+    "noUnusedLocals": false,
     "noEmit": true,
     "target": "esnext",
+    "noPropertyAccessFromIndexSignature": false,
     "skipLibCheck": true,
     "typeRoots": ["typings", "node_modules/@types", "../node_modules/@types"],
     "lib": ["dom", "esnext"],
