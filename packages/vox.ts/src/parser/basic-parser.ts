@@ -1,6 +1,6 @@
 import type * as VoxTypes from '../types/vox-types';
 import { RiffLense } from '../util/riff-lense';
-import { readMatt, readRgba, readXyzi, uint32ToColor } from './chunk-reader';
+import { getDefaultPalette, readMatt, readRgba, readXyzi, uint32ToColor } from './chunk-reader';
 
 /**
  * parser for "basic" vox format
@@ -67,7 +67,7 @@ export function basicParser(
 
   return {
     models,
-    palette,
+    palette: palette ?? getDefaultPalette(),
     materials,
     warnings,
     enableExtension,

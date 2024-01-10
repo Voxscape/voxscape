@@ -56,7 +56,7 @@ export interface VoxelMaterial {
  */
 export interface ParsedVoxFile {
   readonly models: readonly VoxelModel[];
-  readonly palette?: VoxelPalette; // falsy when rgba chunk is missing
+  readonly palette: VoxelPalette; // falsy when rgba chunk is missing
   readonly materials: readonly VoxelMaterial[];
 
   readonly enableExtension: boolean;

@@ -17,7 +17,7 @@ export async function renderModelAlt(
   }
 
   const model = voxFile.models[modelIndex];
-  const palette = voxFile.palette ?? getDefaultPalette();
+  const palette = voxFile.palette;
 
   const mesh = await buildTriangulatedMesh(model, palette, scene);
 
