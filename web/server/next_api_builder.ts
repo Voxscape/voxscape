@@ -6,7 +6,7 @@ export type HTTPMethod = Lowercase<'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'>;
 class ApiError extends Error {
   constructor(
     readonly status: number,
-    readonly message: string,
+    override readonly message: string,
   ) {
     super(message);
   }

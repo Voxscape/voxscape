@@ -4276,6 +4276,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tsconfig/strictest@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@tsconfig/strictest@npm:2.0.2"
+  checksum: 5409233288d872a2d79aca5eb65d3da681c6e0baa9ee58744adceda834fececdaa8265869793cfd5a80f4c887e3296b4d13309ef5bffbf7c8272071f00b60ba7
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.1.14":
   version: 7.20.2
   resolution: "@types/babel__core@npm:7.20.2"
@@ -4518,16 +4525,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/three@npm:^0.149.0":
-  version: 0.149.0
-  resolution: "@types/three@npm:0.149.0"
-  dependencies:
-    "@types/webxr": "npm:*"
-  checksum: 2a02522bf65f368eaf1e80de46e7cb806102737d0c9e99d2657dc6532ae0d50cc63ea20b21a25a7bf866f915c890825c102149fe4e74c08620de75a7a2c45aae
-  languageName: node
-  linkType: hard
-
-"@types/three@npm:^0.156.0":
+"@types/three@npm:^0.156":
   version: 0.156.0
   resolution: "@types/three@npm:0.156.0"
   dependencies:
@@ -4706,6 +4704,7 @@ __metadata:
   dependencies:
     "@babylonjs/core": "npm:^6.22"
     "@jokester/ts-commonutil": "npm:^0.4.2"
+    "@tsconfig/strictest": "npm:^2.0.2"
     "@types/debug": "npm:^4.1.7"
     "@types/ndarray": "npm:^1.0.11"
     "@types/node": "npm:18"
@@ -4761,6 +4760,7 @@ __metadata:
     "@trpc/client": "npm:^10.38.2"
     "@trpc/react-query": "npm:^10.38.2"
     "@trpc/server": "npm:^10.38.2"
+    "@tsconfig/strictest": "npm:^2.0.2"
     "@types/debug": "npm:^4.1.8"
     "@types/lodash-es": "npm:^4.17.9"
     "@types/node": "npm:^18"
@@ -11162,14 +11162,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three@npm:^0.150.1":
-  version: 0.150.1
-  resolution: "three@npm:0.150.1"
-  checksum: 5fda5ceceba3c39fc8891bd42a4ed1885fa4eba23d301a57f0e5df436d86abdf07afea5a8e0a36453b798d22334db4895cab0967dbefde6c593607b1d58e19dc
-  languageName: node
-  linkType: hard
-
-"three@npm:^0.156.1":
+"three@npm:^0.156":
   version: 0.156.1
   resolution: "three@npm:0.156.1"
   checksum: 78efefea95406dd128cebc26923a8d33b2b125c831d58a11f1217a9366454157e327f9b623bfb2b6e78f351446c9df4795a830ec46e415fbeb9fbdc2602578be
@@ -11405,23 +11398,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:<5.2":
-  version: 5.1.6
-  resolution: "typescript@npm:5.1.6"
+"typescript@npm:*, typescript@npm:^5.3.3":
+  version: 5.3.3
+  resolution: "typescript@npm:5.3.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: f347cde665cf43dc4c1c7d9821c7d9bbec3c3914f4bdd82ee490e9fb9f6d99036ed8666463b6a192dd005eeef333c5087d5931bdd51ec853436ff9a670a7417e
+  checksum: 6e4e6a14a50c222b3d14d4ea2f729e79f972fa536ac1522b91202a9a65af3605c2928c4a790a4a50aa13694d461c479ba92cedaeb1e7b190aadaa4e4b96b8e18
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A<5.2#optional!builtin<compat/typescript>":
-  version: 5.1.6
-  resolution: "typescript@patch:typescript@npm%3A5.1.6#optional!builtin<compat/typescript>::version=5.1.6&hash=5da071"
+"typescript@patch:typescript@npm%3A*#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.3.3#optional!builtin<compat/typescript>":
+  version: 5.3.3
+  resolution: "typescript@patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=29ae49"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: f5481fa3ba0eee8970f46708d13c05650a865ad093b586fc9573f425c64c57ca97e3308e110bb528deb3ccebe83f6fd7b5a8ac90018038da96326a9ccdf8e77c
+  checksum: 57bf073a0b88f9bf76e5a24be3df864a8f9d0e70f8316969f4992ae26e30cb8d078708922da2ade1f2c8d1faee13b28bcb69876ebb1e37910e31c54aa9126aa2
   languageName: node
   linkType: hard
 
@@ -11659,7 +11652,7 @@ __metadata:
     jest: "npm:^29.6.4"
     prettier: "npm:^3.0.3"
     ts-node: "npm:^10.9.1"
-    typescript: "npm:^5.2"
+    typescript: "npm:^5.3.3"
   languageName: unknown
   linkType: soft
 

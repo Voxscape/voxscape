@@ -26,7 +26,7 @@ export interface VoxelSegment {
 }
 
 function getLastVoxel(voxels: readonly VoxTypes.Voxel[]): null | VoxTypes.Voxel {
-  return voxels[voxels.length - 1];
+  return voxels[voxels.length - 1] || null;
 }
 
 /**
