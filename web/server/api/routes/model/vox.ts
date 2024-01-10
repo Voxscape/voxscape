@@ -19,21 +19,7 @@ const findByUserQuery = z.object({
   userId: z.string(),
 });
 
-const searchModelQuery = z.object({
-  query: z.string(),
-});
-
 export const voxRouter = t.router({
-  recent: t.procedure.input(pagerParam.optional()).query(async ({ input }) => {
-    const models = await prisma.voxFile.findMany({ where: {}, orderBy: { createdAt: 'desc' }, take: 20 });
-    return { models };
-  }),
-
-  search: t.procedure.input(searchModelQuery).query(async ({ input }) => {
-    const models = await prisma.voxFile.findMany({ where: {} });
-    return [];
-  }),
-
   get: t.procedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
     const model = await prisma.voxFile.findUnique({ where: { id: input.id }, include: { ownerUser: true } });
     if (!model) {

@@ -1,22 +1,15 @@
 import { Layout } from '../../src/layout/layout';
 import { useTrpcHooks } from '../../src/config/trpc';
-import { Spinner } from '@chakra-ui/react';
+import { QueryResult } from '../../src/components/hoc/query-result';
+import { ModelList } from '../../src/model/list/model-list';
 
 function ModelListPageContent() {
   const trpcHooks = useTrpcHooks();
-  const models = trpcHooks.models.vox.recent.useQuery();
+  const models = trpcHooks.models.recent.useQuery({});
 
-  if (!models.data?.models) {
-    return <Spinner />;
-  }
+  const modelsView = <QueryResult value={models}>{(models) => <ModelList voxModels={models.voxModels} />}</QueryResult>;
 
-  return (
-    <ul>
-      {models.data.models.map((m) => (
-        <li key={m.id}>{m.id}</li>
-      ))}
-    </ul>
-  );
+  return <div>{modelsView}</div>;
 }
 
 export default function ModelListPage() {
