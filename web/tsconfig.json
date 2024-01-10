@@ -6,9 +6,10 @@
     "jsx": "preserve",
     "module": "commonjs",
     "moduleResolution": "node",
-    "noUnusedLocals": false,
     "noEmit": true,
     "target": "esnext",
+    // strictness
+    "noUnusedLocals": false,
     "noUncheckedIndexedAccess": false,
     "noPropertyAccessFromIndexSignature": false,
     "noUnusedParameters": false,
