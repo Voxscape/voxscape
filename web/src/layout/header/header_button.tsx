@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { AuthProviderPicker } from '../../components/auth/auth-provider-picker';
 
-export const OwnUserButton: React.FC<{ userId: string }> = (props) => {
+export const SelfUserButton: React.FC<{ userId: string }> = (props) => {
   return (
     <Link href={`/users/${props.userId}`}>
       <Button size="sm" className={styles.authButton}>
@@ -30,6 +30,7 @@ export const SettingButton: React.FC = () => {
 
 export const LoginButton: React.FC = () => {
   const modal = useModalApi();
+  const router = useRouter();
 
   const onStartAuth = async () => {
     const provider = await modal.build<string>((handle) => ({
@@ -38,7 +39,7 @@ export const LoginButton: React.FC = () => {
     }));
 
     if (provider.value) {
-      signIn(provider.value, {});
+      signIn(provider.value, { callbackUrl: router.asPath });
     }
   };
 
@@ -54,9 +55,9 @@ export const LogoutButton: React.FC = () => {
   const router = useRouter();
 
   const onLogout = async () => {
-    const confirmed = await modal.confirm('Logout?', '');
+    const confirmed = await modal.confirm('Logout', 'Really?');
     if (confirmed.value) {
-      signOut().then(() => router.reload());
+      signOut().then(() => router.push('/'));
     }
   };
 
