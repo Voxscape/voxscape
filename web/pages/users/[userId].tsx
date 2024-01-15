@@ -8,7 +8,7 @@ import { PageMeta } from '../../src/components/meta/page-meta';
 import { createDebugLogger } from '../../shared/logger';
 import { UserCard } from '../../src/user/user-card';
 import { UserModelListHeader } from '../../src/user/user-model-list';
-import { ModelList } from '../../src/model/list/model-list';
+import { ModelListView } from '../../src/model/list/model-list';
 
 const logger = createDebugLogger(__filename);
 
@@ -34,7 +34,7 @@ function UserDetailContent(props: { userId: string }) {
           </section>
           <section>
             <UserModelListHeader />
-            <ModelList voxModels={user.data.recentModels} />
+            <ModelListView voxModels={user.data.recentModels} />
           </section>
         </>
       )}
