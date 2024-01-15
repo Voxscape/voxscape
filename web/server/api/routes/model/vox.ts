@@ -3,10 +3,10 @@ import { createDebugLogger } from '../../../../shared/logger';
 import { prisma } from '../../../prisma';
 import { privateProcedure } from '../../common/session.middleware';
 import { t } from '../../common/_base';
-import { pagerParam, pickSafeUser } from '../../common/primitive';
+import { pickSafeUser } from '../../common/primitive';
 import { decomposeUserAssetUrl, getBucket } from '../../../external/gcp';
 import { ClientBad } from '../../errors';
-import { createModelRequest } from '../../../../shared/api-schemas';
+import { mimeTypes } from '../../../../shared/const';
 
 const logger = createDebugLogger(__filename);
 
@@ -17,6 +17,15 @@ const mutateModelRequest = z.object({
 
 const findByUserQuery = z.object({
   userId: z.string(),
+});
+
+export const createModelRequest = z.object({
+  title: z.string(),
+  desc: z.string(),
+  origFilename: z.string(),
+  contentType: z.string().and(z.enum([mimeTypes.vox])),
+  assetUrl: z.string().url(),
+  isPrivate: z.boolean(),
 });
 
 export const voxRouter = t.router({
