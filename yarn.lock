@@ -4698,6 +4698,150 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript/lib-decorators@npm:@better-typescript-lib/decorators@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/decorators@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: 8bf74c0d392a56145dd6209b970991eea082eeb066e1dfe5681ae1d4eb0ff14b28d47a5eb8cb69073150a8dbf47df43d7abf4c31ef025f7b98e1c445867b939b
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-dom@npm:@better-typescript-lib/dom@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/dom@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: a7645dcf2f254c0e6fcb3217fb807f393bbd051121987ac8ada49ef310a1c8e9289a31e10956d46f60061787dcb588b716f77290ac0b7ea37b4133a047c76bc0
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-es2015@npm:@better-typescript-lib/es2015@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/es2015@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: dab573102af63d9e7e0843f683aa1fa20fc0cc3c0cdf6b5c35ea41e173e280d770e7c1afc0f408922fb8fd408b77eef5dccdb6f7ddf6633d0cb57a6408927d8e
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-es2016@npm:@better-typescript-lib/es2016@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/es2016@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: 6820d588e05e5480891c481503577d21fc96d84665849ff1ba981a3eacaf195b943ec2dfb94b7908c5e6e93ddc577503acde1b504138f25b7a0605a5c667d50a
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-es2017@npm:@better-typescript-lib/es2017@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/es2017@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: 5f06d0c8ccb96e33cc2bf555a743fe1b12acfa57cd005616271b7ec0dc3f117fee9d3964671f85b5d8e8f4cd5d292cf77370109a7b07c95db5f8c8063e2ce0df
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-es2018@npm:@better-typescript-lib/es2018@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/es2018@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: 72cf40cc291ab1801dab36e7e7175e1bead5b848c19f2d3ec630c75f8cf82051b3bfc3758f8a9ee7295b4355312f3e69fc264631d7bff329eb1103addc9f0a6f
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-es2019@npm:@better-typescript-lib/es2019@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/es2019@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: 54662f558f517651f2b05857a45b3f6eb74d57f92567110f3efd298454ece87993edd20aaa4c1bdb6e6a08ea67db90d4d2b4d2cb8bc3fe6adf5dc93dfe26b75b
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-es2020@npm:@better-typescript-lib/es2020@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/es2020@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: 89908863ec1b13455ccf435606a80de5a9781cfa18c7e409c68c5b49368a5e19a4bda6a5b7190e21167600a91e7a66c3c28ab81fc1c7c7cee5efb8ce158185f4
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-es2021@npm:@better-typescript-lib/es2021@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/es2021@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: 32cf26f2cf09e88b020a626d9fb23f91ee41efca974d0fe4ee6a1018543c08c34fe9e78893eb1d8d7bae67d900bdcbc7eae45cf13c04ae8cfe1d7597b05814e1
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-es2022@npm:@better-typescript-lib/es2022@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/es2022@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: a347d7142e8799777236faa5cb91a50c268ac657ee2df064cb5bb32d3228555127708160f664d44407c47cf7e452a8f31b6738adb3a59e23790c892e02a856c7
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-es2023@npm:@better-typescript-lib/es2023@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/es2023@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: 68f7bad41cc8fd190647947721f6603fc9bf4a6937d8151db752caaee5beecc091581c8bf56a54c39473d0cff471f81907677126adc79505c6afae6f63c933f2
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-es5@npm:@better-typescript-lib/es5@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/es5@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: 0652859b352e371de18c61c16c4a7ddd2162365b6b56244fffe183165b724cf9a4f3bd5d7d90aee5ec3291a1aa0b83bc043998a77cac4f867e17fdd66f3ab99a
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-es6@npm:@better-typescript-lib/es6@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/es6@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: c07c9b63191b6aba05e312c1e6cc6dca9de0060ca64c25abc7942c1b56c2e13b6e5dc372a8be5c6e063e710751f2828e31bbeca196821e4d9bb0d0f8ea415dfa
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-esnext@npm:@better-typescript-lib/esnext@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/esnext@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: 1ccffb9f00807bd2619bf40985965dfee5ccfbeabcf3f0fa3043a4b2e188325a64875ad051f596b21f7312afa31006f6f76438beeb1bd7f295e989a4c8199b7e
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-scripthost@npm:@better-typescript-lib/scripthost@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/scripthost@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: 7e07531219c608de1526b60801019781d0cbffab4d7fb7a1a9948fee98e0ae26f2394d111bd996309d347a30de77a40ee35159ea1d8f662db1ca3ee57e65d5da
+  languageName: node
+  linkType: hard
+
+"@typescript/lib-webworker@npm:@better-typescript-lib/webworker@2.6.0":
+  version: 2.6.0
+  resolution: "@better-typescript-lib/webworker@npm:2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: fb6ba6eff07ec1dce9b2af94a4ac0cb5f6278500dc44721b3c79e6a8021e70997c56436b4821ef39da39405f21b7110b362868709696a2743c17c7137799701f
+  languageName: node
+  linkType: hard
+
 "@voxscape/vox.ts@workspace:*, @voxscape/vox.ts@workspace:packages/vox.ts":
   version: 0.0.0-use.local
   resolution: "@voxscape/vox.ts@workspace:packages/vox.ts"
@@ -5307,6 +5451,32 @@ __metadata:
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
   checksum: 669632eb3745404c2f822a18fc3a0122d2f9a7a13f7fb8b5823ee19d1d2ff9ee5b52c53367176ea4ad093c332fd5ab4bd0ebae5a8e27917a4105a4cfc86b1005
+  languageName: node
+  linkType: hard
+
+"better-typescript-lib@npm:^2.6.0":
+  version: 2.6.0
+  resolution: "better-typescript-lib@npm:2.6.0"
+  dependencies:
+    "@typescript/lib-decorators": "npm:@better-typescript-lib/decorators@2.6.0"
+    "@typescript/lib-dom": "npm:@better-typescript-lib/dom@2.6.0"
+    "@typescript/lib-es2015": "npm:@better-typescript-lib/es2015@2.6.0"
+    "@typescript/lib-es2016": "npm:@better-typescript-lib/es2016@2.6.0"
+    "@typescript/lib-es2017": "npm:@better-typescript-lib/es2017@2.6.0"
+    "@typescript/lib-es2018": "npm:@better-typescript-lib/es2018@2.6.0"
+    "@typescript/lib-es2019": "npm:@better-typescript-lib/es2019@2.6.0"
+    "@typescript/lib-es2020": "npm:@better-typescript-lib/es2020@2.6.0"
+    "@typescript/lib-es2021": "npm:@better-typescript-lib/es2021@2.6.0"
+    "@typescript/lib-es2022": "npm:@better-typescript-lib/es2022@2.6.0"
+    "@typescript/lib-es2023": "npm:@better-typescript-lib/es2023@2.6.0"
+    "@typescript/lib-es5": "npm:@better-typescript-lib/es5@2.6.0"
+    "@typescript/lib-es6": "npm:@better-typescript-lib/es6@2.6.0"
+    "@typescript/lib-esnext": "npm:@better-typescript-lib/esnext@2.6.0"
+    "@typescript/lib-scripthost": "npm:@better-typescript-lib/scripthost@2.6.0"
+    "@typescript/lib-webworker": "npm:@better-typescript-lib/webworker@2.6.0"
+  peerDependencies:
+    typescript: ">=4.5.2"
+  checksum: 76201cbd666463d97cf099e0bd0b166d8008c0e251df17a6fc32933262904c051d0c078252e615e35d8691a2ec4c9613a2c8ededef98b15aacff56c0ad13c483
   languageName: node
   linkType: hard
 
@@ -11641,6 +11811,7 @@ __metadata:
     "@types/jest": "npm:^29"
     "@typescript-eslint/eslint-plugin": "npm:^6.5.0"
     "@typescript-eslint/parser": "npm:^6.5.0"
+    better-typescript-lib: "npm:^2.6.0"
     env-cmd: "npm:^10.1.0"
     eslint: "npm:^8.48.0"
     eslint-config-prettier: "npm:^9.0.0"
