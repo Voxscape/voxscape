@@ -39,7 +39,7 @@ export function readXyzi(l: RiffLense, size: Chunk, xyzi: Chunk, flipYZ: boolean
 }
 
 export function readRgba(l: RiffLense, rgba: Chunk): VoxTypes.VoxelPalette {
-  const palette = new Array(256);
+  const palette = new Array<VoxTypes.VoxelColor>(256);
   for (let colorIndex = 0; colorIndex < 256; ++colorIndex) {
     const color = uint32ToColor(l.uint32At(rgba.contentStart - 4 + 4 * colorIndex, false) || 0);
     palette[colorIndex] = color;
