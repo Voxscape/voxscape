@@ -47,8 +47,8 @@ jobs:
       - run: docker compose -f ../dev/docker-compose.yml up -d
       - run: yarn
       - run: yarn prisma generate
-      - run: yarn lint
       - run: yarn typecheck
+      - run: yarn lint
       - run: yarn test:init-db
       - run: yarn test
       - run: docker compose -f ../dev/docker-compose.yml down

@@ -133,7 +133,7 @@ class ModalApi {
     });
   }
 
-  build<T>(
+  build<T = unknown>(
     builder: (handle: ModalHandle<T>) => {
       title?: ReactNode;
       body?: ReactNode;

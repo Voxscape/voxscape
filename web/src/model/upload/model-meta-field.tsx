@@ -1,8 +1,8 @@
-import { createModelRequest } from '../../../shared/api-schemas';
 import { z } from 'zod';
 import { useInputState } from '@mantine/hooks';
 import { Checkbox, Input, TextInput } from '@mantine/core';
 import { useEffect } from 'react';
+import type { createModelRequest } from '../../../server/api/routes/model/vox';
 
 export type ModelMetaFormValue = Pick<z.infer<typeof createModelRequest>, 'title' | 'isPrivate' | 'desc'>;
 

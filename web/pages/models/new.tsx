@@ -11,6 +11,7 @@ import { useModalApi } from '../../src/components/modal/modal-context';
 import { useRouter } from 'next/router';
 import { trpcClient } from '../../src/config/trpc';
 import { ModelMetaForm, ModelMetaFormValue } from '../../src/model/upload/model-meta-field';
+import { WithRequireLoginModal } from '../../src/hooks/use-require-login';
 
 function CreateModelPageContent() {
   const [file, setFile] = useState<null | { f: File; parsed: ParsedVoxFile }>(null);
@@ -69,9 +70,11 @@ function CreateModelPageContent() {
 export default function CreateModelPage() {
   return (
     <Layout>
-      <BlockingContextProvider>
-        <CreateModelPageContent />
-      </BlockingContextProvider>
+      <WithRequireLoginModal>
+        <BlockingContextProvider>
+          <CreateModelPageContent />
+        </BlockingContextProvider>
+      </WithRequireLoginModal>
     </Layout>
   );
 }

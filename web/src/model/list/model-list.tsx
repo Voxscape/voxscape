@@ -1,38 +1,10 @@
-import Link from 'next/link';
-import { DummyImage } from '../../_dev/dummy-image';
-import { pixelBorders, pixelFonts } from '../../styles/pixelBorders';
-import clsx from 'clsx';
+import { useTrpcHooks } from '../../config/trpc';
+import { QueryResult } from '../../components/hoc/query-result';
+import { ModelListView } from './model-list.view';
 
-interface ModelBrief {
-  id: string;
-  title?: null | string;
-  desc: string;
-  createdAt: Date;
-}
+export function IndexPageModelList() {
+  const trpcHooks = useTrpcHooks();
+  const models = trpcHooks.models.recent.useQuery({});
 
-function ModelListCard({ model }: { model: ModelBrief }) {
-  return (
-    <div className={clsx(pixelBorders.box.light, 'inline-block border')}>
-      <div>
-        <DummyImage text={model.title ?? 'preview'} className="h-48 " />
-      </div>
-      <div>
-        <h6 className={clsx('p-2 text-left whitespace-pre-line text-xl')}>{model.title || '\n'}</h6>
-      </div>
-    </div>
-  );
-}
-
-export function ModelList(props: { voxModels: ModelBrief[] }) {
-  return (
-    <ol className="grid grid-flow-row auto-rows-max md:grid-cols-2">
-      {props.voxModels.map((model) => (
-        <li key={model.id} className="inline-block my-3 text-center">
-          <Link href={`/models/vox/${model.id}`}>
-            <ModelListCard model={model} />
-          </Link>
-        </li>
-      ))}
-    </ol>
-  );
+  return <QueryResult value={models}>{(models) => <ModelListView voxModels={models.voxModels} />}</QueryResult>;
 }

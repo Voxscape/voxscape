@@ -1,10 +1,10 @@
 import { NextPage } from 'next';
 import { Layout } from '../src/layout/layout';
-import { PwaInstall } from '../src/components/meta/pwa-install';
+import { IndexPageModelList } from '../src/model/list/model-list';
 const IndexPage: NextPage = (props) => {
   return (
     <Layout>
-      <PwaInstall />
+      <IndexPageModelList />
     </Layout>
   );
 };
