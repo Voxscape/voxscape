@@ -26,7 +26,7 @@
     "tslib": "^2.1.0"
   },
   "devDependencies": {
-    "@babylonjs/core": "^6.22",
+    "@babylonjs/core": "^7.4",
     "@tsconfig/strictest": "^2.0.2",
     "@types/debug": "^4.1.7",
     "@types/ndarray": "^1.0.11",
