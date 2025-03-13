@@ -1,5 +1,4 @@
-/* eslint @typescript-eslint/no-var-requires: 0 */
-const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require('next/constants');
+import { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } from 'next/constants.js';
 
 /**
  * when in problem, try to sync with {@link https://github.com/vercel/next.js/tree/canary/packages/create-next-app/templates/typescript}
@@ -10,20 +9,29 @@ const nextConf = {
 
   /**
    * runtime server-only configuration
+   * see https://nextjs.org/docs/pages/api-reference/next-config-js/runtime-configuration
    * @type {import('./server/runtime-config').ServerRuntimeConfig}
    */
   serverRuntimeConfig: {
     serverStartAt: new Date().toISOString(),
   },
   /**
+   * runtime shared configuration
+   * see https://nextjs.org/docs/pages/api-reference/next-config-js/runtime-configuration
+   * @type {import('./shared/runtime-config').PublicRuntimeConfig}
+   */
+  publicRuntimeConfig: {
+    // TODO
+  },
+  /**
    * build-time configuration
    */
   env: {
-    // becomes process.env.SOME_CONSTANT : boolean
+    // values defined get bundled when `next build`
     builtAt: new Date().toISOString(),
   },
   // see https://nextjs.org/docs/#customizing-webpack-config
-  webpack(config, { buildId, dev, isServer, webpack }) {
+  webpack(config, {buildId, dev, isServer, webpack}) {
     config.plugins.push(
       new webpack.DefinePlugin({
         /**
@@ -48,7 +56,7 @@ const nextConf = {
   },
 
   typescript: {
-    ignoreBuildErrors: true, // required, we are not using emotion's jsx types
+    ignoreBuildErrors: true, // types get checked with lint
   },
 
   images: {},
@@ -72,14 +80,15 @@ const UNUSED_rewrites = async () => {
   };
 };
 
-module.exports = (phase, { defaultConfig }) => {
+export default async (phase, {defaultConfig}) => {
   /**
    * @type {import('next').NextConfig}
    */
   let merged = { ...nextConf };
 
   if (phase === PHASE_PRODUCTION_BUILD) {
-    merged = require('@next/bundle-analyzer')({ enabled: true, openAnalyzer: false })(merged);
+    const {default: analyzerPlugin} = await import('@next/bundle-analyzer');
+    merged = analyzerPlugin({enabled: true, openAnalyzer: false})(merged);
   }
 
   return merged;
