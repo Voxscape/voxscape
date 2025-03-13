@@ -4963,7 +4963,7 @@ __metadata:
     debug: "npm:^4.3.7"
     env-cmd: "npm:*"
     eslint: "npm:*"
-    foxact: "npm:^0.2.33"
+    foxact: "npm:^0.2.20"
     fp-ts: "npm:<3"
     framer-motion: "npm:^10"
     immer: "npm:^10.0.2"
@@ -7121,7 +7121,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"foxact@npm:^0.2.33":
+"foxact@npm:^0.2.20":
   version: 0.2.44
   resolution: "foxact@npm:0.2.44"
   dependencies:

@@ -48,7 +48,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^3",
     "debug": "^4.3.7",
-    "foxact": "^0.2.33",
+    "foxact": "^0.2.20",
     "fp-ts": "<3",
     "framer-motion": "^10",
     "immer": "^10.0.2",

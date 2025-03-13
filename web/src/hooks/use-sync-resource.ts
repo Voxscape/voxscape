@@ -10,14 +10,11 @@ const logger = createDebugLogger(__filename);
 export function useSyncResource<T>(allocate: () => T, release: (t: T) => void): null | T {
   const [value, setValue] = useState<T | null>(null);
 
-  useAsyncEffect(
-    async (running, released) => {
-      setValue(allocate());
-      await released;
-      setValue(null);
-    },
-    [],
-  );
+  useAsyncEffect(async (running, released) => {
+    setValue(allocate());
+    await released;
+    setValue(null);
+  }, []);
 
   return value;
 }
@@ -47,18 +44,15 @@ export function useAsyncResource<T, A = unknown, B = unknown>(
 ): PromiseLike<T> {
   const res = useDeferred<T>();
 
-  useAsyncEffect(
-    async (running, released) => {
-      const gotDeps = await Promise.all(deps);
-      // @ts-ignore
-      const v = await allocate(...gotDeps);
-      logger(`useAsyncResource: allocated`, v);
-      res.fulfill(v);
-      await released;
-      release(v);
-    },
-    deps,
-  );
+  useAsyncEffect(async (running, released) => {
+    const gotDeps = await Promise.all(deps);
+    // @ts-ignore
+    const v = await allocate(...gotDeps);
+    logger(`useAsyncResource: allocated`, v);
+    res.fulfill(v);
+    await released;
+    release(v);
+  }, deps);
 
   return res;
 }
