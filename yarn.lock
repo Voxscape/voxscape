@@ -2453,12 +2453,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jokester/ts-commonutil@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "@jokester/ts-commonutil@npm:0.6.0"
+"@jokester/ts-commonutil@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "@jokester/ts-commonutil@npm:0.5.0"
   dependencies:
-    tslib: "npm:^2"
-  checksum: 046c9537e327a65abf8a46645294c4d5ba03d12362a7841fc21a98b23fdc83eaa2cd72ff7e3a09b854c024b9ca3134d4ed938177a5a8b7fdbd818fe99351a6d4
+    tslib: "npm:^2.6"
+  checksum: 006adb1d2b6a1edb15344f6a5159f1dce9ede59302a7f89dee73c3f276ec83e59ba36efcdb281a93b3254fd350667afd3409f1c43d871742d642275642a6672f
   languageName: node
   linkType: hard
 
@@ -4892,7 +4892,7 @@ __metadata:
   resolution: "@voxscape/vox.ts@workspace:packages/vox.ts"
   dependencies:
     "@babylonjs/core": "npm:^7.4"
-    "@jokester/ts-commonutil": "npm:^0.6.0"
+    "@jokester/ts-commonutil": "npm:^0.5.0"
     "@tsconfig/strictest": "npm:^2.0.2"
     "@types/debug": "npm:^4.1.7"
     "@types/ndarray": "npm:^1.0.11"
@@ -4934,7 +4934,7 @@ __metadata:
     "@faker-js/faker": "npm:^8.2.0"
     "@google-cloud/storage": "npm:^7.5.0"
     "@iconify/react": "npm:^4.1.1"
-    "@jokester/ts-commonutil": "npm:^0.6.0"
+    "@jokester/ts-commonutil": "npm:^0.5.0"
     "@mantine/core": "npm:^6.0.20"
     "@mantine/dropzone": "npm:^6.0.20"
     "@mantine/hooks": "npm:^6.0.20"
@@ -4963,7 +4963,7 @@ __metadata:
     debug: "npm:^4.3.7"
     env-cmd: "npm:*"
     eslint: "npm:*"
-    foxact: "npm:^0.2.20"
+    foxact: "npm:^0.2.33"
     fp-ts: "npm:<3"
     framer-motion: "npm:^10"
     immer: "npm:^10.0.2"
@@ -7121,7 +7121,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"foxact@npm:^0.2.20":
+"foxact@npm:^0.2.33":
   version: 0.2.44
   resolution: "foxact@npm:0.2.44"
   dependencies:
