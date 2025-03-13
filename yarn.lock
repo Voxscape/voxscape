@@ -2453,15 +2453,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jokester/ts-commonutil@npm:^0.4.2":
-  version: 0.4.2
-  resolution: "@jokester/ts-commonutil@npm:0.4.2"
-  peerDependencies:
-    tslib: ^2.4.0
-  checksum: 6f60fd6eb0005ac6f3fc2fd5c5d40a31f02e0502ade1e0e8d9fc380792b8cfd7a04d584708e7630219f52302044a77d763f05f6d8c4fdba4382a5602ee16b3b9
-  languageName: node
-  linkType: hard
-
 "@jokester/ts-commonutil@npm:^0.6.0":
   version: 0.6.0
   resolution: "@jokester/ts-commonutil@npm:0.6.0"
@@ -4901,7 +4892,7 @@ __metadata:
   resolution: "@voxscape/vox.ts@workspace:packages/vox.ts"
   dependencies:
     "@babylonjs/core": "npm:^7.4"
-    "@jokester/ts-commonutil": "npm:^0.4.2"
+    "@jokester/ts-commonutil": "npm:^0.6.0"
     "@tsconfig/strictest": "npm:^2.0.2"
     "@types/debug": "npm:^4.1.7"
     "@types/ndarray": "npm:^1.0.11"
