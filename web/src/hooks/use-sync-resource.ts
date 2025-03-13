@@ -17,7 +17,6 @@ export function useSyncResource<T>(allocate: () => T, release: (t: T) => void): 
       setValue(null);
     },
     [],
-    true,
   );
 
   return value;
@@ -59,7 +58,6 @@ export function useAsyncResource<T, A = unknown, B = unknown>(
       release(v);
     },
     deps,
-    true,
   );
 
   return res;

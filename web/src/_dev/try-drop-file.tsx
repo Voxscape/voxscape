@@ -15,7 +15,7 @@ function onMaybeFile(evDataTransfer: DataTransferItemList) {
     const files: File[] = Array.from(evDataTransfer)
       .filter((i) => i.kind === 'file')
       .map((i) => /* only got non-null in drop event */ i.getAsFile()!)
-      .filter((_) => _);
+      .filter((_) => !!_);
     logger.debug('files', files);
   }
 }

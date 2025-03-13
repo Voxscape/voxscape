@@ -15,7 +15,6 @@ export function useDeferred<T>(rejectOnUnmount = false): Deferred<T> {
       }
     },
     [],
-    true,
   );
   return ref.current;
 }
