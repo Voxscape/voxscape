@@ -103,7 +103,7 @@ export async function* buildBabylonMeshProgressive(
     voxelsMesh.parent = root;
   }
 
-  yield {
+  return {
     ...progress,
     progress: 1,
     finishAt: Date.now(),
@@ -238,7 +238,7 @@ function* extractSurfaces(
     }
   }
 
-  yield {
+  return {
     progress: 1,
     faceColors,
     custom: {

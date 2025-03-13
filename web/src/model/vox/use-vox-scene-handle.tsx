@@ -51,7 +51,6 @@ function useRenderLight(
       light.l2.dispose();
     },
     [sceneHandle],
-    true,
   );
 
   useEffect(() => {
@@ -107,7 +106,6 @@ export function useRenderVox(
       }
     },
     [sceneHandle],
-    true,
   );
 
   useEffect(() => {

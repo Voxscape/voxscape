@@ -1,19 +1,56 @@
 import { NextPage } from 'next';
 import { trpcReact } from '../../src/config/trpc';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { FC, useEffect } from 'react';
 import { TRPCClientError } from '@trpc/client';
 import { Layout } from '../../src/layout/layout';
 import { PageMeta } from '../../src/components/meta/page-meta';
 import { createDebugLogger } from '../../shared/logger';
 import { UserCard } from '../../src/user/user-card';
 import { UserModelListHeader } from '../../src/user/user-model-list';
-import { ModelList } from '../../src/model/list/model-list';
+import { ModelListView } from '../../src/model/list/model-list.view';
+import { signOut, useSession } from 'next-auth/react';
+import { useModalApi } from '../../src/components/modal/modal-context';
+import { Button } from '@chakra-ui/react';
+import { IconLogout } from '@tabler/icons-react';
+import { pixelFonts } from '../../src/styles/pixelBorders';
+import clsx from 'clsx';
 
 const logger = createDebugLogger(__filename);
 
+const LogoutButton: FC = () => {
+  const modal = useModalApi();
+  const router = useRouter();
+
+  const onLogout = async () => {
+    const confirmed = await modal.confirm('Logout', 'Really?');
+    if (confirmed.value) {
+      signOut({ callbackUrl: '/' });
+    }
+  };
+
+  return (
+    <Button size="lg" className={clsx(pixelFonts.base, 'text-lg')} onClick={onLogout}>
+      <IconLogout />
+      <span className="ml-2">Logout</span>
+    </Button>
+  );
+};
+
 function UserDetailContent(props: { userId: string }) {
   const user = trpcReact.user.getById.useQuery({ userId: props.userId });
+  const session = useSession();
+
+  const selfView =
+    session.data?.user?.id === props.userId ? (
+      <>
+        <section className="flex w-full justify-between items-center">
+          <p>This is you!</p>
+          <LogoutButton />
+        </section>
+        <hr className="my-4" />
+      </>
+    ) : null;
 
   useEffect(() => {
     if (user.error instanceof TRPCClientError) {
@@ -27,6 +64,7 @@ function UserDetailContent(props: { userId: string }) {
   return (
     <>
       <PageMeta title="User" />
+      {selfView}
       {user.data && (
         <>
           <section className="flex">
@@ -34,7 +72,7 @@ function UserDetailContent(props: { userId: string }) {
           </section>
           <section>
             <UserModelListHeader />
-            <ModelList voxModels={user.data.recentModels} />
+            <ModelListView voxModels={user.data.recentModels} />
           </section>
         </>
       )}

@@ -32,7 +32,6 @@ function useDemoModel(modelUrl?: string): null | ParsedVoxFile {
       setModel(parsed);
     },
     [modelUrl],
-    true,
   );
   return model;
 }

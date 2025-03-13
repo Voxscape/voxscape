@@ -15,9 +15,9 @@ async function doFetchRefModelIndex(): Promise<RefModelIndexEntry[]> {
   const lines = await res.text();
   const list = lines
     .split(/\r\n|\r|\n/)
-    .filter((line) => line.trim())
+    .filter((line) => !!line.trim())
     .map((line) => {
-      return JSON.parse(line) as RefModelIndexEntry;
+      return JSON.parse(line) as any as RefModelIndexEntry;
     })
     .filter((d) => d.models.length > 0)
     .map((i) => ({

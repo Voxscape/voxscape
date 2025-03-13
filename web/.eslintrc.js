@@ -4,5 +4,6 @@ module.exports = {
   rules: {
     'react/no-unknown-property': ['warn', { ignore: ['css'] }],
     'no-restricted-properties': ['warn'],
+    'import/no-unresolved': 0,
   },
 };

@@ -1,5 +1,5 @@
 # NOTE this file does not with docker-compose in GHA. try `docker compose` instead
-version: '3.3'
+# version: '3.3'
 
 name: voxscape-dev
 
